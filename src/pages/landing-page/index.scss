@@ -1,0 +1,17 @@
+.landing-page {
+    background-color: rgb(146, 204, 206);
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .container {
+        width: 25rem;
+        height: 15rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 5rem;
+    }
+}
