@@ -13,7 +13,7 @@ const Dashboard = () => {
             return 'http://127.0.0.1:8000';
         } else {
             // production code
-            return 'https://fut-v2.herokuapp.com';
+            return 'https://pp--backend.herokuapp.com';
         }
     }
     // page loaded - fake state - just to run first hook at start...
