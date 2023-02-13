@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import MilestoneTag from './milestone-tag';
+import Timeline from './timeline';
 import './index.scss';
 
 const Dashboard = () => {
@@ -19,7 +20,7 @@ const Dashboard = () => {
     // page loaded - fake state - just to run first hook at start...
     const [loaded, setLoaded] = useState(0);
     const [displayedProjects, setDisplayProjects] = useState([]);
-    const [dateOffset, setDateOffset] = useState(0);
+    const [dateOffset, setDateOffset] = useState(0);    // offset from today...
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
 
@@ -96,20 +97,21 @@ const Dashboard = () => {
                         <div className='cell starting'><div className='rotate'>{project.name}</div></div>
                         <div className='middle'>
                             {project.milestone_plan.milestone_items.map((milestoneItem) => {
-                                return < MilestoneTag pad_left={7} milestoneItem={milestoneItem} />
+                                return < MilestoneTag dateOffset={dateOffset} milestoneItem={milestoneItem} displayLimit={100} />
                             })}
                         </div>
                         <div className='cell starting'></div>
                     </main>
                 })}
+                <Timeline dateOffset={dateOffset} />
                 <footer className='wrapper-footer'>
                     <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>previous</div>
-                    <div className='cell-footer'>{moment().add(dateOffset - 1, 'M').format('MMMM YYYY')}</div>
+                    {/* <div className='cell-footer'>{moment().add(dateOffset - 1, 'M').format('MMMM YYYY')}</div>
                     <div className='cell-footer'>{moment().add(dateOffset, 'M').format('MMMM YYYY')}</div>
                     <div className='cell-footer'>{moment().add(dateOffset + 1, 'M').format('MMMM YYYY')}</div>
                     <div className='cell-footer'>{moment().add(dateOffset + 2, 'M').format('MMMM YYYY')}</div>
                     <div className='cell-footer'>{moment().add(dateOffset + 3, 'M').format('MMMM YYYY')}</div>
-                    <div className='cell-footer'>{moment().add(dateOffset + 4, 'M').format('MMMM YYYY')}</div>
+                    <div className='cell-footer'>{moment().add(dateOffset + 4, 'M').format('MMMM YYYY')}</div> */}
                     <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 1)}>next</div>
                 </footer>
             </main>
