@@ -4,7 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import './index.scss';
 
-const MilestoneInfo = (props) => {
+const AddMilestoneModal = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -149,4 +149,4 @@ const MilestoneInfo = (props) => {
     </div>);
 }
 
-export default MilestoneInfo;
+export default AddMilestoneModal;

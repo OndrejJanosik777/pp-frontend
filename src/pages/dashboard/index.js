@@ -4,8 +4,8 @@ import axios from 'axios';
 import moment from 'moment';
 import MilestoneTag from './milestone-tag';
 import Timeline from './timeline';
-import ProjectInfo from './project-info';
-import MilestoneInfo from './milestone-info';
+import CreateProjectModal from './create-project-modal';
+import AddMilestoneModal from './create-milestone-modal';
 import './index.scss';
 
 const Dashboard = () => {
@@ -25,10 +25,11 @@ const Dashboard = () => {
     const [dateOffset, setDateOffset] = useState(0);    // offset from today...
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [projectModalVisible, setProjectModalVisible] = useState(false);
-    const [milestoneModalVisible, setMilestoneModalVisible] = useState(false);
+    // modal toogles
+    const [createProject_toogle, setCreateProject_toogle] = useState(false);
+    const [addMilestone_toogle, setAddMilestone_toogle] = useState(false);
+    const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(true);
     const [activeProject, setActiveProject] = useState({});
-
     // const moment = require('moment');
 
     useEffect(() => {
@@ -98,7 +99,8 @@ const Dashboard = () => {
                 // console.log(response.data);
 
                 // setDisplayProjects([...displayedProjects, response.data]);
-                setDisplayProjects(...displayedProjects, response.data);
+                // setDisplayProjects(...displayedProjects, response.data);
+                setDisplayProjects(response.data);
             }))
             .catch((error) => {
                 console.log(error);
@@ -134,7 +136,7 @@ const Dashboard = () => {
 
                 setDisplayProjects([...displayedProjects, newProject]);
 
-                setProjectModalVisible(!projectModalVisible);
+                setCreateProject_toogle(!createProject_toogle);
             }))
             .catch((error) => {
                 console.log(error);
@@ -152,10 +154,12 @@ const Dashboard = () => {
     const displayNewMilestone = (project) => {
         setActiveProject(project);
 
-        setMilestoneModalVisible(!milestoneModalVisible);
+        setAddMilestone_toogle(!addMilestone_toogle);
     }
 
     const updateProject = (projectId) => {
+        console.log('caling method: updateProject')
+
         axios({
             method: 'get',
             url: baseUrl + `/company/project/${projectId}/`,
@@ -180,18 +184,21 @@ const Dashboard = () => {
 
     return (
         <div className='dashboard'>
-            {
-                projectModalVisible ?
-                    <ProjectInfo createNewProject={createNewProject} toogleVisibility={() => setProjectModalVisible(!projectModalVisible)} />
-                    :
-                    ""
-            }
-            {
-                milestoneModalVisible ?
-                    <MilestoneInfo project={activeProject} updateProject={updateProject} createNewMilestone={createNewProject} toogleVisibility={() => setMilestoneModalVisible(!milestoneModalVisible)} />
-                    :
-                    ""
-            }
+            {createProject_toogle ?
+                <CreateProjectModal
+                    createNewProject={createNewProject}
+                    toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
+                />
+                : ""}
+            {addMilestone_toogle ?
+                <AddMilestoneModal
+                    project={activeProject}
+                    updateProject={updateProject}
+                    createNewMilestone={createNewProject}
+                    toogleVisibility={() => setAddMilestone_toogle(!addMilestone_toogle)}
+                />
+                :
+                ""}
             <header>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
                     <div className="container-fluid">
@@ -202,27 +209,34 @@ const Dashboard = () => {
                     </div>
                 </nav>
                 <nav>
-                    <button type="button" className="btn btn-success" onClick={() => setProjectModalVisible(!projectModalVisible)} >Create Project</button>
+                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => setCreateProject_toogle(!createProject_toogle)} >Add Project</button>
+                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
                 </nav>
             </header>
             <main>
-                {displayedProjects.map((project) => {
-                    return <main className='wrapper-project' key={Math.random() * 100000}>
-                        <div className='cell starting'><div className='rotate'>{project.short_name}</div></div>
-                        <div className='middle'>
-                            {
-                                project.milestone_items.map((milestoneItem) => {
-                                    return < MilestoneTag key={Math.random() * 100000} dateOffset={dateOffset} milestoneItem={milestoneItem} displayLimit={100} />
-                                })
-                            }
-                        </div>
-                        <div className='cell-ending'>
-                            <span className="badge bg-primary" onClick={() => displayNewMilestone(project)}>Add Milestone</span>
-                            <span className="badge bg-secondary">Update</span>
-                            <span className="badge bg-danger">delete</span>
-                        </div>
-                    </main>
-                })
+                {
+                    // displayedProjects.isArray() ?
+                    // displayedProjects !== undefined ?
+                    typeof displayedProjects.map === "function" ?
+                        displayedProjects.map((project) => {
+                            return <main className='wrapper-project' key={Math.random() * 100000}>
+                                <div className='cell starting'><div className='rotate'>{project.short_name}</div></div>
+                                <div className='middle'>
+                                    {
+                                        project.milestone_items.map((milestoneItem) => {
+                                            return < MilestoneTag key={Math.random() * 100000} dateOffset={dateOffset} milestoneItem={milestoneItem} displayLimit={100} />
+                                        })
+                                    }
+                                </div>
+                                <div className='cell-ending'>
+                                    <span className="badge bg-primary" onClick={() => displayNewMilestone(project)}>Add Milestone</span>
+                                    <span className="badge bg-secondary">Update</span>
+                                    <span className="badge bg-danger">delete</span>
+                                </div>
+                            </main>
+                        })
+                        :
+                        ""
                 }
                 <Timeline dateOffset={dateOffset} />
                 <footer className='wrapper-footer'>

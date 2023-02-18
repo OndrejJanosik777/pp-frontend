@@ -19,7 +19,7 @@ const MilestoneTag = (props) => {
         // console.log('KW: ', moment('2023-02-13').isoWeek());            // week starting with Monday
         // console.log('Weekday: ', moment('2023-02-13').isoWeekday());    // week starting with Monday
 
-        if (difference > 0 && difference < props.displayLimit - 1) {
+        if (difference >= 0 && difference < props.displayLimit - 1) {
             setVisible(true);
             setLeftOffset(difference + 1);
         }

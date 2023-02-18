@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { useState } from 'react';
 import './index.scss';
 
-const ProjectInfo = (props) => {
+const CreateProjectModal = (props) => {
     const [name, setName] = useState('');
     const [shortName, setShortName] = useState('');
     const [number, setNumber] = useState('');
@@ -39,4 +39,4 @@ const ProjectInfo = (props) => {
     </div>);
 }
 
-export default ProjectInfo;
+export default CreateProjectModal;
