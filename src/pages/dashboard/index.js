@@ -227,9 +227,6 @@ const Dashboard = () => {
             </header>
             <main>
                 {
-                    // displayedProjects.isArray() ?
-                    // displayedProjects !== undefined ?
-                    // typeof displayedProjects.map === "function" ?
                     displayedProjects.map((project) => {
                         return <main className='wrapper-project' key={Math.random() * 100000}>
                             <div className='cell starting'><div className='rotate'>{project.short_name}</div></div>
@@ -247,8 +244,6 @@ const Dashboard = () => {
                             </div>
                         </main>
                     })
-                    // :
-                    // ""
                 }
                 <Timeline dateOffset={dateOffset} />
                 <footer className='wrapper-footer'>

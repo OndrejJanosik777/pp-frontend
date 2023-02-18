@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
+import editSVG from './assets/pencil-square.svg';
+import deleteSVG from './assets/trash3.svg';
 import axios from 'axios';
 import './index.scss';
 
@@ -92,24 +94,69 @@ const ManageMilestoneTypes = (props) => {
         console.log('milestoneTypes: ', milestoneTypes)
     }
 
+    const editMilestoneType = (id) => {
+        // alert(`updating milestoneType ${id}`);
+
+        const index = milestoneTypes.findIndex(elem => elem.id === id);
+        let selectedMilestoneType = milestoneTypes[index];
+
+        document.getElementById('name').value = selectedMilestoneType.name;
+        document.getElementById('short_name').value = selectedMilestoneType.short_name;
+
+    }
+
+    const deleteMilestoneType = (id) => {
+        // alert(`deleting milestoneType ${id}`);
+
+        const index = milestoneTypes.findIndex(elem => elem.id === id)
+        let deletedMilestoneType = milestoneTypes[index];
+
+        let updatedMilestoneTypes = [...milestoneTypes];
+        updatedMilestoneTypes.splice(index, 1);
+
+        setMilestoneTypes([...updatedMilestoneTypes]);
+
+        axios({
+            method: 'delete',
+            url: baseUrl + `/company/milestone-item-type/${id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+            .then((response => {
+                alert(`${deletedMilestoneType.short_name} : ${deletedMilestoneType.name} is deleted.`)
+            }))
+            .catch((error) => {
+                console.log(error);
+
+                alert('cannot delete this MilestoneItem. It is used in Project.')
+
+                let updatedMilestoneTypes = [...milestoneTypes];
+                // updatedMilestoneTypes.splice(index, 0, deletedMilestoneType);
+                setMilestoneTypes([...updatedMilestoneTypes]);
+            })
+    }
+
     return (<div className='manage-milestone-types'>
         <div className='background'></div>
         <div className='container'>
             <div className='text-center fs-4' onClick={showState}>MANAGE MILESTONE TYPES</div>
             {fetchingMilestoneTypes ?
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only"></span>
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only"></span>
                     </div>
                 </div>
                 :
                 <div>
-                    <table class="table table-sm">
+                    <table className="table table-sm">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">short name</th>
                                 <th scope="col">name</th>
+                                <th scope="col">edit</th>
+                                <th scope="col">delete</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,6 +165,8 @@ const ManageMilestoneTypes = (props) => {
                                     <th scope="row">{milestoneType.id}</th>
                                     <td>{milestoneType.short_name}</td>
                                     <td>{milestoneType.name}</td>
+                                    <td><img className='icons' src={editSVG} alt='' onClick={() => editMilestoneType(milestoneType.id)} /></td>
+                                    <td><img className='icons' src={deleteSVG} alt='' onClick={() => deleteMilestoneType(milestoneType.id)} /></td>
                                 </tr>
                             })}
                         </tbody>
@@ -132,13 +181,13 @@ const ManageMilestoneTypes = (props) => {
                     </div>
                     <div className='actions'>
                         {creatingNewMilestoneType ?
-                            <div class="spinner-border" role="status">
-                                <span class="sr-only"></span>
+                            <div className="spinner-border" role="status">
+                                <span className="sr-only"></span>
                             </div>
                             :
-                            <button type="button" class="btn btn-primary close" onClick={createNewMilestoneType}>CREATE</button>
+                            <button type="button" className="btn btn-primary close" onClick={createNewMilestoneType}>CREATE</button>
                         }
-                        <button type="button" class="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
+                        <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
                     </div>
                 </div>
             }

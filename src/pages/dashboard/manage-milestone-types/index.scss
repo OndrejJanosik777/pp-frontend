@@ -24,9 +24,17 @@
         padding: 2rem;
         opacity: 1;
         position: absolute;
-        width: 30rem;
-        height: min-25rem;
+        min-width: 30rem;
+        min-height: 25rem;
         z-index: 20;
+
+        .icons {
+            &:hover {
+                transform: scale(1.25);
+                transition: 0.1s;
+                cursor: pointer;
+            }
+        }
 
         .actions {
             display: flex;
