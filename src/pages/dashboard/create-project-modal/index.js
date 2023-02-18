@@ -17,6 +17,7 @@ const CreateProjectModal = (props) => {
     }
 
     return (<div className='project-info'>
+        <div className='background'></div>
         <div className='container'>
             <div className='text-center fs-4'>NEW PROJECT</div>
             <div className="form-floating mb-3">

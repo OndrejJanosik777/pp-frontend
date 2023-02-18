@@ -16,7 +16,6 @@ const AddMilestoneModal = (props) => {
     }
 
     const [loaded, setLoaded] = useState([]);
-    const [comment, setComment] = useState('');
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [milestoneItemTypes, setmilestoneItemTypes] = useState([]);
@@ -115,6 +114,7 @@ const AddMilestoneModal = (props) => {
     }
 
     return (<div className='milestone-info'>
+        <div className='background'></div>
         <div className='container'>
             <div className='text-center fs-4' onClick={showState}>NEW MILESTONE</div>
             <div>{props.project.short_name}</div>
