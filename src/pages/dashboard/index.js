@@ -4,6 +4,8 @@ import axios from 'axios';
 import moment from 'moment';
 import MilestoneTag from './milestone-tag';
 import Timeline from './timeline';
+import ProjectInfo from './project-info';
+import MilestoneInfo from './milestone-info';
 import './index.scss';
 
 const Dashboard = () => {
@@ -23,13 +25,16 @@ const Dashboard = () => {
     const [dateOffset, setDateOffset] = useState(0);    // offset from today...
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
+    const [projectModalVisible, setProjectModalVisible] = useState(false);
+    const [milestoneModalVisible, setMilestoneModalVisible] = useState(false);
+    const [activeProject, setActiveProject] = useState({});
 
     // const moment = require('moment');
 
     useEffect(() => {
-        console.log('page DASHBOARD loaded')
+        // console.log('page DASHBOARD loaded')
         // fetchUser();
-        fetchProject(1);
+        fetchProjects();
     }, [loaded]);
 
     const fetchUser = () => {
@@ -68,12 +73,37 @@ const Dashboard = () => {
         })
             .then((response => {
                 console.log(response.data);
+                console.log(response.data);
 
                 // setDisplayProjects([...displayedProjects, response.data]);
-                setDisplayProjects([response.data]);
+                setDisplayProjects(response.data);
             }))
             .catch((error) => {
                 console.log(error);
+            })
+    }
+
+    const fetchProjects = () => {
+        // console.log('fetching project with id: ', projectId);
+
+        axios({
+            method: 'get',
+            url: baseUrl + '/company/project/',
+            headers: {
+                "Authorization": token
+            }
+        })
+            .then((response => {
+                // console.log("projects fetched sucessfully");
+                // console.log(response.data);
+
+                // setDisplayProjects([...displayedProjects, response.data]);
+                setDisplayProjects(...displayedProjects, response.data);
+            }))
+            .catch((error) => {
+                console.log(error);
+
+                alert('problem with fetching projects')
             })
     }
 
@@ -81,28 +111,119 @@ const Dashboard = () => {
         console.log('displayedProjects: ', displayedProjects);
     }
 
+    const createNewProject = (name, shortName, number) => {
+        alert('creating new project');
+
+        axios({
+            method: 'post',
+            url: baseUrl + '/company/project/',
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                name: name,
+                number: number,
+                short_name: shortName,
+                milestone_items: [],
+                monuments: []
+            }
+        })
+            .then((response => {
+                // console.log("projects created sucessfully");
+                let newProject = response.data;
+
+                setDisplayProjects([...displayedProjects, newProject]);
+
+                setProjectModalVisible(!projectModalVisible);
+            }))
+            .catch((error) => {
+                console.log(error);
+
+                alert('problem with creating project')
+            })
+
+
+    }
+
+    const createMilestone = () => {
+        alert('creating milestone...')
+    }
+
+    const displayNewMilestone = (project) => {
+        setActiveProject(project);
+
+        setMilestoneModalVisible(!milestoneModalVisible);
+    }
+
+    const updateProject = (projectId) => {
+        axios({
+            method: 'get',
+            url: baseUrl + `/company/project/${projectId}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+            .then((response => {
+                const index = displayedProjects.findIndex((elem) => elem.id === projectId);
+
+                let newArray = [...displayedProjects];
+                newArray[index] = { ...response.data };
+
+                setDisplayProjects([...newArray]);
+            }))
+            .catch((error) => {
+                console.log(error);
+
+                alert('problem with fetching projects')
+            })
+    }
+
     return (
         <div className='dashboard'>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
-                <div className="container-fluid">
-                    <div className="navbar-brand">Dashboard</div>
-                    <div className="navbar-brand">Months / Weeks / Days</div>
-                    <div className="navbar-brand clicable" onClick={() => setDateOffset(0)}>{moment().format('LLLL')}</div>
-                    <div className="navbar-brand">username</div>
-                </div>
-            </nav>
+            {
+                projectModalVisible ?
+                    <ProjectInfo createNewProject={createNewProject} toogleVisibility={() => setProjectModalVisible(!projectModalVisible)} />
+                    :
+                    ""
+            }
+            {
+                milestoneModalVisible ?
+                    <MilestoneInfo project={activeProject} updateProject={updateProject} createNewMilestone={createNewProject} toogleVisibility={() => setMilestoneModalVisible(!milestoneModalVisible)} />
+                    :
+                    ""
+            }
+            <header>
+                <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
+                    <div className="container-fluid">
+                        <div className="navbar-brand">Dashboard</div>
+                        <div className="navbar-brand">Months / Weeks / Days</div>
+                        <div className="navbar-brand clicable" onClick={() => setDateOffset(0)}>{moment().format('LLLL')}</div>
+                        <div className="navbar-brand">username</div>
+                    </div>
+                </nav>
+                <nav>
+                    <button type="button" className="btn btn-success" onClick={() => setProjectModalVisible(!projectModalVisible)} >Create Project</button>
+                </nav>
+            </header>
             <main>
                 {displayedProjects.map((project) => {
                     return <main className='wrapper-project' key={Math.random() * 100000}>
-                        <div className='cell starting'><div className='rotate'>{project.name}</div></div>
+                        <div className='cell starting'><div className='rotate'>{project.short_name}</div></div>
                         <div className='middle'>
-                            {project.milestone_plan.milestone_items.map((milestoneItem) => {
-                                return < MilestoneTag dateOffset={dateOffset} milestoneItem={milestoneItem} displayLimit={100} />
-                            })}
+                            {
+                                project.milestone_items.map((milestoneItem) => {
+                                    return < MilestoneTag key={Math.random() * 100000} dateOffset={dateOffset} milestoneItem={milestoneItem} displayLimit={100} />
+                                })
+                            }
                         </div>
-                        <div className='cell starting'></div>
+                        <div className='cell-ending'>
+                            <span className="badge bg-primary" onClick={() => displayNewMilestone(project)}>Add Milestone</span>
+                            <span className="badge bg-secondary">Update</span>
+                            <span className="badge bg-danger">delete</span>
+                        </div>
                     </main>
-                })}
+                })
+                }
                 <Timeline dateOffset={dateOffset} />
                 <footer className='wrapper-footer'>
                     <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>previous</div>

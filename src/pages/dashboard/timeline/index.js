@@ -11,7 +11,7 @@ const Timeline = (props) => {
     const [dates, setDates] = useState([])
 
     useEffect(() => {
-        console.log('component Timeline loaded/updated')
+        // console.log('component Timeline loaded/updated')
         let _dates = [];
 
         for (let i = 0; i < 100; i++) {
@@ -20,7 +20,7 @@ const Timeline = (props) => {
         }
 
         let _isoWeekDay = moment().add(props.dateOffset).isoWeekday();
-        console.log('_isoWeekDay: ', _isoWeekDay);
+        // console.log('_isoWeekDay: ', _isoWeekDay);
 
         if (_isoWeekDay !== 1) {
 
@@ -54,7 +54,7 @@ const Timeline = (props) => {
         color: green;
         display: grid;
         grid-template-columns: repeat(2, 7rem);
-        padding-left: ${7}rem;
+        padding-left: ${9}rem;
         position: relative;
         font-size: 0.5rem;
         align-items: center;
