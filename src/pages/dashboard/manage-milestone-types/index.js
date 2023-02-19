@@ -22,6 +22,9 @@ const ManageMilestoneTypes = (props) => {
     const [milestoneTypes, setMilestoneTypes] = useState([]);
     const [fetchingMilestoneTypes, setFetchingMilestoneTypes] = useState(true);
     const [creatingNewMilestoneType, setCreatingNewMilestoneType] = useState(false);
+    const [updateMode, setUpdateMode] = useState(false);
+    const [updatedId, setUpdatedId] = useState(0);
+    const [updatingMilestoneType, setUpdatingMilestoneType] = useState(false);
 
     useEffect(() => {
         fetchMilestoneItemTypes();
@@ -103,6 +106,8 @@ const ManageMilestoneTypes = (props) => {
         document.getElementById('name').value = selectedMilestoneType.name;
         document.getElementById('short_name').value = selectedMilestoneType.short_name;
 
+        setUpdateMode(true);
+        setUpdatedId(id);
     }
 
     const deleteMilestoneType = (id) => {
@@ -124,7 +129,7 @@ const ManageMilestoneTypes = (props) => {
             }
         })
             .then((response => {
-                alert(`${deletedMilestoneType.short_name} : ${deletedMilestoneType.name} is deleted.`)
+                // alert(`${deletedMilestoneType.short_name} : ${deletedMilestoneType.name} is deleted.`)
             }))
             .catch((error) => {
                 console.log(error);
@@ -134,6 +139,45 @@ const ManageMilestoneTypes = (props) => {
                 let updatedMilestoneTypes = [...milestoneTypes];
                 // updatedMilestoneTypes.splice(index, 0, deletedMilestoneType);
                 setMilestoneTypes([...updatedMilestoneTypes]);
+            })
+    }
+
+    const updateMilestoneType = () => {
+        // alert(`updating milestoneType ${id}`);
+        let newName = document.getElementById('name').value;
+        let newShortName = document.getElementById('short_name').value;
+
+        const index = milestoneTypes.findIndex(elem => elem.id === updatedId)
+        let updatedMilestoneType = milestoneTypes[index];
+        updatedMilestoneType.id = updatedId;
+        updatedMilestoneType.name = newName;
+        updatedMilestoneType.short_name = newShortName;
+
+        let updatedMilestoneTypes = [...milestoneTypes];
+        updatedMilestoneTypes.splice(index, 1, updatedMilestoneType);
+
+        setMilestoneTypes([...updatedMilestoneTypes]);
+        setUpdatingMilestoneType(true);
+
+        axios({
+            method: 'put',
+            url: baseUrl + `/company/milestone-item-type/${updatedId}/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                id: updatedMilestoneType.id,
+                name: updatedMilestoneType.name,
+                short_name: updatedMilestoneType.short_name,
+            }
+        })
+            .then((response => {
+                // alert(`${updatedMilestoneType.short_name} : ${updatedMilestoneType.name} is updated.`)
+                setUpdatingMilestoneType(false);
+            }))
+            .catch((error) => {
+                console.log(error);
+                alert('problem with updating Milestone Type.')
             })
     }
 
@@ -179,16 +223,29 @@ const ManageMilestoneTypes = (props) => {
                         <input type="text" className="form-control" id="name" />
                         <label htmlFor="name">name</label>
                     </div>
-                    <div className='actions'>
-                        {creatingNewMilestoneType ?
-                            <div className="spinner-border" role="status">
-                                <span className="sr-only"></span>
-                            </div>
-                            :
-                            <button type="button" className="btn btn-primary close" onClick={createNewMilestoneType}>CREATE</button>
-                        }
-                        <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
-                    </div>
+                    {updateMode ?
+                        <div className='actions'>
+                            {updatingMilestoneType ?
+                                <div className="spinner-border" role="status">
+                                    <span className="sr-only"></span>
+                                </div>
+                                :
+                                <button type="button" className="btn btn-primary close" onClick={updateMilestoneType}>UPDATE</button>
+                            }
+                            <button type="button" className="btn btn-danger close" onClick={() => setUpdateMode(false)}>CANCEL UPDATE</button>
+                        </div>
+                        :
+                        <div className='actions'>
+                            {creatingNewMilestoneType ?
+                                <div className="spinner-border" role="status">
+                                    <span className="sr-only"></span>
+                                </div>
+                                :
+                                <button type="button" className="btn btn-primary close" onClick={createNewMilestoneType}>CREATE</button>
+                            }
+                            <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
+                        </div>
+                    }
                 </div>
             }
         </div>
