@@ -8,6 +8,7 @@ import Timeline from './timeline';
 import CreateProjectModal from './create-project-modal';
 import AddMilestoneModal from './create-milestone-modal';
 import ManageMilestoneTypes from './manage-milestone-types';
+import DeleteWarning from './delete-warning';
 import './index.scss';
 
 const Dashboard = () => {
@@ -29,10 +30,12 @@ const Dashboard = () => {
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     // modal toogles
     const [createProject_toogle, setCreateProject_toogle] = useState(false);
+    const [deleteWarning_toogle, setDeleteWarning_toogle] = useState(false);
     const [addMilestone_toogle, setAddMilestone_toogle] = useState(false);
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
     // rest
     const [activeProject, setActiveProject] = useState({});
+    const [warningText, setWarningText] = useState('');
     // const moment = require('moment');
 
     useEffect(() => {
@@ -117,7 +120,7 @@ const Dashboard = () => {
     }
 
     const createNewProject = (name, shortName, number) => {
-        alert('creating new project');
+        // alert('creating new project');
 
         axios({
             method: 'post',
@@ -152,6 +155,41 @@ const Dashboard = () => {
 
     const createMilestone = () => {
         alert('creating milestone...')
+    }
+
+    const displayDeleteProjectWarning = (project) => {
+        setActiveProject(project);
+        setWarningText('Are you sure to delete following project?')
+        setDeleteWarning_toogle(!deleteWarning_toogle);
+    }
+
+    const deleteProject = () => {
+        // console.log(activeProject.id);
+        // console.log(activeProject.name);
+
+        const index = displayedProjects.findIndex(elem => elem.id === activeProject.id)
+
+        let modifiedProjects = [...displayedProjects];
+        modifiedProjects.splice(index, 1);
+
+        setDisplayProjects([...modifiedProjects]);
+
+        axios({
+            method: 'delete',
+            url: baseUrl + `/company/project/${activeProject.id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+            .then((response => {
+                setDeleteWarning_toogle(!deleteWarning_toogle);
+            }))
+            .catch((error) => {
+                console.log(error);
+
+                alert('Error: Project cannot be deleted.')
+            })
+
     }
 
     const displayNewMilestone = (project) => {
@@ -191,6 +229,14 @@ const Dashboard = () => {
                 <CreateProjectModal
                     createNewProject={createNewProject}
                     toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
+                />
+                : ""}
+            {deleteWarning_toogle ?
+                <DeleteWarning
+                    project={activeProject}
+                    text={warningText}
+                    action={deleteProject}
+                    toogleVisibility={() => setDeleteWarning_toogle(!deleteWarning_toogle)}
                 />
                 : ""}
             {addMilestone_toogle ?
@@ -233,14 +279,27 @@ const Dashboard = () => {
                             <div className='middle'>
                                 {
                                     project.milestone_items.map((milestoneItem) => {
-                                        return < MilestoneTag key={Math.random() * 100000} dateOffset={dateOffset} milestoneItem={milestoneItem} displayLimit={100} />
+                                        return < MilestoneTag
+                                            key={Math.random() * 100000}
+                                            dateOffset={dateOffset}
+                                            milestoneItem={milestoneItem}
+                                            displayLimit={100}
+                                        />
                                     })
                                 }
                             </div>
                             <div className='cell-ending'>
-                                <span className="badge bg-primary" onClick={() => displayNewMilestone(project)}>Add Milestone</span>
+                                <span
+                                    className="badge bg-primary"
+                                    onClick={() => displayNewMilestone(project)}>
+                                    Add Milestone
+                                </span>
                                 <span className="badge bg-secondary">Update</span>
-                                <span className="badge bg-danger">delete</span>
+                                <span
+                                    className="badge bg-danger"
+                                    onClick={() => displayDeleteProjectWarning(project)} >
+                                    delete
+                                </span>
                             </div>
                         </main>
                     })

@@ -135,7 +135,7 @@ const AddMilestoneModal = (props) => {
                 <label for="deadline">Milestone deadline:</label>
                 <input type="date" id="deadline" name="deadline" />
             </div>
-            <div class="btn-group">
+            <div className="btn-group">
             </div>
             <div className="form-floating mb-3">
                 <input type="text" className="form-control" id="comment" />

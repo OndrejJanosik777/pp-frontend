@@ -21,14 +21,17 @@ const MilestoneTag = (props) => {
 
         if (difference >= 0 && difference < props.displayLimit - 1) {
             setVisible(true);
-            setLeftOffset(difference + 1);
+            if (difference === 0) {
+                setLeftOffset(difference + 1);
+            }
+            setLeftOffset(difference);
         }
 
 
 
     }, [loaded, props.dateOffset]);
 
-    const Tag = styled.strong`
+    const Tag = styled.div`
     padding-left: ${leftOffset}rem
     `
 
