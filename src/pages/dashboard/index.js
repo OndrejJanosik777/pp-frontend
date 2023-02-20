@@ -91,7 +91,7 @@ const Dashboard = () => {
     }
 
     const fetchProjects = () => {
-        // console.log('fetching project with id: ', projectId);
+        console.log('fetching projects');
 
         axios({
             method: 'get',
@@ -304,16 +304,17 @@ const Dashboard = () => {
                         </main>
                     })
                 }
-                <Timeline dateOffset={dateOffset} />
+                <Timeline
+                    dateOffset={dateOffset}
+                    displayLimit={100}
+                />
                 <footer className='wrapper-footer'>
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>previous</div>
-                    {/* <div className='cell-footer'>{moment().add(dateOffset - 1, 'M').format('MMMM YYYY')}</div>
-                    <div className='cell-footer'>{moment().add(dateOffset, 'M').format('MMMM YYYY')}</div>
-                    <div className='cell-footer'>{moment().add(dateOffset + 1, 'M').format('MMMM YYYY')}</div>
-                    <div className='cell-footer'>{moment().add(dateOffset + 2, 'M').format('MMMM YYYY')}</div>
-                    <div className='cell-footer'>{moment().add(dateOffset + 3, 'M').format('MMMM YYYY')}</div>
-                    <div className='cell-footer'>{moment().add(dateOffset + 4, 'M').format('MMMM YYYY')}</div> */}
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 1)}>next</div>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>- DAYS</div>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 1)}>+ DAYS</div>
+                </footer>
+                <footer className='wrapper-footer'>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 7)}>- WEEKS</div>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 7)}>+ WEEKS</div>
                 </footer>
             </main>
         </div>);
