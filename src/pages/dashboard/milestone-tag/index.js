@@ -9,21 +9,19 @@ const MilestoneTag = (props) => {
     const [visible, setVisible] = useState(false)
 
     useEffect(() => {
-        // console.log('component Milestonetag loaded/updated')
-
         let date_now = moment().add(props.dateOffset, 'days');
         let eventDate = moment(props.milestoneItem.date);
         let difference = eventDate.diff(date_now, "days");
 
-        // console.log('difference: ', difference);
+        if (date_now.year() <= eventDate.year() && date_now.dayOfYear() < eventDate.dayOfYear()) {
+            difference = difference + 1;
+        }
+
         // console.log('KW: ', moment('2023-02-13').isoWeek());            // week starting with Monday
         // console.log('Weekday: ', moment('2023-02-13').isoWeekday());    // week starting with Monday
 
         if (difference >= 0 && difference < props.displayLimit - 1) {
             setVisible(true);
-            if (difference === 0) {
-                setLeftOffset(difference + 1);
-            }
             setLeftOffset(difference);
         }
 
