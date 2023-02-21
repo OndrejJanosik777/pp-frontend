@@ -3,8 +3,11 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import WeekCell from './weekCell';
+import MonthCell from './monthCell';
+import MonthTimeLine from './months-timeline';
 import './index.scss';
 
+//dateOffset, displayLimit
 const Timeline = (props) => {
     const [loaded, setLoaded] = useState([]);
     // const [startingDay, setStartingDay] = useState(moment().add(props.dateOffset))
@@ -13,10 +16,27 @@ const Timeline = (props) => {
     const [dates, setDates] = useState([])
 
     useEffect(() => {
-        console.log('component Timeline loaded/updated')
+        console.log('---------------------------------')
+        console.log('*** COMPONENT TIMELINE LOADED ***')
+        console.log('---------------------------------')
 
         let _dates = [];
-        let date_now = moment().add(props.dateOffset, 'days');
+        let startDate = moment().add(props.dateOffset, 'days');
+        console.log(`startDate: ${startDate}`);
+        let endDate = moment().add(props.dateOffset + props.displayLimit - 1, 'days');
+        console.log(`endDate: ${endDate}`);
+
+
+        let startDay = startDate.format('D')
+        console.log(`startDay: ${startDay}`);
+        let startWeek = startDate.format('WW')
+        console.log(`startWeek: ${startWeek}`);
+        let startMonth = startDate.format('MMMM')
+        console.log(`startMonth: ${startMonth}`);
+        let startYear = startDate.format('YYYY')
+        console.log(`startYear: ${startYear}`);
+        let dayInMonths = startDate.daysInMonth();
+        console.log(`dayInMonths: ${dayInMonths}`);
 
         for (let i = 0; i < 100; i++) {
             let dd = moment().add(i + props.dateOffset, 'days').format("D");
@@ -27,17 +47,18 @@ const Timeline = (props) => {
         // console.log('_isoWeekDay: ', _isoWeekDay);
 
         console.log(`props.dateOffset: ${props.dateOffset}`);
-        console.log(`date_now: ${date_now}`);
-        console.log(`date_now.isoWeekday(): ${date_now.isoWeekday()}`);
-        console.log(`date_now.isoWeeks(): ${date_now.isoWeeks()}`);
+        console.log(`props.displayLimit: ${props.displayLimit}`);
 
-        let daysToNextKW = 8 - date_now.isoWeekday();
-        let nextKWNumber = date_now.isoWeeks() + 1;
+        console.log(`date_now.isoWeekday(): ${startDate.isoWeekday()}`);
+        console.log(`date_now.isoWeeks(): ${startDate.isoWeeks()}`);
+
+        let daysToNextKW = 8 - startDate.isoWeekday();
+        let nextKWNumber = startDate.isoWeeks() + 1;
 
         // do correction if (7)
         if (daysToNextKW === 7) {
             daysToNextKW = 0;
-            nextKWNumber = date_now.isoWeeks();
+            nextKWNumber = startDate.isoWeeks();
         }
 
         let weeksCount = Math.floor((props.displayLimit - daysToNextKW) / 7);
@@ -66,7 +87,6 @@ const Timeline = (props) => {
         font-size: 0.5rem;
         align-items: center;
     `
-
     const DayCell = styled.div`
         border: 1px solid black;
         width: 1rem;
@@ -75,7 +95,6 @@ const Timeline = (props) => {
         justify-content: center;
         align-items: center;
     `
-
     const WeekTimeLine = styled.strong`
         color: green;
         display: flexbox;
@@ -85,6 +104,7 @@ const Timeline = (props) => {
         font-size: 0.5rem;
         align-items: center;
     `
+
 
     return (<div>
         <DayTimeLine>
@@ -98,9 +118,11 @@ const Timeline = (props) => {
             {visibleWeeks.map((weekNumber) => {
                 return <WeekCell key={Math.random() * 100000} weekNumber={weekNumber} />
             })}
-            {/* <WeekCell weekNumber={9} /> */}
-            {/* <WeekCell weekNumber={10} /> */}
         </WeekTimeLine>
+        <MonthTimeLine
+            startDate={moment().add(props.dateOffset, 'days')}
+            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+        />
     </div>);
 }
 
