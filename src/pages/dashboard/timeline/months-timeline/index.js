@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import MonthCell from '../monthCell';
+import MonthCell from './monthCell';
 import moment from 'moment';
 
 // startDate, endDate
@@ -72,7 +72,7 @@ const MonthTimeLine = (props) => {
 
     return (<MonthContainer>
         {months.map((month) => {
-            return <MonthCell label={month} />
+            return <MonthCell key={Math.random() * 100000} label={month} />
         })}
     </MonthContainer>);
 }

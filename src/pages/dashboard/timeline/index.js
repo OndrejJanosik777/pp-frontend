@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import WeekCell from './weekCell';
-import MonthCell from './monthCell';
 import MonthTimeLine from './months-timeline';
+import WeeksTimeLine from './weeks-timeline';
 import './index.scss';
 
 //dateOffset, displayLimit
@@ -22,21 +21,21 @@ const Timeline = (props) => {
 
         let _dates = [];
         let startDate = moment().add(props.dateOffset, 'days');
-        console.log(`startDate: ${startDate}`);
+        // console.log(`startDate: ${startDate}`);
         let endDate = moment().add(props.dateOffset + props.displayLimit - 1, 'days');
-        console.log(`endDate: ${endDate}`);
+        // console.log(`endDate: ${endDate}`);
 
 
         let startDay = startDate.format('D')
-        console.log(`startDay: ${startDay}`);
+        // console.log(`startDay: ${startDay}`);
         let startWeek = startDate.format('WW')
-        console.log(`startWeek: ${startWeek}`);
+        // console.log(`startWeek: ${startWeek}`);
         let startMonth = startDate.format('MMMM')
-        console.log(`startMonth: ${startMonth}`);
+        // console.log(`startMonth: ${startMonth}`);
         let startYear = startDate.format('YYYY')
-        console.log(`startYear: ${startYear}`);
+        // console.log(`startYear: ${startYear}`);
         let dayInMonths = startDate.daysInMonth();
-        console.log(`dayInMonths: ${dayInMonths}`);
+        // console.log(`dayInMonths: ${dayInMonths}`);
 
         for (let i = 0; i < 100; i++) {
             let dd = moment().add(i + props.dateOffset, 'days').format("D");
@@ -46,11 +45,11 @@ const Timeline = (props) => {
         let _isoWeekDay = moment().add(props.dateOffset).isoWeekday();
         // console.log('_isoWeekDay: ', _isoWeekDay);
 
-        console.log(`props.dateOffset: ${props.dateOffset}`);
-        console.log(`props.displayLimit: ${props.displayLimit}`);
+        // console.log(`props.dateOffset: ${props.dateOffset}`);
+        // console.log(`props.displayLimit: ${props.displayLimit}`);
 
-        console.log(`date_now.isoWeekday(): ${startDate.isoWeekday()}`);
-        console.log(`date_now.isoWeeks(): ${startDate.isoWeeks()}`);
+        // console.log(`date_now.isoWeekday(): ${startDate.isoWeekday()}`);
+        // console.log(`date_now.isoWeeks(): ${startDate.isoWeeks()}`);
 
         let daysToNextKW = 8 - startDate.isoWeekday();
         let nextKWNumber = startDate.isoWeeks() + 1;
@@ -63,9 +62,9 @@ const Timeline = (props) => {
 
         let weeksCount = Math.floor((props.displayLimit - daysToNextKW) / 7);
 
-        console.log(`daysToNextKW: ${daysToNextKW}`);
-        console.log(`nextKWNumber: ${nextKWNumber}`);
-        console.log(`weeksCount: ${weeksCount}`);
+        // console.log(`daysToNextKW: ${daysToNextKW}`);
+        // console.log(`nextKWNumber: ${nextKWNumber}`);
+        // console.log(`weeksCount: ${weeksCount}`);
 
         let KWNumbers = [];
 
@@ -95,17 +94,6 @@ const Timeline = (props) => {
         justify-content: center;
         align-items: center;
     `
-    const WeekTimeLine = styled.strong`
-        color: green;
-        display: flexbox;
-        // grid-template-columns: repeat(2, 7rem);
-        padding-left: ${weekOffset + 5}rem;
-        position: relative;
-        font-size: 0.5rem;
-        align-items: center;
-    `
-
-
     return (<div>
         <DayTimeLine>
             <div></div>
@@ -114,11 +102,10 @@ const Timeline = (props) => {
             })}
             <div></div>
         </DayTimeLine>
-        <WeekTimeLine>
-            {visibleWeeks.map((weekNumber) => {
-                return <WeekCell key={Math.random() * 100000} weekNumber={weekNumber} />
-            })}
-        </WeekTimeLine>
+        <WeeksTimeLine
+            startDate={moment().add(props.dateOffset, 'days')}
+            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+        />
         <MonthTimeLine
             startDate={moment().add(props.dateOffset, 'days')}
             endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
