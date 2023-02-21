@@ -33,7 +33,7 @@ const MonthTimeLine = (props) => {
 
         for (let i = 0; i < monthsDifference; i++) {
             let _month = moment().month(parseInt(startingMonth) + i - 1).format('MMMM');
-            console.log('MONTH: ', _month);
+            // console.log('MONTH: ', _month);
             _months.push(_month);
         }
 

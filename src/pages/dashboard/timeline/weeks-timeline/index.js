@@ -34,7 +34,7 @@ const WeeksTimeLine = (props) => {
 
         for (let i = 0; i < numberOfWeeks; i++) {
             let _week = moment().week(parseInt(startingWeek) + i).isoWeek();
-            console.log('week: ', _week);
+            // console.log('week: ', _week);
             _weeks.push(_week);
         }
 

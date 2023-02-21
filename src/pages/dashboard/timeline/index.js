@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import MonthTimeLine from './months-timeline';
 import WeeksTimeLine from './weeks-timeline';
+import DaysTimeLine from './days-timeline';
 import './index.scss';
 
 //dateOffset, displayLimit
@@ -95,13 +96,17 @@ const Timeline = (props) => {
         align-items: center;
     `
     return (<div>
-        <DayTimeLine>
+        {/* <DayTimeLine>
             <div></div>
             {dates.map((day) => {
                 return <DayCell key={Math.random() * 100000}>{day}</DayCell>;
             })}
             <div></div>
-        </DayTimeLine>
+        </DayTimeLine> */}
+        <DaysTimeLine
+            startDate={moment().add(props.dateOffset, 'days')}
+            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+        />
         <WeeksTimeLine
             startDate={moment().add(props.dateOffset, 'days')}
             endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
