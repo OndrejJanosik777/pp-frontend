@@ -36,18 +36,13 @@ const Dashboard = () => {
     // rest
     const [activeProject, setActiveProject] = useState({});
     const [warningText, setWarningText] = useState('');
-    // const moment = require('moment');
 
     useEffect(() => {
-        // console.log('page DASHBOARD loaded')
-        // fetchUser();
         fetchProjects();
     }, [loaded]);
 
     const fetchUser = () => {
-        console.log('displaying user info')
 
-        // let token = "Bearer " + localStorage.getItem('PP-token');
 
         axios({
             method: 'post',
@@ -79,10 +74,6 @@ const Dashboard = () => {
             }
         })
             .then((response => {
-                console.log(response.data);
-                console.log(response.data);
-
-                // setDisplayProjects([...displayedProjects, response.data]);
                 setDisplayProjects(response.data);
             }))
             .catch((error) => {
@@ -91,8 +82,6 @@ const Dashboard = () => {
     }
 
     const fetchProjects = () => {
-        console.log('fetching projects');
-
         axios({
             method: 'get',
             url: baseUrl + '/company/project/',
@@ -101,11 +90,6 @@ const Dashboard = () => {
             }
         })
             .then((response => {
-                // console.log("projects fetched sucessfully");
-                // console.log(response.data);
-
-                // setDisplayProjects([...displayedProjects, response.data]);
-                // setDisplayProjects(...displayedProjects, response.data);
                 setDisplayProjects(response.data);
             }))
             .catch((error) => {
@@ -135,9 +119,6 @@ const Dashboard = () => {
     }
 
     const deleteProject = () => {
-        // console.log(activeProject.id);
-        // console.log(activeProject.name);
-
         const index = displayedProjects.findIndex(elem => elem.id === activeProject.id)
 
         let modifiedProjects = [...displayedProjects];
@@ -170,8 +151,6 @@ const Dashboard = () => {
     }
 
     const updateProject = (projectId) => {
-        console.log('caling method: updateProject')
-
         axios({
             method: 'get',
             url: baseUrl + `/company/project/${projectId}/`,
@@ -245,6 +224,10 @@ const Dashboard = () => {
             <main>
                 {
                     displayedProjects.map((project) => {
+                        project.milestone_items.sort((a, b) => {
+                            return moment(a.date) - moment(b.date);
+                        })
+
                         return <main className='wrapper-project' key={Math.random() * 100000}>
                             <div className='cell starting'><div className='rotate'>{project.short_name}</div></div>
                             <div className='middle'>

@@ -19,6 +19,7 @@ const AddMilestoneModal = (props) => {
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [milestoneItemTypes, setmilestoneItemTypes] = useState([]);
+    const [showSpinnerCreate, setShowSpinnerCreate] = useState(false);
 
     useEffect(() => {
         fetchMilestoneItemTypes();
@@ -58,7 +59,9 @@ const AddMilestoneModal = (props) => {
 
         let newMilestoneItemId = {};
 
-        props.toogleVisibility();
+
+
+        setShowSpinnerCreate(true);
 
         // first create a milestone
         try {
@@ -83,6 +86,10 @@ const AddMilestoneModal = (props) => {
             console.log(error);
 
             alert('problem with creating new milestone item')
+
+            setShowSpinnerCreate(false);
+
+            props.toogleVisibility();
         }
 
         // now assign new milestone to project
@@ -101,11 +108,19 @@ const AddMilestoneModal = (props) => {
                 // console.log('succesfully assigned to project: ', response.data);
 
                 props.updateProject(props.project.id);
+
+                setShowSpinnerCreate(false);
+
+                props.toogleVisibility();
             }))
             .catch((error) => {
                 console.log(error);
 
                 alert('problem with fetching milestone item types')
+
+                setShowSpinnerCreate(false);
+
+                props.toogleVisibility();
             })
     }
 
@@ -127,12 +142,12 @@ const AddMilestoneModal = (props) => {
                 <select name="types" id="type-select">
                     <option value="">--Please choose an option--</option>
                     {milestoneItemTypes.map((type) => {
-                        return <option>{`${type.name}`}</option>;
+                        return <option key={Math.random() * 100000}>{`${type.name}`}</option>;
                     })}
                 </select>
             </div>
             <div className='row'>
-                <label for="deadline">Milestone deadline:</label>
+                <label htmlFor="deadline">Milestone deadline:</label>
                 <input type="date" id="deadline" name="deadline" />
             </div>
             <div className="btn-group">
@@ -142,7 +157,13 @@ const AddMilestoneModal = (props) => {
                 <label htmlFor="name">comment</label>
             </div>
             <div className='actions'>
-                <button type="button" className="btn btn-primary close" onClick={createNewMilestone}>CREATE</button>
+                {showSpinnerCreate ?
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only"></span>
+                    </div>
+                    :
+                    <button type="button" className="btn btn-primary close" onClick={createNewMilestone}>CREATE</button>
+                }
                 <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
             </div>
         </div>
