@@ -1,15 +1,55 @@
 import React, { Component } from 'react';
 import { useState } from 'react';
+import axios from 'axios';
 import './index.scss';
 
 const CreateProjectModal = (props) => {
+    const getBaseUrl = () => {
+        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+            // dev code
+            return 'http://127.0.0.1:8000';
+        } else {
+            // production code
+            return 'https://pp--backend.herokuapp.com';
+        }
+    }
+
     const [name, setName] = useState('');
+    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [shortName, setShortName] = useState('');
     const [number, setNumber] = useState('');
+    const [showSpinnerCreateProject, setShowSpinnerCreateProject] = useState(false);
 
     const checkInputData = () => {
         if (name !== "" && shortName !== "" && number !== "") {
-            props.createNewProject(name, shortName, number);
+            setShowSpinnerCreateProject(true);
+
+            axios({
+                method: 'post',
+                url: baseUrl + '/company/project/',
+                headers: {
+                    "Authorization": token
+                },
+                data: {
+                    name: name,
+                    number: number,
+                    short_name: shortName,
+                    milestone_items: [],
+                    monuments: []
+                }
+            })
+                .then((response => {
+                    // console.log("projects created sucessfully");
+                    props.addNewProject(response.data);
+                    setShowSpinnerCreateProject(false);
+                }))
+                .catch((error) => {
+                    console.log(error);
+
+                    alert('problem with creating project')
+                })
+
         }
         else {
             alert('Invalid Data');
@@ -33,7 +73,13 @@ const CreateProjectModal = (props) => {
                 <label htmlFor="name">short name</label>
             </div>
             <div className='actions'>
-                <button type="button" className="btn btn-primary close" onClick={checkInputData}>CREATE</button>
+                {showSpinnerCreateProject ?
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only"></span>
+                    </div>
+                    :
+                    <button type="button" className="btn btn-primary close" onClick={checkInputData}>CREATE</button>
+                }
                 <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
             </div>
         </div>

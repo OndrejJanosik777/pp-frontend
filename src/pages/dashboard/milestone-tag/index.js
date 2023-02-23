@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import './index.scss';
 import moment from 'moment';
 
 const MilestoneTag = (props) => {
@@ -36,7 +36,8 @@ const MilestoneTag = (props) => {
     return (<div>
         {visible ?
             <div style={TagStyle}>
-                <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top!!">
+                {/* <button type="button" className="badge bg-primary slight-side-margin dragable" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top!!"> */}
+                <button type="button" className="dragable" title={props.milestoneItem.milestone_item_type.name}>
                     {props.milestoneItem.milestone_item_type.short_name}
                     {/* test */}
                 </button>

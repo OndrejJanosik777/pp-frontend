@@ -7,14 +7,12 @@ const DeleteWarning = (props) => {
     const [name, setName] = useState('');
     const [shortName, setShortName] = useState('');
     const [number, setNumber] = useState('');
+    const [showSpinnerDelete, setShowSpinnerDelete] = useState(false);
 
-    const checkInputData = () => {
-        // if (name !== "" && shortName !== "" && number !== "") {
-        //     props.createNewProject(name, shortName, number);
-        // }
-        // else {
-        //     alert('Invalid Data');
-        // }
+    const activateAction = () => {
+        setShowSpinnerDelete(true);
+
+        props.action();
     }
 
     return (<div className='delete-warning'>
@@ -22,20 +20,14 @@ const DeleteWarning = (props) => {
         <div className='container'>
             <div className='text-center fs-4'>{props.text}</div>
             <div className='text-center fs-4'>{props.project.name}</div>
-            {/* <div className="form-floating mb-3">
-                <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-                <label htmlFor="name">name</label>
-            </div>
-            <div className="form-floating mb-3">
-                <input type="text" className="form-control" id="name" value={number} onChange={(e) => setNumber(e.target.value)} />
-                <label htmlFor="name">number</label>
-            </div>
-            <div className="form-floating mb-3">
-                <input type="text" className="form-control" id="name" value={shortName} onChange={(e) => setShortName(e.target.value)} />
-                <label htmlFor="name">short name</label>
-            </div> */}
             <div className='actions'>
-                <button type="button" className="btn btn-danger close" onClick={props.action}>DELETE</button>
+                {showSpinnerDelete ?
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only"></span>
+                    </div>
+                    :
+                    <button type="button" className="btn btn-danger close" onClick={activateAction}>DELETE</button>
+                }
                 <button type="button" className="btn btn-primary close" onClick={props.toogleVisibility}>CANCEL</button>
             </div>
         </div>

@@ -119,38 +119,9 @@ const Dashboard = () => {
         console.log('displayedProjects: ', displayedProjects);
     }
 
-    const createNewProject = (name, shortName, number) => {
-        // alert('creating new project');
-
-        axios({
-            method: 'post',
-            url: baseUrl + '/company/project/',
-            headers: {
-                "Authorization": token
-            },
-            data: {
-                name: name,
-                number: number,
-                short_name: shortName,
-                milestone_items: [],
-                monuments: []
-            }
-        })
-            .then((response => {
-                // console.log("projects created sucessfully");
-                let newProject = response.data;
-
-                setDisplayProjects([...displayedProjects, newProject]);
-
-                setCreateProject_toogle(!createProject_toogle);
-            }))
-            .catch((error) => {
-                console.log(error);
-
-                alert('problem with creating project')
-            })
-
-
+    const addNewProject = (project) => {
+        setDisplayProjects([...displayedProjects, project]);
+        setCreateProject_toogle(!createProject_toogle);
     }
 
     const createMilestone = () => {
@@ -227,7 +198,7 @@ const Dashboard = () => {
         <div className='dashboard'>
             {createProject_toogle ?
                 <CreateProjectModal
-                    createNewProject={createNewProject}
+                    addNewProject={addNewProject}
                     toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
                 />
                 : ""}
@@ -243,7 +214,7 @@ const Dashboard = () => {
                 <AddMilestoneModal
                     project={activeProject}
                     updateProject={updateProject}
-                    createNewMilestone={createNewProject}
+                    createNewMilestone={addNewProject}
                     toogleVisibility={() => setAddMilestone_toogle(!addMilestone_toogle)}
                 />
                 :
@@ -252,7 +223,7 @@ const Dashboard = () => {
                 <ManageMilestoneTypes
                     project={activeProject}
                     updateProject={updateProject}
-                    createNewMilestone={createNewProject}
+                    createNewMilestone={addNewProject}
                     toogleVisibility={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
                 />
                 :

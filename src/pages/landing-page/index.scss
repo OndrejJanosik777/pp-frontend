@@ -12,6 +12,11 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 5rem;
+
+        .input {
+            width: 25rem;
+        }
     }
 }

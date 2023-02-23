@@ -21,6 +21,7 @@ const LandingPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    const [showSpinnerLogin, setShowSpinnerLogin] = useState(false);
 
     const showState = () => {
         console.log('username: ', username);
@@ -28,6 +29,8 @@ const LandingPage = () => {
     }
 
     const loggingIn = () => {
+        setShowSpinnerLogin(true);
+
         axios({
             method: 'post',
             url: baseUrl + '/api/token/',
@@ -40,6 +43,7 @@ const LandingPage = () => {
                 // alert('account created succesfully');
                 console.log(response.data);
                 localStorage.setItem('PP-token', response.data.access);
+                setShowSpinnerLogin(false);
 
                 navigate('/dashboard/');
             }))
@@ -50,15 +54,21 @@ const LandingPage = () => {
 
     return (<div className='landing-page'>
         <div className='container'>
-            <div className="form-floating mb-3">
+            <div className="form-floating mb-3 input">
                 <input type="text" className="form-control" id="floatingInput" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <label htmlFor="floatingInput">username</label>
             </div>
-            <div className="form-floating">
+            <div className="form-floating input">
                 <input type="password" className="form-control" id="floatingPassword" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <label htmlFor="floatingPassword">password</label>
             </div>
-            <button type='button' className='btn btn-primary' onClick={loggingIn}>Login</button>
+            {showSpinnerLogin ?
+                <div className="spinner-border" role="status">
+                    <span className="sr-only"></span>
+                </div>
+                :
+                <button type='button' className='btn btn-primary' onClick={loggingIn}>Login</button>
+            }
         </div>
     </div>);
 }
