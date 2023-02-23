@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import MonthCell from './monthCell';
 import moment from 'moment';
 
@@ -13,8 +12,19 @@ const MonthTimeLine = (props) => {
     useEffect(() => {
         let startingMonth = props.startDate.format('M');
         let endingMonth = props.endDate.format('M');
+        console.log('startingMonth: ', startingMonth);
+        console.log('endingMonth: ', endingMonth);
 
-        let monthsDifference = endingMonth - startingMonth + 1;
+        let monthsDifference = 0;
+
+        if (parseInt(startingMonth) > parseInt(endingMonth)) {
+            monthsDifference = endingMonth - startingMonth + 1 + 12;
+        }
+        else {
+            monthsDifference = endingMonth - startingMonth + 1;
+        }
+
+        console.log('monthsDifference: ', monthsDifference);
 
         let startDay = props.startDate.format('D');
         let endDay = props.endDate.format('D');
@@ -30,7 +40,7 @@ const MonthTimeLine = (props) => {
         let _intervals = '';
 
         for (let i = 0; i < monthsDifference; i++) {
-            let _month = moment().month(parseInt(startingMonth) + i - 1);
+            let _month = moment(props.startDate.format('YYYY')).month(parseInt(startingMonth) + i - 1);
 
             if (i === 0) {
                 _intervals = _intervals + `${_month.daysInMonth() - startDay + 1}rem `;
@@ -48,21 +58,21 @@ const MonthTimeLine = (props) => {
 
     }, [loaded, props.startDate]);
 
-    const MonthContainer = styled.div`
-        color: green;
-        display: grid;
-        grid-template-columns: ${intervals};
-        padding-left: ${5}rem;
-        position: relative;
-        font-size: 0.5rem;
-        align-items: center;
-    `
+    const monthTimeLineStyle = {
+        color: 'green',
+        display: 'grid',
+        gridTemplateColumns: `${intervals}`,
+        paddingLeft: `${5}rem`,
+        position: 'relative',
+        fontSize: '0.5rem',
+        alignItems: 'center',
+    }
 
-    return (<MonthContainer>
+    return (<div style={monthTimeLineStyle}>
         {months.map((month) => {
             return <MonthCell key={Math.random() * 100000} label={month} />
         })}
-    </MonthContainer>);
+    </div>);
 }
 
 export default MonthTimeLine;

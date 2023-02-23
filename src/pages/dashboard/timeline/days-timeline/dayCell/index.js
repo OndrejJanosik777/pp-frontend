@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-// label
-const DayCell = (props) => {
-    const DayCellComponent = styled.div`
+const DayCellComponent = styled.div`
     border: 1px solid black;
     width: 100%;
     height: 1rem;
@@ -13,6 +11,9 @@ const DayCell = (props) => {
     align-items: center;
     overflow: hidden;
 `
+
+// label
+const DayCell = (props) => {
 
     return (<div>
         <DayCellComponent>{props.label}</DayCellComponent>

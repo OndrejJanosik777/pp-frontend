@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-// label
-const YearCell = (props) => {
-    const WeekCellComponent = styled.div`
+const WeekCellComponent = styled.div`
     border: 1px solid black;
     width: 100%;
     height: 2rem;
@@ -13,6 +11,9 @@ const YearCell = (props) => {
     align-items: center;
     overflow: hidden;
 `
+
+// label
+const YearCell = (props) => {
 
     return (<div>
         <WeekCellComponent>{props.label}</WeekCellComponent>

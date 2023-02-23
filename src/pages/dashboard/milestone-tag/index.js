@@ -29,18 +29,18 @@ const MilestoneTag = (props) => {
 
     }, [loaded, props.dateOffset]);
 
-    const Tag = styled.div`
-    padding-left: ${leftOffset}rem
-    `
+    const TagStyle = {
+        paddingLeft: `${leftOffset}rem`
+    }
 
     return (<div>
         {visible ?
-            <Tag>
+            <div style={TagStyle}>
                 <button type="button" className="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top!!">
                     {props.milestoneItem.milestone_item_type.short_name}
                     {/* test */}
                 </button>
-            </Tag>
+            </div>
             :
             <div></div>
         }

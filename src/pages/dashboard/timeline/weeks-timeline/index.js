@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import WeekCell from './weekCell';
 import moment from 'moment';
 
@@ -14,7 +13,14 @@ const WeeksTimeLine = (props) => {
         let startingWeek = props.startDate.isoWeek();
         let endingWeek = props.endDate.isoWeek();
 
-        let numberOfWeeks = endingWeek - startingWeek + 1;
+        let numberOfWeeks = 0;
+
+        if (startingWeek > endingWeek) {
+            numberOfWeeks = endingWeek - startingWeek + 1 + 52;
+        }
+        else {
+            numberOfWeeks = endingWeek - startingWeek + 1;
+        }
 
         let startDay = props.startDate.isoWeekday();
         let endDay = props.endDate.isoWeekday();
@@ -47,21 +53,21 @@ const WeeksTimeLine = (props) => {
 
     }, [loaded, props.startDate]);
 
-    const WeeksContainer = styled.div`
-        color: green;
-        display: grid;
-        grid-template-columns: ${intervals};
-        padding-left: ${5}rem;
-        position: relative;
-        font-size: 0.5rem;
-        align-items: center;
-    `
+    const weeksTimeLineStyle = {
+        color: 'green',
+        display: 'grid',
+        gridTemplateColumns: `${intervals}`,
+        paddingLeft: `${5}rem`,
+        position: 'relative',
+        fontSize: '0.5rem',
+        alignItems: 'center',
+    }
 
-    return (<WeeksContainer>
+    return (<div style={weeksTimeLineStyle}>
         {weeks.map((week) => {
             return <WeekCell key={Math.random() * 100000} label={week} />
         })}
-    </WeeksContainer>);
+    </div>);
 }
 
 export default WeeksTimeLine;

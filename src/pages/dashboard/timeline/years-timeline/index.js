@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import YearCell from './yearCell';
 import moment from 'moment';
 
@@ -28,18 +27,23 @@ const YearsTimeLine = (props) => {
 
         let _intervals = '';
 
-        for (let i = 0; i < numberOfYears; i++) {
-            let _month = moment().week(parseInt(startingYear) + i);
+        if (_years.length > 1) {
+            for (let i = 0; i < numberOfYears; i++) {
+                let _month = moment().week(parseInt(startingYear) + i);
 
-            if (i === 0) {
-                _intervals = _intervals + `${middlePoint - startingDayOfYear + 1}rem `;
+                if (i === 0) {
+                    _intervals = _intervals + `${middlePoint - startingDayOfYear + 1}rem `;
+                }
+                else if (i === numberOfYears - 1) {
+                    _intervals = _intervals + `${endingDayOfYear}rem`;
+                }
+                else {
+                    _intervals = _intervals + `${7}rem `;
+                }
             }
-            else if (i === numberOfYears - 1) {
-                _intervals = _intervals + `${endingDayOfYear}rem`;
-            }
-            else {
-                _intervals = _intervals + `${7}rem `;
-            }
+        }
+        else {
+            _intervals = `${endingDayOfYear - startingDayOfYear + 1}rem `;
         }
 
         setYears([..._years]);
@@ -47,21 +51,21 @@ const YearsTimeLine = (props) => {
 
     }, [loaded, props.startDate]);
 
-    const WeeksContainer = styled.div`
-        color: green;
-        display: grid;
-        grid-template-columns: ${intervals};
-        padding-left: ${5}rem;
-        position: relative;
-        font-size: 0.5rem;
-        align-items: center;
-    `
+    const yearsTimeLineStyle = {
+        color: 'green',
+        display: 'grid',
+        gridTemplateColumns: `${intervals}`,
+        paddingLeft: `${5}rem`,
+        position: 'relative',
+        fontSize: '0.5rem',
+        alignItems: 'center',
+    }
 
-    return (<WeeksContainer>
+    return (<div style={yearsTimeLineStyle}>
         {years.map((week) => {
             return <YearCell key={Math.random() * 100000} label={week} />
         })}
-    </WeeksContainer>);
+    </div>);
 }
 
 export default YearsTimeLine;

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import DayCell from './dayCell';
-import moment from 'moment';
 
 // startDate, endDate
 const DaysTimeLine = (props) => {
@@ -33,21 +31,21 @@ const DaysTimeLine = (props) => {
 
     }, [loaded, props.startDate]);
 
-    const WeeksContainer = styled.div`
-        color: green;
-        display: grid;
-        grid-template-columns: ${intervals};
-        padding-left: ${5}rem;
-        position: relative;
-        font-size: 0.5rem;
-        align-items: center;
-    `
+    const daysTimeLineStyle = {
+        color: 'green',
+        display: 'grid',
+        gridTemplateColumns: `${intervals}`,
+        paddingLeft: `${5}rem`,
+        position: 'relative',
+        fontSize: '0.5rem',
+        alignItems: 'center',
+    }
 
-    return (<WeeksContainer>
+    return (<div style={daysTimeLineStyle}>
         {days.map((day) => {
             return <DayCell key={Math.random() * 100000} label={day} />
         })}
-    </WeeksContainer>);
+    </div>);
 }
 
 export default DaysTimeLine;
