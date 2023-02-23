@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import YearsTimeLine from './years-timeline';
 import MonthTimeLine from './months-timeline';
 import WeeksTimeLine from './weeks-timeline';
 import DaysTimeLine from './days-timeline';
@@ -96,13 +97,6 @@ const Timeline = (props) => {
         align-items: center;
     `
     return (<div>
-        {/* <DayTimeLine>
-            <div></div>
-            {dates.map((day) => {
-                return <DayCell key={Math.random() * 100000}>{day}</DayCell>;
-            })}
-            <div></div>
-        </DayTimeLine> */}
         <DaysTimeLine
             startDate={moment().add(props.dateOffset, 'days')}
             endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
@@ -112,6 +106,10 @@ const Timeline = (props) => {
             endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
         />
         <MonthTimeLine
+            startDate={moment().add(props.dateOffset, 'days')}
+            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+        />
+        <YearsTimeLine
             startDate={moment().add(props.dateOffset, 'days')}
             endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
         />

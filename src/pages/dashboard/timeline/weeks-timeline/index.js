@@ -11,30 +11,18 @@ const WeeksTimeLine = (props) => {
     const [intervals, setIntervals] = useState('')
 
     useEffect(() => {
-        // console.log('---------------------------------------');
-        // console.log('*** COMPONENT WEEKS-TIMELINE LOADED ***');
-        // console.log('---------------------------------------');
-        // console.log('props.startDate: ', props.startDate);
-        // console.log('props.endDate: ', props.endDate);
-
         let startingWeek = props.startDate.isoWeek();
         let endingWeek = props.endDate.isoWeek();
-        // console.log('startingWeek: ', startingWeek);
-        // console.log('endingWeek: ', endingWeek);
 
         let numberOfWeeks = endingWeek - startingWeek + 1;
-        // console.log('numberOfWeeks: ', numberOfWeeks);
 
         let startDay = props.startDate.isoWeekday();
         let endDay = props.endDate.isoWeekday();
-        // console.log('startDay (isoWeekday()): ', startDay);
-        // console.log('endDay (isoWeekday()): ', endDay);
 
         let _weeks = [];
 
         for (let i = 0; i < numberOfWeeks; i++) {
             let _week = moment().week(parseInt(startingWeek) + i).isoWeek();
-            // console.log('week: ', _week);
             _weeks.push(_week);
         }
 
@@ -54,8 +42,6 @@ const WeeksTimeLine = (props) => {
             }
         }
 
-        // console.log('_weeks: ', _weeks);
-        // console.log('_intervals: ', _intervals);
         setWeeks([..._weeks]);
         setIntervals(_intervals);
 

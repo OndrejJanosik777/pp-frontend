@@ -11,19 +11,10 @@ const MonthTimeLine = (props) => {
     const [intervals, setIntervals] = useState('')
 
     useEffect(() => {
-        // console.log('---------------------------------------');
-        // console.log('*** COMPONENT MONTH-TIMELINE LOADED ***');
-        // console.log('---------------------------------------');
-        // console.log('props.startDate: ', props.startDate);
-        // console.log('props.endDate: ', props.endDate);
-
         let startingMonth = props.startDate.format('M');
         let endingMonth = props.endDate.format('M');
-        // console.log('startingMonth: ', startingMonth);
-        // console.log('endingMonth: ', endingMonth);
 
         let monthsDifference = endingMonth - startingMonth + 1;
-        // console.log('monthsDifference: ', monthsDifference);
 
         let startDay = props.startDate.format('D');
         let endDay = props.endDate.format('D');
@@ -33,7 +24,6 @@ const MonthTimeLine = (props) => {
 
         for (let i = 0; i < monthsDifference; i++) {
             let _month = moment().month(parseInt(startingMonth) + i - 1).format('MMMM');
-            // console.log('MONTH: ', _month);
             _months.push(_month);
         }
 
@@ -53,8 +43,6 @@ const MonthTimeLine = (props) => {
             }
         }
 
-        // console.log('_months: ', _months);
-        // console.log('_intervals: ', _intervals);
         setMonths([..._months]);
         setIntervals(_intervals);
 

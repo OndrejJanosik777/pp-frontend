@@ -11,20 +11,7 @@ const DaysTimeLine = (props) => {
     const [intervals, setIntervals] = useState('')
 
     useEffect(() => {
-        // console.log('---------------------------------------');
-        // console.log('*** COMPONENT WEEKS-TIMELINE LOADED ***');
-        // console.log('---------------------------------------');
-        // console.log('props.startDate: ', props.startDate);
-        // console.log('props.endDate: ', props.endDate);
-
-        let startingDay = props.startDate.format('D');
-        let endingDay = props.endDate.format('D');
-        // console.log('startingDay: ', startingDay);
-        // console.log('endingDay: ', endingDay);
-
-        // let numberOfDays = endingDay - startingDay + 1;
         let numberOfDays = props.endDate.diff(props.startDate, 'days') + 1;
-        // console.log('numberOfDays: ', numberOfDays);
 
         let _days = [];
 
@@ -32,7 +19,6 @@ const DaysTimeLine = (props) => {
 
         for (let i = 0; i < numberOfDays; i++) {
             let _day = props.startDate.add(1, 'days').format('D');
-            // console.log('day: ', _day);
             _days.push(_day);
         }
 
@@ -42,8 +28,6 @@ const DaysTimeLine = (props) => {
             _intervals = _intervals + `${1}rem `;
         }
 
-        // console.log('_days: ', _days);
-        // console.log('_intervals: ', _intervals);
         setDays([..._days]);
         setIntervals(_intervals);
 
