@@ -33,9 +33,13 @@ const Dashboard = () => {
     const [deleteWarning_toogle, setDeleteWarning_toogle] = useState(false);
     const [addMilestone_toogle, setAddMilestone_toogle] = useState(false);
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
+    const [mouseCursor, setMouseCursor] = useState(0);
     // rest
     const [activeProject, setActiveProject] = useState({});
     const [warningText, setWarningText] = useState('');
+    const [mousePos, setMousePos] = useState({});
+
+    // window.addEventListener('mousemove', handleMouseMove);
 
     useEffect(() => {
         fetchProjects();
@@ -63,21 +67,28 @@ const Dashboard = () => {
             })
     }
 
-    const fetchProject = (projectId) => {
-        console.log('fetching project with id: ', projectId);
+    const updateMilestoneItem = (milestoneItem) => {
+        // console.log('updating milestone item with id: ', milestoneItem.id);
 
         axios({
-            method: 'get',
-            url: baseUrl + '/company/project/' + projectId + "/",
+            method: 'put',
+            url: baseUrl + '/company/milestone-item/' + milestoneItem.id + "/",
             headers: {
                 "Authorization": token
+            },
+            data: {
+                // id: milestoneItem.id,
+                name: milestoneItem.name,
+                // milestone_item_type: milestoneItem.id,
+                date: milestoneItem.date,
+                comment: milestoneItem.comment
             }
         })
             .then((response => {
-                setDisplayProjects(response.data);
+                console.log('milestone updated: ', response.data);
             }))
             .catch((error) => {
-                console.log(error);
+                console.log('problem with updating milestone item: ', error);
             })
     }
 
@@ -106,10 +117,6 @@ const Dashboard = () => {
     const addNewProject = (project) => {
         setDisplayProjects([...displayedProjects, project]);
         setCreateProject_toogle(!createProject_toogle);
-    }
-
-    const createMilestone = () => {
-        alert('creating milestone...')
     }
 
     const displayDeleteProjectWarning = (project) => {
@@ -141,7 +148,6 @@ const Dashboard = () => {
 
                 alert('Error: Project cannot be deleted.')
             })
-
     }
 
     const displayNewMilestone = (project) => {
@@ -171,6 +177,36 @@ const Dashboard = () => {
 
                 alert('problem with fetching projects')
             })
+    }
+
+    const milestoneTagClicked = (event) => {
+        // const handleMouseMove = (event) => {
+        //     setMousePos({ x: event.clientX, y: event.clientY })
+        // }
+
+        console.log('eventX: ', event.clientX);
+        console.log('eventY: ', event.clientY);
+
+
+        // console.log('milestoneItem: ', milestoneItem);
+    }
+
+    const setNewDeadline = (days, projectId, milestoneItemId) => {
+        console.log(`moving milestone with id ${milestoneItemId} within project with id ${projectId} by ${days}... `);
+
+        let projectIndex = displayedProjects.findIndex(element => element.id === projectId);
+        let milestoneIndex = displayedProjects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItemId);
+        let originalDate = displayedProjects[projectIndex].milestone_items[milestoneIndex].date;
+        console.log('originalDate: ', originalDate);
+
+        let newDate = moment(originalDate).add(days, 'days').format("YYYY-MM-DD");
+        console.log('newDate: ', newDate);
+
+        let updateddisplayedProjects = [...displayedProjects];
+        updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
+        console.log('updateddisplayedProjects: ', updateddisplayedProjects);
+        updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
+        setDisplayProjects([...updateddisplayedProjects]);
     }
 
     return (
@@ -221,6 +257,7 @@ const Dashboard = () => {
                     <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
                 </nav>
             </header>
+            <div>{mouseCursor}</div>
             <main>
                 {
                     displayedProjects.map((project) => {
@@ -237,7 +274,10 @@ const Dashboard = () => {
                                             key={Math.random() * 100000}
                                             dateOffset={dateOffset}
                                             milestoneItem={milestoneItem}
+                                            project={project}
                                             displayLimit={100}
+                                            onClick={(e) => milestoneTagClicked(e)}
+                                            setNewDeadline={setNewDeadline}
                                         />
                                     })
                                 }
@@ -248,11 +288,10 @@ const Dashboard = () => {
                                     onClick={() => displayNewMilestone(project)}>
                                     Add Milestone
                                 </span>
-                                <span className="badge bg-secondary">Update</span>
                                 <span
                                     className="badge bg-danger"
                                     onClick={() => displayDeleteProjectWarning(project)} >
-                                    delete
+                                    Delete Project
                                 </span>
                             </div>
                         </main>

@@ -59,8 +59,6 @@ const AddMilestoneModal = (props) => {
 
         let newMilestoneItemId = {};
 
-
-
         setShowSpinnerCreate(true);
 
         // first create a milestone

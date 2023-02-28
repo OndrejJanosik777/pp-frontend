@@ -12,8 +12,6 @@ const MonthTimeLine = (props) => {
     useEffect(() => {
         let startingMonth = props.startDate.format('M');
         let endingMonth = props.endDate.format('M');
-        console.log('startingMonth: ', startingMonth);
-        console.log('endingMonth: ', endingMonth);
 
         let monthsDifference = 0;
 
@@ -23,8 +21,6 @@ const MonthTimeLine = (props) => {
         else {
             monthsDifference = endingMonth - startingMonth + 1;
         }
-
-        console.log('monthsDifference: ', monthsDifference);
 
         let startDay = props.startDate.format('D');
         let endDay = props.endDate.format('D');
