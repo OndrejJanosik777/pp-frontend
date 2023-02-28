@@ -15,7 +15,6 @@ const AddMilestoneModal = (props) => {
         }
     }
 
-    const [loaded, setLoaded] = useState([]);
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [milestoneItemTypes, setmilestoneItemTypes] = useState([]);
@@ -23,7 +22,7 @@ const AddMilestoneModal = (props) => {
 
     useEffect(() => {
         fetchMilestoneItemTypes();
-    }, [loaded]);
+    }, []);
 
     const fetchMilestoneItemTypes = () => {
         // console.log('fetching project with id: ', projectId);

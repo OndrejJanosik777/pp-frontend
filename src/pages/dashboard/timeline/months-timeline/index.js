@@ -5,22 +5,26 @@ import moment from 'moment';
 
 // startDate, endDate
 const MonthTimeLine = (props) => {
-    const [loaded, setLoaded] = useState([]);
     const [months, setMonths] = useState([]);
     const [intervals, setIntervals] = useState('')
 
     useEffect(() => {
         let startingMonth = props.startDate.format('M');
         let endingMonth = props.endDate.format('M');
+        let normalizedEndDate = props.endDate.format('YYYY-MM');
+        let normalizedStartDate = props.startDate.format('YYYY-MM');
+        let monthsDifference = moment(normalizedEndDate).diff(moment(normalizedStartDate), 'months') + 1;
 
-        let monthsDifference = 0;
+        // if (parseInt(startingMonth) > parseInt(endingMonth)) {
+        //     monthsDifference = endingMonth - startingMonth + 1 + 12;
+        // }
+        // else {
+        //     monthsDifference = endingMonth - startingMonth + 1;
+        // }
 
-        if (parseInt(startingMonth) > parseInt(endingMonth)) {
-            monthsDifference = endingMonth - startingMonth + 1 + 12;
-        }
-        else {
-            monthsDifference = endingMonth - startingMonth + 1;
-        }
+        // console.log('starting date: ', moment(props.startDate.format('YYYY-MM')));
+        // console.log('ending date: ', props.endDate.format('YYYY-MM'));
+        // console.log('new monthdifference: ', props.endDate.diff(props.startDate, 'months') + 2);
 
         let startDay = props.startDate.format('D');
         let endDay = props.endDate.format('D');
@@ -48,11 +52,12 @@ const MonthTimeLine = (props) => {
                 _intervals = _intervals + `${_month.daysInMonth()}rem `;
             }
         }
-
+        // console.log('_months: ', _months);
+        // console.log('_intervals: ', _intervals);
         setMonths([..._months]);
         setIntervals(_intervals);
 
-    }, [loaded, props.startDate]);
+    }, [props.startDate]);
 
     const monthTimeLineStyle = {
         color: 'green',

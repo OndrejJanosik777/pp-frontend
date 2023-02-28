@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import MilestoneTag from './milestone-tag';
@@ -22,50 +22,35 @@ const Dashboard = () => {
             return 'https://pp--backend.herokuapp.com';
         }
     }
-    // page loaded - fake state - just to run first hook at start...
-    const [loaded, setLoaded] = useState(0);
     const [displayedProjects, setDisplayProjects] = useState([]);
     const [dateOffset, setDateOffset] = useState(0);    // offset from today...
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
+    const [displayedDays, setDisplayedDays] = useState(105);
     // modal toogles
     const [createProject_toogle, setCreateProject_toogle] = useState(false);
     const [deleteWarning_toogle, setDeleteWarning_toogle] = useState(false);
     const [addMilestone_toogle, setAddMilestone_toogle] = useState(false);
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
-    const [mouseCursor, setMouseCursor] = useState(0);
     // rest
     const [activeProject, setActiveProject] = useState({});
     const [warningText, setWarningText] = useState('');
-    const [mousePos, setMousePos] = useState({});
 
-    // window.addEventListener('mousemove', handleMouseMove);
+    const handleResize = useRef((event) => {
+        // console.log('event.target.innerWidth', event.target.innerWidth);
+
+        let availableWidth = event.target.innerWidth;
+        availableWidth = availableWidth - 5 * 16 - 8 * 16 - 4 * 16;
+
+        let daysToDisplay = parseInt(availableWidth / 16);
+        // console.log('daysToDisplay: ', daysToDisplay);
+        setDisplayedDays(daysToDisplay);
+    })
 
     useEffect(() => {
+        window.addEventListener('resize', handleResize.current);
         fetchProjects();
-    }, [loaded]);
-
-    const fetchUser = () => {
-
-
-        axios({
-            method: 'post',
-            url: baseUrl + '/auth/users/me',
-            headers: {
-                "Authorization": token
-            }
-        })
-            .then((response => {
-                // alert('account created succesfully');
-                console.log(response.data);
-                // localStorage.setItem('PP-token', response.data.access);
-
-                // navigate('/dashboard/');
-            }))
-            .catch((error) => {
-                console.log(error);
-            })
-    }
+    }, []);
 
     const updateMilestoneItem = (milestoneItem) => {
         // console.log('updating milestone item with id: ', milestoneItem.id);
@@ -179,32 +164,20 @@ const Dashboard = () => {
             })
     }
 
-    const milestoneTagClicked = (event) => {
-        // const handleMouseMove = (event) => {
-        //     setMousePos({ x: event.clientX, y: event.clientY })
-        // }
-
-        console.log('eventX: ', event.clientX);
-        console.log('eventY: ', event.clientY);
-
-
-        // console.log('milestoneItem: ', milestoneItem);
-    }
-
     const setNewDeadline = (days, projectId, milestoneItemId) => {
-        console.log(`moving milestone with id ${milestoneItemId} within project with id ${projectId} by ${days}... `);
+        // console.log(`moving milestone with id ${milestoneItemId} within project with id ${projectId} by ${days}... `);
 
         let projectIndex = displayedProjects.findIndex(element => element.id === projectId);
         let milestoneIndex = displayedProjects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItemId);
         let originalDate = displayedProjects[projectIndex].milestone_items[milestoneIndex].date;
-        console.log('originalDate: ', originalDate);
+        // console.log('originalDate: ', originalDate);
 
         let newDate = moment(originalDate).add(days, 'days').format("YYYY-MM-DD");
-        console.log('newDate: ', newDate);
+        // console.log('newDate: ', newDate);
 
         let updateddisplayedProjects = [...displayedProjects];
         updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
-        console.log('updateddisplayedProjects: ', updateddisplayedProjects);
+        // console.log('updateddisplayedProjects: ', updateddisplayedProjects);
         updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
         setDisplayProjects([...updateddisplayedProjects]);
     }
@@ -282,7 +255,7 @@ const Dashboard = () => {
                             <div style={middleStyle}>
                                 {
                                     project.milestone_items.map((milestoneItem, index) => {
-                                        console.log('drawing milestone items: ', index)
+                                        // console.log('drawing milestone items: ', index)
 
                                         return < MilestoneTag
                                             key={Math.random() * 100000}
@@ -290,8 +263,7 @@ const Dashboard = () => {
                                             topOffset={(index - 1) * 30}  // offset in px from top
                                             milestoneItem={milestoneItem}
                                             project={project}
-                                            displayLimit={100}
-                                            onClick={(e) => milestoneTagClicked(e)}
+                                            displayLimit={displayedDays}
                                             setNewDeadline={setNewDeadline}
                                         />
                                     })
@@ -314,7 +286,7 @@ const Dashboard = () => {
                 }
                 <Timeline
                     dateOffset={dateOffset}
-                    displayLimit={100}
+                    displayLimit={displayedDays}
                 />
                 <footer className='wrapper-footer'>
                     <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>- 1 DAY</div>

@@ -4,7 +4,7 @@ import './index.scss';
 import moment from 'moment';
 
 const MilestoneTag = (props) => {
-    const [loaded, setLoaded] = useState([]);
+    // const [loaded, setLoaded] = useState([]);
     const [leftOffset, setLeftOffset] = useState(0);
     const [originalLeftOffset, setOriginalLeftOffset] = useState(0);
     const [startingX, setStartingX] = useState(0);
@@ -30,7 +30,7 @@ const MilestoneTag = (props) => {
             setLeftOffset(difference * 16);
             setOriginalLeftOffset(difference * 16);
         }
-    }, [loaded, props.dateOffset]);
+    }, [props.dateOffset]);
 
     const handleMouseMove = useRef((event) => {
         let newLeftOffset = event.clientX - 6 * 16;
