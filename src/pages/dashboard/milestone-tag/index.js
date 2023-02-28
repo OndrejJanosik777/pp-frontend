@@ -11,7 +11,7 @@ const MilestoneTag = (props) => {
     const [isMoving, setIsMoving] = useState(false);
     const [deadlineUpdated, setDeadLineUpdate] = useState(false);
     const [deltaX, setDeltaX] = useState(0);
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         // console.log('props.dateOffset: ', props.dateOffset);
@@ -25,6 +25,7 @@ const MilestoneTag = (props) => {
         }
 
         if (difference >= 0 && difference < props.displayLimit - 1) {
+            // if (difference < props.displayLimit - 1) {
             setVisible(true);
             setLeftOffset(difference * 16);
             setOriginalLeftOffset(difference * 16);
@@ -46,19 +47,18 @@ const MilestoneTag = (props) => {
 
     useEffect(() => {
         if (isMoving) {
-            console.log('listener is active ...');
+            // console.log('listener is active ...');
 
             window.addEventListener('mousemove', handleMouseMove.current);
         }
         else {
-            console.log('listener is not active ...');
+            // console.log('listener is not active ...');
 
             window.removeEventListener('mousemove', handleMouseMove.current);
-            // window.removeEventListener('mousemove');
 
             // update date in dashboard component
             let deltaDays = parseInt((leftOffset - originalLeftOffset) / 16);
-            console.log('deltaDays: ', deltaDays) // second day from dateOffset
+            // console.log('deltaDays: ', deltaDays) // second day from dateOffset
 
             if (deltaDays !== 0) {
                 props.setNewDeadline(deltaDays, props.project.id, props.milestoneItem.id);
@@ -82,10 +82,10 @@ const MilestoneTag = (props) => {
     }
 
     const TagStyle = {
-        paddingLeft: `${leftOffset}px`
+        paddingLeft: `${leftOffset}px`,
     }
 
-    return (<div>
+    return (<div className='milestone-tag'>
         {visible ?
             <div style={TagStyle}>
                 <button
@@ -100,7 +100,7 @@ const MilestoneTag = (props) => {
                 </button>
             </div>
             :
-            <div></div>
+            <div style={{ height: '30px' }}></div>
         }
     </div>);
 }

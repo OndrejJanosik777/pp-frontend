@@ -257,7 +257,6 @@ const Dashboard = () => {
                     <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
                 </nav>
             </header>
-            <div>{mouseCursor}</div>
             <main>
                 {
                     displayedProjects.map((project) => {
@@ -265,14 +264,30 @@ const Dashboard = () => {
                             return moment(a.date) - moment(b.date);
                         })
 
+                        const middleStyle = {
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: `${project.milestone_items.length * 30}px`,
+                            borderWidth: '1px',
+                            borderColor: 'black',
+                            borderStyle: 'solid',
+                            position: 'relative',
+                            // backgroundColor: 'green',
+                            width: '100%',
+                        }
+
                         return <main className='wrapper-project' key={Math.random() * 100000}>
                             <div className='cell starting'><div className='rotate'>{project.short_name}</div></div>
-                            <div className='middle'>
+                            {/* <div className='middle'> */}
+                            <div style={middleStyle}>
                                 {
-                                    project.milestone_items.map((milestoneItem) => {
+                                    project.milestone_items.map((milestoneItem, index) => {
+                                        console.log('drawing milestone items: ', index)
+
                                         return < MilestoneTag
                                             key={Math.random() * 100000}
                                             dateOffset={dateOffset}
+                                            topOffset={(index - 1) * 30}  // offset in px from top
                                             milestoneItem={milestoneItem}
                                             project={project}
                                             displayLimit={100}
