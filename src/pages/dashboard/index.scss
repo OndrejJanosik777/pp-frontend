@@ -16,17 +16,16 @@
         grid-template-columns: 5rem 1fr 8rem;
         position: relative;
 
-        .cell {
+        .cell-starting {
             border: 1px solid black;
             min-height: 10rem;
             display: flex;
-            justify-content: center;
-            align-items: center;
-
-            .starting {
-                background-color: rgb(81, 182, 126);
-            }
-
+            justify-content: start;
+            text-align: center;
+            align-items: start;
+            background-color: rgb(81, 182, 126);
+            max-width: 5rem;
+            overflow: hidden;
         }
 
         .cell-ending {
@@ -37,6 +36,8 @@
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
+            max-width: 8rem;
+            overflow: hidden;
 
             .badge {
 

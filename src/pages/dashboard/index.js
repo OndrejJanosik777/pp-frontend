@@ -250,7 +250,7 @@ const Dashboard = () => {
                         }
 
                         return <main className='wrapper-project' key={Math.random() * 100000}>
-                            <div className='cell starting'><div className='rotate'>{project.short_name}</div></div>
+                            <div className='cell-starting'>{project.short_name}</div>
                             {/* <div className='middle'> */}
                             <div style={middleStyle}>
                                 {
@@ -274,6 +274,9 @@ const Dashboard = () => {
                                     className="badge bg-primary"
                                     onClick={() => displayNewMilestone(project)}>
                                     Add Milestone
+                                </span>
+                                <span className="badge bg-primary">
+                                    maybe some longer name even longer
                                 </span>
                                 <span
                                     className="badge bg-danger"
