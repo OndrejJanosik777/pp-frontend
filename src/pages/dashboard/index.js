@@ -299,7 +299,7 @@ const Dashboard = () => {
                                 <div className='row-left'>
                                     {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
                                 </div>
-                                <div className='row-left'>{`Reports: ${5}`}</div>
+                                <div className='row-left'>{`Tasks: ${0}/${0}`}</div>
                                 <div className='row-left'>{`Monuments: ${project.monuments.length}`}</div>
                             </div>
                             <div style={middleStyle}>
@@ -328,7 +328,6 @@ const Dashboard = () => {
                                 </span>
                                 <span
                                     className="badge bg-warning"
-                                    // onClick={() => displayNewMilestone(project)}
                                     onClick={() => showModal_ManageProject(project)}
                                 >
                                     Update Project
