@@ -5,7 +5,7 @@ import moment from 'moment';
 import MilestoneTag from './milestone-tag';
 import Timeline from './timeline';
 // modal components
-import CreateProjectModal from './create-project-modal';
+import ManageProjectModal from './manage-project-modal';
 import AddMilestoneModal from './create-milestone-modal';
 import ManageMilestoneTypes from './manage-milestone-types';
 import DeleteWarning from './delete-warning';
@@ -99,8 +99,16 @@ const Dashboard = () => {
         console.log('displayedProjects: ', displayedProjects);
     }
 
-    const addNewProject = (project) => {
+    const addNewProjectToState = (project) => {
         setDisplayProjects([...displayedProjects, project]);
+        setCreateProject_toogle(!createProject_toogle);
+    }
+
+    const updateExistingProjectInState = (project) => {
+        let index = displayedProjects.findIndex(element => element.id === project.id);
+        let newProjects = [...displayedProjects];
+        newProjects[index] = { ...project };
+        setDisplayProjects([...newProjects]);
         setCreateProject_toogle(!createProject_toogle);
     }
 
@@ -182,11 +190,30 @@ const Dashboard = () => {
         setDisplayProjects([...updateddisplayedProjects]);
     }
 
+    const showModal_ManageProject = (project) => {
+        // creating new project or updating existing project
+
+        if (project === undefined) {
+            // alert('showing create new project');
+
+            setActiveProject({});
+        }
+        else {
+            // alert('showing modify existing project')
+
+            setActiveProject(project);
+        }
+
+        setCreateProject_toogle(!createProject_toogle)
+    }
+
     return (
         <div className='dashboard'>
             {createProject_toogle ?
-                <CreateProjectModal
-                    addNewProject={addNewProject}
+                <ManageProjectModal
+                    project={activeProject}
+                    addNewProject={addNewProjectToState}
+                    updateProject={updateExistingProjectInState}
                     toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
                 />
                 : ""}
@@ -202,7 +229,7 @@ const Dashboard = () => {
                 <AddMilestoneModal
                     project={activeProject}
                     updateProject={updateProject}
-                    createNewMilestone={addNewProject}
+                    createNewMilestone={addNewProjectToState}
                     toogleVisibility={() => setAddMilestone_toogle(!addMilestone_toogle)}
                 />
                 :
@@ -211,7 +238,7 @@ const Dashboard = () => {
                 <ManageMilestoneTypes
                     project={activeProject}
                     updateProject={updateProject}
-                    createNewMilestone={addNewProject}
+                    createNewMilestone={addNewProjectToState}
                     toogleVisibility={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
                 />
                 :
@@ -226,7 +253,7 @@ const Dashboard = () => {
                     </div>
                 </nav>
                 <nav>
-                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => setCreateProject_toogle(!createProject_toogle)} >Add Project</button>
+                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => showModal_ManageProject()} >Create New Project</button>
                     <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
                 </nav>
             </header>
@@ -272,15 +299,21 @@ const Dashboard = () => {
                             <div className='cell-ending'>
                                 <span
                                     className="badge bg-primary"
-                                    onClick={() => displayNewMilestone(project)}>
+                                    onClick={() => displayNewMilestone(project)}
+                                >
                                     Add Milestone
                                 </span>
-                                <span className="badge bg-primary">
-                                    maybe some longer name even longer
+                                <span
+                                    className="badge bg-primary"
+                                    // onClick={() => displayNewMilestone(project)}
+                                    onClick={() => showModal_ManageProject(project)}
+                                >
+                                    Update Project
                                 </span>
                                 <span
                                     className="badge bg-danger"
-                                    onClick={() => displayDeleteProjectWarning(project)} >
+                                    onClick={() => displayDeleteProjectWarning(project)}
+                                >
                                     Delete Project
                                 </span>
                             </div>

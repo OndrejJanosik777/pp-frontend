@@ -3,7 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import './index.scss';
 
-const CreateProjectModal = (props) => {
+const ManageProjectModal = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -14,14 +14,14 @@ const CreateProjectModal = (props) => {
         }
     }
 
-    const [name, setName] = useState('');
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [shortName, setShortName] = useState('');
-    const [number, setNumber] = useState('');
+    const [name, setName] = useState(props.project.name);
+    const [shortName, setShortName] = useState(props.project.short_name);
+    const [number, setNumber] = useState(props.project.number);
     const [showSpinnerCreateProject, setShowSpinnerCreateProject] = useState(false);
 
-    const checkInputData = () => {
+    const createNewProject = () => {
         if (name !== "" && shortName !== "" && number !== "") {
             setShowSpinnerCreateProject(true);
 
@@ -56,10 +56,45 @@ const CreateProjectModal = (props) => {
         }
     }
 
+    const updateNewProject = () => {
+        if (name !== "" && shortName !== "" && number !== "") {
+            setShowSpinnerCreateProject(true);
+
+            axios({
+                method: 'put',
+                url: baseUrl + `/company/project/${props.project.id}/`,
+                headers: {
+                    "Authorization": token
+                },
+                data: {
+                    name: name,
+                    number: number,
+                    short_name: shortName,
+                    // milestone_items: [],
+                    // monuments: []
+                }
+            })
+                .then((response => {
+                    // console.log("projects created sucessfully");
+                    props.updateProject(response.data);
+                    setShowSpinnerCreateProject(false);
+                }))
+                .catch((error) => {
+                    console.log(error);
+
+                    alert('problem with creating project')
+                })
+
+        }
+        else {
+            alert('Invalid Data');
+        }
+    }
+
     return (<div className='project-info'>
         <div className='background'></div>
         <div className='container'>
-            <div className='text-center fs-4'>NEW PROJECT</div>
+            <div className='text-center fs-4'>{props.project.name !== undefined ? `Updating: ${props.project.name}` : 'NEW PROJECT'}</div>
             <div className="form-floating mb-3">
                 <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
                 <label htmlFor="name">name</label>
@@ -78,12 +113,22 @@ const CreateProjectModal = (props) => {
                         <span className="sr-only"></span>
                     </div>
                     :
-                    <button type="button" className="btn btn-primary close" onClick={checkInputData}>CREATE</button>
+                    <button
+                        type="button"
+                        className="btn btn-primary close"
+                        onClick={props.project.name !== undefined ? updateNewProject : createNewProject}>
+                        {props.project.name !== undefined ? 'UPDATE' : 'CREATE'}
+                    </button>
                 }
-                <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
+                <button
+                    type="button"
+                    className="btn btn-danger close"
+                    onClick={props.toogleVisibility}>
+                    CANCEL
+                </button>
             </div>
         </div>
     </div>);
 }
 
-export default CreateProjectModal;
+export default ManageProjectModal;
