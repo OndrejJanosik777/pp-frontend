@@ -7,7 +7,8 @@ import moment from 'moment';
 const WeeksTimeLine = (props) => {
     const [loaded, setLoaded] = useState([]);
     const [weeks, setWeeks] = useState([]);
-    const [intervals, setIntervals] = useState('')
+    const [intervals, setIntervals] = useState('');
+    const [paddingLeft, setPaddingLeft] = useState(8);
 
     useEffect(() => {
         let startingWeek = props.startDate.isoWeek();
@@ -57,7 +58,7 @@ const WeeksTimeLine = (props) => {
         color: 'green',
         display: 'grid',
         gridTemplateColumns: `${intervals}`,
-        paddingLeft: `${5}rem`,
+        paddingLeft: `${paddingLeft}rem`,
         position: 'relative',
         fontSize: '0.5rem',
         alignItems: 'center',

@@ -6,7 +6,8 @@ import DayCell from './dayCell';
 const DaysTimeLine = (props) => {
     const [loaded, setLoaded] = useState([]);
     const [days, setDays] = useState([]);
-    const [intervals, setIntervals] = useState('')
+    const [intervals, setIntervals] = useState('');
+    const [paddingLeft, setPaddingLeft] = useState(8);
 
     useEffect(() => {
         let numberOfDays = props.endDate.diff(props.startDate, 'days') + 1;
@@ -35,7 +36,7 @@ const DaysTimeLine = (props) => {
         color: 'green',
         display: 'grid',
         gridTemplateColumns: `${intervals}`,
-        paddingLeft: `${5}rem`,
+        paddingLeft: `${paddingLeft}rem`,
         position: 'relative',
         fontSize: '0.5rem',
         alignItems: 'center',

@@ -7,6 +7,7 @@ import moment from 'moment';
 const MonthTimeLine = (props) => {
     const [months, setMonths] = useState([]);
     const [intervals, setIntervals] = useState('')
+    const [paddingLeft, setPaddingLeft] = useState(8);
 
     useEffect(() => {
         let startingMonth = props.startDate.format('M');
@@ -63,7 +64,7 @@ const MonthTimeLine = (props) => {
         color: 'green',
         display: 'grid',
         gridTemplateColumns: `${intervals}`,
-        paddingLeft: `${5}rem`,
+        paddingLeft: `${paddingLeft}rem`,
         position: 'relative',
         fontSize: '0.5rem',
         alignItems: 'center',

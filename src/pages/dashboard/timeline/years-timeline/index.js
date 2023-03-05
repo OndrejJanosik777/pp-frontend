@@ -8,6 +8,7 @@ const YearsTimeLine = (props) => {
     const [loaded, setLoaded] = useState([]);
     const [years, setYears] = useState(['2021']);
     const [intervals, setIntervals] = useState('100rem')
+    const [paddingLeft, setPaddingLeft] = useState(8);
 
     useEffect(() => {
         let startingYear = props.startDate.format('YYYY');
@@ -55,7 +56,7 @@ const YearsTimeLine = (props) => {
         color: 'green',
         display: 'grid',
         gridTemplateColumns: `${intervals}`,
-        paddingLeft: `${5}rem`,
+        paddingLeft: `${paddingLeft}rem`,
         position: 'relative',
         fontSize: '0.5rem',
         alignItems: 'center',

@@ -135,7 +135,7 @@ const AddMilestoneModal = (props) => {
                 <label htmlFor="name">name</label>
             </div>
             <div className='row'>
-                <label for="type-select">Choose a Milestone type:</label>
+                <label htmlFor="type-select">Choose a Milestone type:</label>
                 <select name="types" id="type-select">
                     <option value="">--Please choose an option--</option>
                     {milestoneItemTypes.map((type) => {

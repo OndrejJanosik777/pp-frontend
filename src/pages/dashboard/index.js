@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import moment from 'moment';
+import planeSVG from './assets/airplane.svg';
 import MilestoneTag from './milestone-tag';
 import Timeline from './timeline';
 // modal components
@@ -26,7 +27,7 @@ const Dashboard = () => {
     const [dateOffset, setDateOffset] = useState(0);    // offset from today...
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [displayedDays, setDisplayedDays] = useState(105);
+    const [displayedDays, setDisplayedDays] = useState(parseInt((window.innerWidth - 8 * 16 - 8 * 16 - 4 * 16) / 16));
     // modal toogles
     const [createProject_toogle, setCreateProject_toogle] = useState(false);
     const [deleteWarning_toogle, setDeleteWarning_toogle] = useState(false);
@@ -264,10 +265,18 @@ const Dashboard = () => {
                             return moment(a.date) - moment(b.date);
                         })
 
+                        let achievedMilestones = project.milestone_items.filter(elem => {
+                            let now = moment();
+                            let m_date = moment(elem.date);
+
+                            return m_date.diff(now, 'days') < 0;
+                        })
+
                         const middleStyle = {
                             display: 'flex',
                             flexDirection: 'column',
                             height: `${project.milestone_items.length * 30}px`,
+                            minHeight: '10rem',
                             borderWidth: '1px',
                             borderColor: 'black',
                             borderStyle: 'solid',
@@ -277,8 +286,22 @@ const Dashboard = () => {
                         }
 
                         return <main className='wrapper-project' key={Math.random() * 100000}>
-                            <div className='cell-starting'>{project.short_name}</div>
-                            {/* <div className='middle'> */}
+                            <div className='left-container'>
+                                <div>{project.short_name}</div>
+                                <div>
+                                    <img
+                                        className='plane-icons'
+                                        src={planeSVG}
+                                        alt=''
+                                    // onClick={() => editMilestoneType(milestoneType.id)} 
+                                    />
+                                </div>
+                                <div className='row-left'>
+                                    {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
+                                </div>
+                                <div className='row-left'>{`Reports: ${5}`}</div>
+                                <div className='row-left'>{`Monuments: ${project.monuments.length}`}</div>
+                            </div>
                             <div style={middleStyle}>
                                 {
                                     project.milestone_items.map((milestoneItem, index) => {
@@ -296,7 +319,7 @@ const Dashboard = () => {
                                     })
                                 }
                             </div>
-                            <div className='cell-ending'>
+                            <div className='right-container'>
                                 <span
                                     className="badge bg-primary"
                                     onClick={() => displayNewMilestone(project)}
@@ -304,7 +327,7 @@ const Dashboard = () => {
                                     Add Milestone
                                 </span>
                                 <span
-                                    className="badge bg-primary"
+                                    className="badge bg-warning"
                                     // onClick={() => displayNewMilestone(project)}
                                     onClick={() => showModal_ManageProject(project)}
                                 >

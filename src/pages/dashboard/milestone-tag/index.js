@@ -33,7 +33,7 @@ const MilestoneTag = (props) => {
     }, [props.dateOffset]);
 
     const handleMouseMove = useRef((event) => {
-        let newLeftOffset = event.clientX - 6 * 16;
+        let newLeftOffset = event.clientX - 9 * 16;
         // console.log("event.clientX: ", event.clientX);
         // console.log("startingX: ", startingX);
         // console.log("leftOffset: ", leftOffset);
