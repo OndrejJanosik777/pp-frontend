@@ -60,7 +60,7 @@ const MilestoneTag = (props) => {
             // console.log('deltaDays: ', deltaDays) // second day from dateOffset
 
             if (deltaDays !== 0) {
-                props.setNewDeadline(deltaDays, props.project.id, props.milestoneItem.id);
+                props.updateMilestoneItemDeadline(deltaDays, props.project, props.milestoneItem);
             }
         }
     }, [isMoving])
@@ -74,16 +74,13 @@ const MilestoneTag = (props) => {
     const contextMenuClicked = (event) => {
         event.preventDefault();
 
-        setMouseX(event.clientX);
-        setMouseY(event.clientY);
+        // setMouseX(event.clientX);
+        // setMouseY(event.clientY);
         setContextMenuVisible(!contextMenuVisible);
-        console.log(`context menu clicked: ${event.clientX} ${event.clientY}`);
+        // console.log(`context menu clicked: ${event.clientX} ${event.clientY}`);
     }
 
     const ContextMenuStyle = {
-        // width: `5rem`,
-        // height: `5rem`,
-        // backgroundColor: `red`,
         position: 'absolute',
         marginLeft: `${leftOffset}px`,
         marginTop: `${0}px`,
@@ -115,10 +112,18 @@ const MilestoneTag = (props) => {
                 <ul className='context-container' onMouseLeave={() => setContextMenuVisible(!contextMenuVisible)}>
                     <li className='context-item'>
                         <span
-                            className="badge bg-primary"
+                            className="badge bg-warning"
                         // onClick={() => displayNewMilestone(project)}
                         >
                             Edit Milestone
+                        </span>
+                    </li>
+                    <li className='context-item'>
+                        <span
+                            className="badge bg-danger"
+                            onClick={() => props.deleteMilestoneItem(props.project, props.milestoneItem)}
+                        >
+                            Delete Milestone
                         </span>
                     </li>
                     <li className='context-item'>
@@ -131,17 +136,13 @@ const MilestoneTag = (props) => {
                     </li>
                     <li className='context-item'>
                         <span
-                            className="badge bg-primary"
+                            className="badge bg-secondary"
                         // onClick={() => displayNewMilestone(project)}
                         >
                             Display Tasks
                         </span>
                     </li>
                 </ul>
-                {/* <ul className='dropdown-menu'>
-                    <li><div className='dropdown-item'>Modify Milestone</div></li>
-                    <li><div className='dropdown-item'>Add Task</div></li>
-                </ul> */}
             </div>
             :
             <div></div>}

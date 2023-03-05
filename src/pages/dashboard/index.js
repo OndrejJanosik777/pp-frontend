@@ -30,12 +30,15 @@ const Dashboard = () => {
     const [displayedDays, setDisplayedDays] = useState(parseInt((window.innerWidth - 8 * 16 - 8 * 16 - 4 * 16) / 16));
     // modal toogles
     const [createProject_toogle, setCreateProject_toogle] = useState(false);
-    const [deleteWarning_toogle, setDeleteWarning_toogle] = useState(false);
+    const [deleteProjectWarning_toogle, setDeleteProjectWarning_toogle] = useState(false);
+    const [deleteMilestoneWarning_toogle, setDeleteMilestoneWarning_toogle] = useState(false);
     const [addMilestone_toogle, setAddMilestone_toogle] = useState(false);
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
     // rest
     const [activeProject, setActiveProject] = useState({});
+    const [activeMilestone, setActiveMilestoneProject] = useState({});
     const [warningText, setWarningText] = useState('');
+    // const [deleteFunction, setDeleteFunction] = useState();
 
     const handleResize = useRef((event) => {
         // console.log('event.target.innerWidth', event.target.innerWidth);
@@ -52,31 +55,6 @@ const Dashboard = () => {
         window.addEventListener('resize', handleResize.current);
         fetchProjects();
     }, []);
-
-    const updateMilestoneItem = (milestoneItem) => {
-        // console.log('updating milestone item with id: ', milestoneItem.id);
-
-        axios({
-            method: 'put',
-            url: baseUrl + '/company/milestone-item/' + milestoneItem.id + "/",
-            headers: {
-                "Authorization": token
-            },
-            data: {
-                // id: milestoneItem.id,
-                name: milestoneItem.name,
-                // milestone_item_type: milestoneItem.id,
-                date: milestoneItem.date,
-                comment: milestoneItem.comment
-            }
-        })
-            .then((response => {
-                console.log('milestone updated: ', response.data);
-            }))
-            .catch((error) => {
-                console.log('problem with updating milestone item: ', error);
-            })
-    }
 
     const fetchProjects = () => {
         axios({
@@ -113,14 +91,15 @@ const Dashboard = () => {
         setCreateProject_toogle(!createProject_toogle);
     }
 
-    const displayDeleteProjectWarning = (project) => {
+    const displayWarning_DeleteProject = (project) => {
         setActiveProject(project);
-        setWarningText('Are you sure to delete following project?')
-        setDeleteWarning_toogle(!deleteWarning_toogle);
+        setWarningText(`Are you sure to delete project: ${project.name}?`);
+        // setDeleteFunction(deleteProject(project));
+        setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle);
     }
 
-    const deleteProject = () => {
-        const index = displayedProjects.findIndex(elem => elem.id === activeProject.id)
+    const deleteProject = (project) => {
+        const index = displayedProjects.findIndex(elem => elem.id === project.id)
 
         let modifiedProjects = [...displayedProjects];
         modifiedProjects.splice(index, 1);
@@ -129,13 +108,13 @@ const Dashboard = () => {
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/project/${activeProject.id}/`,
+            url: baseUrl + `/company/project/${project.id}/`,
             headers: {
                 "Authorization": token
             }
         })
             .then((response => {
-                setDeleteWarning_toogle(!deleteWarning_toogle);
+                setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle);
             }))
             .catch((error) => {
                 console.log(error);
@@ -173,22 +152,101 @@ const Dashboard = () => {
             })
     }
 
-    const setNewDeadline = (days, projectId, milestoneItemId) => {
+    const updateMilestoneItemDeadline = (days, project, milestoneItem) => {
+        // update in component state
         // console.log(`moving milestone with id ${milestoneItemId} within project with id ${projectId} by ${days}... `);
 
-        let projectIndex = displayedProjects.findIndex(element => element.id === projectId);
-        let milestoneIndex = displayedProjects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItemId);
+        let projectIndex = displayedProjects.findIndex(element => element.id === project.id);
+        let milestoneIndex = displayedProjects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItem.id);
         let originalDate = displayedProjects[projectIndex].milestone_items[milestoneIndex].date;
         // console.log('originalDate: ', originalDate);
 
         let newDate = moment(originalDate).add(days, 'days').format("YYYY-MM-DD");
         // console.log('newDate: ', newDate);
 
-        let updateddisplayedProjects = [...displayedProjects];
-        updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
+        let originalProjects = [...displayedProjects];
+        let updatedProjects = [...displayedProjects];
+        updatedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
         // console.log('updateddisplayedProjects: ', updateddisplayedProjects);
-        updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
-        setDisplayProjects([...updateddisplayedProjects]);
+        // updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
+        setDisplayProjects([...updatedProjects]);
+
+        let updatedMilestoneItem = { ...updatedProjects[projectIndex].milestone_items[milestoneIndex] };
+
+        // update in database
+        axios({
+            method: 'put',
+            url: baseUrl + '/company/milestone-item/' + updatedMilestoneItem.id + "/",
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                // id: milestoneItem.id,
+                name: updatedMilestoneItem.name,
+                // milestone_item_type: milestoneItem.id,
+                date: updatedMilestoneItem.date,
+                comment: updatedMilestoneItem.comment
+            }
+        })
+            .then((response => {
+                console.log('milestone deadline updated in database: ', response.data);
+            }))
+            .catch((error) => {
+                console.log('problem with updating milestone item: ', error);
+
+                setDisplayProjects([...originalProjects]);
+            })
+    }
+
+    const updateMilestoneItem = (project, milestoneItem) => {
+        // console.log('updating milestone item with id: ', milestoneItem.id);
+
+    }
+
+    const displayWarning_DeleteMilestoneItem = (project, milestone) => {
+        setActiveProject(project);
+        setActiveMilestoneProject(milestone);
+        setWarningText(`Are you sure to delete milestone ${milestone.name} from project ${project.name}?`);
+        // setDeleteFunction(deleteProject(project));
+        setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
+    }
+
+    const deleteMilestoneItem = (project, milestoneItem) => {
+        console.log(`deleting item: ${milestoneItem.id}`);
+
+        // update in component state
+        let projectIndex = displayedProjects.findIndex(elem => elem.id === project.id)
+        let milestoneItemIndex = displayedProjects[projectIndex].milestone_items.findIndex(elem => elem.id === milestoneItem.id)
+
+        // console.log(`projectIndex: ${projectIndex}`);
+        // console.log(`milestoneItemIndex: ${milestoneItemIndex}`);
+
+        let originalProjects = [...displayedProjects];
+        let updatedProjects = [...displayedProjects];
+
+        updatedProjects[projectIndex].milestone_items.splice(milestoneItemIndex, 1);
+        console.log(`updatedProjects:`, updatedProjects);
+
+        setDisplayProjects([...updatedProjects]);
+
+        // update in database
+        axios({
+            method: 'delete',
+            url: baseUrl + '/company/milestone-item/' + milestoneItem.id + "/",
+            headers: {
+                "Authorization": token
+            }
+        })
+            .then((response => {
+                console.log('milestone deleted from database: ', response.data);
+
+                setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
+            }))
+            .catch((error) => {
+                console.log('problem with deleting milestone item: ', error);
+
+                setDisplayProjects([...originalProjects]);
+            })
     }
 
     const showModal_ManageProject = (project) => {
@@ -218,12 +276,20 @@ const Dashboard = () => {
                     toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
                 />
                 : ""}
-            {deleteWarning_toogle ?
+            {deleteProjectWarning_toogle ?
                 <DeleteWarning
-                    project={activeProject}
+                    // project={activeProject}
                     text={warningText}
-                    action={deleteProject}
-                    toogleVisibility={() => setDeleteWarning_toogle(!deleteWarning_toogle)}
+                    action={() => deleteProject(activeProject)}
+                    toogleVisibility={() => setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle)}
+                />
+                : ""}
+            {deleteMilestoneWarning_toogle ?
+                <DeleteWarning
+                    // project={activeProject}
+                    text={warningText}
+                    action={() => deleteMilestoneItem(activeProject, activeMilestone)}
+                    toogleVisibility={() => setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
                 />
                 : ""}
             {addMilestone_toogle ?
@@ -311,10 +377,12 @@ const Dashboard = () => {
                                             key={Math.random() * 100000}
                                             dateOffset={dateOffset}
                                             topOffset={(index - 1) * 30}  // offset in px from top
-                                            milestoneItem={milestoneItem}
                                             project={project}
+                                            milestoneItem={milestoneItem}
                                             displayLimit={displayedDays}
-                                            setNewDeadline={setNewDeadline}
+                                            updateMilestoneItemDeadline={updateMilestoneItemDeadline}
+                                            // deleteMilestoneItem={deleteMilestoneItem}
+                                            deleteMilestoneItem={() => displayWarning_DeleteMilestoneItem(project, milestoneItem)}
                                         />
                                     })
                                 }
@@ -334,7 +402,7 @@ const Dashboard = () => {
                                 </span>
                                 <span
                                     className="badge bg-danger"
-                                    onClick={() => displayDeleteProjectWarning(project)}
+                                    onClick={() => displayWarning_DeleteProject(project)}
                                 >
                                     Delete Project
                                 </span>

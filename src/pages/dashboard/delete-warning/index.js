@@ -19,7 +19,7 @@ const DeleteWarning = (props) => {
         <div className='background'></div>
         <div className='container'>
             <div className='text-center fs-4'>{props.text}</div>
-            <div className='text-center fs-4'>{props.project.name}</div>
+            {/* <div className='text-center fs-4'>{props.project.name}</div> */}
             <div className='actions'>
                 {showSpinnerDelete ?
                     <div className="spinner-border" role="status">

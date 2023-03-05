@@ -16,9 +16,9 @@ const ManageProjectModal = (props) => {
 
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [name, setName] = useState(props.project.name);
-    const [shortName, setShortName] = useState(props.project.short_name);
-    const [number, setNumber] = useState(props.project.number);
+    const [name, setName] = useState(props.project.name ? props.project.name : "");
+    const [shortName, setShortName] = useState(props.project.short_name ? props.project.short_name : "");
+    const [number, setNumber] = useState(props.project.number ? props.project.number : "");
     const [showSpinnerCreateProject, setShowSpinnerCreateProject] = useState(false);
 
     const createNewProject = () => {
@@ -96,15 +96,15 @@ const ManageProjectModal = (props) => {
         <div className='container'>
             <div className='text-center fs-4'>{props.project.name !== undefined ? `Updating: ${props.project.name}` : 'NEW PROJECT'}</div>
             <div className="form-floating mb-3">
-                <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                <input type="text" className="form-control" id="project_name" value={name} onChange={(e) => setName(e.target.value)} />
                 <label htmlFor="name">name</label>
             </div>
             <div className="form-floating mb-3">
-                <input type="text" className="form-control" id="name" value={number} onChange={(e) => setNumber(e.target.value)} />
+                <input type="text" className="form-control" id="project_number" value={number} onChange={(e) => setNumber(e.target.value)} />
                 <label htmlFor="name">number</label>
             </div>
             <div className="form-floating mb-3">
-                <input type="text" className="form-control" id="name" value={shortName} onChange={(e) => setShortName(e.target.value)} />
+                <input type="text" className="form-control" id="project_shortName" value={shortName} onChange={(e) => setShortName(e.target.value)} />
                 <label htmlFor="name">short name</label>
             </div>
             <div className='actions'>
