@@ -3,7 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import './index.scss';
 
-const ManageProjectModal = (props) => {
+const CreateEditProjectModal = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -91,7 +91,7 @@ const ManageProjectModal = (props) => {
         }
     }
 
-    return (<div className='project-info'>
+    return (<div className='create-edit-project-modal'>
         <div className='background'></div>
         <div className='container'>
             <div className='text-center fs-4'>{props.project.name !== undefined ? `Updating: ${props.project.name}` : 'NEW PROJECT'}</div>
@@ -131,4 +131,4 @@ const ManageProjectModal = (props) => {
     </div>);
 }
 
-export default ManageProjectModal;
+export default CreateEditProjectModal;

@@ -1,4 +1,4 @@
-.create-milestoneItem-modal {
+.create-edit-project-modal {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -33,12 +33,6 @@
             width: 100%;
             justify-content: space-around;
             margin-top: 4rem;
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
     }
 }

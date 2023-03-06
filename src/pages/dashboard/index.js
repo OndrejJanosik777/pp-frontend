@@ -6,8 +6,9 @@ import planeSVG from './assets/airplane.svg';
 import MilestoneTag from './milestone-tag';
 import Timeline from './timeline';
 // modal components
-import ManageProjectModal from './manage-project-modal';
-import AddMilestoneModal from './create-milestone-modal';
+import CreateEditProjectModal from './create-edit-project-modal';
+import EditMilestoneItemModal from './edit-milestoneItem-modal';
+import CreateMilestoneItemModal from './create-milestone-modal';
 import ManageMilestoneTypes from './manage-milestone-types';
 import DeleteWarning from './delete-warning';
 import './index.scss';
@@ -23,6 +24,7 @@ const Dashboard = () => {
             return 'https://pp--backend.herokuapp.com';
         }
     }
+
     const [displayedProjects, setDisplayProjects] = useState([]);
     const [dateOffset, setDateOffset] = useState(0);    // offset from today...
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
@@ -32,11 +34,12 @@ const Dashboard = () => {
     const [createProject_toogle, setCreateProject_toogle] = useState(false);
     const [deleteProjectWarning_toogle, setDeleteProjectWarning_toogle] = useState(false);
     const [deleteMilestoneWarning_toogle, setDeleteMilestoneWarning_toogle] = useState(false);
-    const [addMilestone_toogle, setAddMilestone_toogle] = useState(false);
+    const [createMilestone_toogle, setCreateMilestone_toogle] = useState(false);
+    const [editMilestone_toogle, setEditMilestone_toogle] = useState(false);
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
     // rest
-    const [activeProject, setActiveProject] = useState({});
-    const [activeMilestone, setActiveMilestoneProject] = useState({});
+    const [activeProject, setActiveProject] = useState(undefined);
+    const [activeMilestoneItem, setActiveMilestoneItem] = useState(undefined);
     const [warningText, setWarningText] = useState('');
     // const [deleteFunction, setDeleteFunction] = useState();
 
@@ -50,13 +53,10 @@ const Dashboard = () => {
         // console.log('daysToDisplay: ', daysToDisplay);
         setDisplayedDays(daysToDisplay);
     })
-
+    // hook to run while loading component
     useEffect(() => {
         window.addEventListener('resize', handleResize.current);
-        fetchProjects();
-    }, []);
 
-    const fetchProjects = () => {
         axios({
             method: 'get',
             url: baseUrl + '/company/project/',
@@ -72,12 +72,8 @@ const Dashboard = () => {
 
                 alert('problem with fetching projects')
             })
-    }
-
-    const showState = () => {
-        console.log('displayedProjects: ', displayedProjects);
-    }
-
+    }, []);
+    // functions for managing projects
     const addNewProjectToState = (project) => {
         setDisplayProjects([...displayedProjects, project]);
         setCreateProject_toogle(!createProject_toogle);
@@ -123,12 +119,6 @@ const Dashboard = () => {
             })
     }
 
-    const displayNewMilestone = (project) => {
-        setActiveProject(project);
-
-        setAddMilestone_toogle(!addMilestone_toogle);
-    }
-
     const updateProject = (projectId) => {
         axios({
             method: 'get',
@@ -150,6 +140,30 @@ const Dashboard = () => {
 
                 alert('problem with fetching projects')
             })
+    }
+
+    const showModal_ManageProject = (project) => {
+        // creating new project or updating existing project
+
+        if (project === undefined) {
+            // alert('showing create new project');
+
+            setActiveProject({});
+        }
+        else {
+            // alert('showing modify existing project')
+
+            setActiveProject(project);
+        }
+
+        setCreateProject_toogle(!createProject_toogle)
+    }
+    // functions for manageing milestones
+    const displayNewMilestone = (project) => {
+        setActiveProject(project);
+        setActiveMilestoneItem(undefined);
+
+        setCreateMilestone_toogle(!createMilestone_toogle);
     }
 
     const updateMilestoneItemDeadline = (days, project, milestoneItem) => {
@@ -175,7 +189,7 @@ const Dashboard = () => {
 
         // update in database
         axios({
-            method: 'put',
+            method: 'patch',
             url: baseUrl + '/company/milestone-item/' + updatedMilestoneItem.id + "/",
             headers: {
                 "Authorization": token
@@ -199,13 +213,17 @@ const Dashboard = () => {
     }
 
     const updateMilestoneItem = (project, milestoneItem) => {
-        // console.log('updating milestone item with id: ', milestoneItem.id);
+        console.log(`updating milestone item ${milestoneItem.name} within project ${project.name}`);
 
+        setActiveProject(project);
+        setActiveMilestoneItem(milestoneItem);
+
+        setEditMilestone_toogle(!editMilestone_toogle);
     }
 
     const displayWarning_DeleteMilestoneItem = (project, milestone) => {
         setActiveProject(project);
-        setActiveMilestoneProject(milestone);
+        setActiveMilestoneItem(milestone);
         setWarningText(`Are you sure to delete milestone ${milestone.name} from project ${project.name}?`);
         // setDeleteFunction(deleteProject(project));
         setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
@@ -248,28 +266,15 @@ const Dashboard = () => {
                 setDisplayProjects([...originalProjects]);
             })
     }
-
-    const showModal_ManageProject = (project) => {
-        // creating new project or updating existing project
-
-        if (project === undefined) {
-            // alert('showing create new project');
-
-            setActiveProject({});
-        }
-        else {
-            // alert('showing modify existing project')
-
-            setActiveProject(project);
-        }
-
-        setCreateProject_toogle(!createProject_toogle)
+    // displaying state in console window
+    const showState = () => {
+        console.log('displayedProjects: ', displayedProjects);
     }
 
     return (
         <div className='dashboard'>
             {createProject_toogle ?
-                <ManageProjectModal
+                <CreateEditProjectModal
                     project={activeProject}
                     addNewProject={addNewProjectToState}
                     updateProject={updateExistingProjectInState}
@@ -284,23 +289,34 @@ const Dashboard = () => {
                     toogleVisibility={() => setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle)}
                 />
                 : ""}
+            {editMilestone_toogle ?
+                <EditMilestoneItemModal
+                    project={activeProject}
+                    milestoneItem={activeMilestoneItem}
+                    updateProject={updateProject}
+                    createNewMilestone={addNewProjectToState}
+                    toogleVisibility={() => setEditMilestone_toogle(!editMilestone_toogle)}
+                />
+                :
+                ""}
+            {createMilestone_toogle ?
+                <CreateMilestoneItemModal
+                    project={activeProject}
+                    // milestoneItem={activeMilestoneItem}
+                    updateProject={updateProject}
+                    createNewMilestone={addNewProjectToState}
+                    toogleVisibility={() => setCreateMilestone_toogle(!createMilestone_toogle)}
+                />
+                :
+                ""}
             {deleteMilestoneWarning_toogle ?
                 <DeleteWarning
                     // project={activeProject}
                     text={warningText}
-                    action={() => deleteMilestoneItem(activeProject, activeMilestone)}
+                    action={() => deleteMilestoneItem(activeProject, activeMilestoneItem)}
                     toogleVisibility={() => setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
                 />
                 : ""}
-            {addMilestone_toogle ?
-                <AddMilestoneModal
-                    project={activeProject}
-                    updateProject={updateProject}
-                    createNewMilestone={addNewProjectToState}
-                    toogleVisibility={() => setAddMilestone_toogle(!addMilestone_toogle)}
-                />
-                :
-                ""}
             {manageMilestoneTypes_toogle ?
                 <ManageMilestoneTypes
                     project={activeProject}
@@ -381,7 +397,8 @@ const Dashboard = () => {
                                             milestoneItem={milestoneItem}
                                             displayLimit={displayedDays}
                                             updateMilestoneItemDeadline={updateMilestoneItemDeadline}
-                                            // deleteMilestoneItem={deleteMilestoneItem}
+                                            updateMilestoneItem={updateMilestoneItem}
+                                            // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
                                             deleteMilestoneItem={() => displayWarning_DeleteMilestoneItem(project, milestoneItem)}
                                         />
                                     })
@@ -392,7 +409,7 @@ const Dashboard = () => {
                                     className="badge bg-primary"
                                     onClick={() => displayNewMilestone(project)}
                                 >
-                                    Add Milestone
+                                    Create Milestone
                                 </span>
                                 <span
                                     className="badge bg-warning"

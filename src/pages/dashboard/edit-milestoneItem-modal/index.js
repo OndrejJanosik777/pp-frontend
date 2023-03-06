@@ -4,7 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import './index.scss';
 
-const CreateMilestoneItemModal = (props) => {
+const EditMilestoneItemModal = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -23,11 +23,11 @@ const CreateMilestoneItemModal = (props) => {
     useEffect(() => {
         fetchMilestoneItemTypes();
 
-        // if (props.milestoneItem !== undefined) {
-        //     document.getElementById('name').value = props.milestoneItem.name;
-        //     document.getElementById('deadline').value = props.milestoneItem.date;
-        //     document.getElementById('comment').value = props.milestoneItem.comment;
-        // }
+        if (props.milestoneItem !== undefined) {
+            document.getElementById('name').value = props.milestoneItem.name;
+            document.getElementById('deadline').value = props.milestoneItem.date;
+            document.getElementById('comment').value = props.milestoneItem.comment;
+        }
 
     }, []);
 
@@ -130,24 +130,86 @@ const CreateMilestoneItemModal = (props) => {
             })
     }
 
-    const handleChanges = () => {
-        if (props.project !== undefined && props.milestoneItem !== undefined) {
-            createNewMilestone();
+    const saveChanges = () => {
+        const nameElement = document.getElementById('name')
+        const typesElement = document.getElementById('type-select')
+        const deadlineElement = document.getElementById('deadline')
+        const commentElement = document.getElementById('comment')
+
+        console.log(`nameElement: ${nameElement.value}`);
+        console.log(`typesElement: ${typesElement.value}`);
+        console.log(`deadlineElement: ${deadlineElement.value}`);
+        console.log(`commentElement: ${commentElement.value}`);
+
+        let milestoneItemType = milestoneItemTypes.find(elem => elem.name === typesElement.value);
+
+        if (nameElement.value === "" || typesElement.value === "" || deadlineElement.value === "" || commentElement.value === "") {
+            return alert('missing input!')
         }
-        else {
-            console.log('updating existing milestone item')
-        }
+
+        let updateMilestoneItem = { ...props.milestoneItem }
+        updateMilestoneItem.name = nameElement.value;
+        updateMilestoneItem.date = deadlineElement.value;
+        updateMilestoneItem.comment = commentElement.value;
+        updateMilestoneItem.milestone_item_type = milestoneItemType;
+
+
+        setShowSpinnerCreate(true);
+
+        console.log(`sending put request: `);
+        console.log(`name: ${nameElement.value}`);
+        console.log(`milestone_item_type: `, milestoneItemType);
+        console.log(`date: ${deadlineElement.value}`);
+        console.log(`comment: ${commentElement.value}`);
+        console.log(`updateMilestoneItem: `, updateMilestoneItem);
+
+        // update milestoneItem in state (not implemented yet, .. instead fetching of whole project... TODO: better solution?)
+        props.toogleVisibility();
+        setShowSpinnerCreate(false);
+
+        // update milestoneItem in database
+        axios({
+            method: 'put',
+            url: baseUrl + `/company/milestone-item/${updateMilestoneItem.id}/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                name: updateMilestoneItem.name,
+                milestone_item_type: updateMilestoneItem.milestone_item_type.id,
+                date: updateMilestoneItem.date,
+                comment: updateMilestoneItem.comment,
+            }
+        })
+            .then((response => {
+                console.log('succesfully updated milestoneItem: ');
+
+                props.updateProject(props.project.id);
+
+                // setShowSpinnerCreate(false);
+
+                // props.toogleVisibility();
+            }))
+            .catch((error) => {
+                console.log(error);
+
+                alert('problem with updating milestoneItem.');
+
+                // setShowSpinnerCreate(false);
+
+                // props.toogleVisibility();
+            })
     }
 
     const showState = () => {
         console.log('milestoneItemTypes: ', milestoneItemTypes);
     }
 
-    return (<div className='create-milestoneItem-modal'>
+    return (<div className='edit-milestoneItem-modal'>
         <div className='background'></div>
         <div className='container'>
-            <div className='text-center fs-4' onClick={showState}>NEW MILESTONE</div>
-            <div>{props.project.short_name}</div>
+            <div className='text-center fs-4' onClick={showState}>EDIT MILESTONE</div>
+            <div className='text-center fs-4'>({props.project.short_name})</div>
             <div className="form-floating mb-3">
                 <input type="text" className="form-control" id="name" />
                 <label htmlFor="name">name</label>
@@ -155,9 +217,14 @@ const CreateMilestoneItemModal = (props) => {
             <div className='row'>
                 <label htmlFor="type-select">Choose a Milestone type:</label>
                 <select name="types" id="type-select">
-                    <option value="">--Please choose an option--</option>
+                    <option value="">{'--Please choose an option--'}</option>
                     {milestoneItemTypes.map((type) => {
-                        return <option key={Math.random() * 100000}>{`${type.name}`}</option>;
+                        if (props.milestoneItem.milestone_item_type.name === type.name) {
+                            return <option key={Math.random() * 100000} selected>{`${type.name}`}</option>;
+                        }
+                        else {
+                            return <option key={Math.random() * 100000}>{`${type.name}`}</option>;
+                        }
                     })}
                 </select>
             </div>
@@ -177,7 +244,13 @@ const CreateMilestoneItemModal = (props) => {
                         <span className="sr-only"></span>
                     </div>
                     :
-                    <button type="button" className="btn btn-primary close" onClick={createNewMilestone}>CREATE</button>
+                    <button
+                        type="button"
+                        className="btn btn-primary close"
+                        onClick={saveChanges}
+                    >
+                        SAVE
+                    </button>
                 }
                 <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
             </div>
@@ -185,4 +258,4 @@ const CreateMilestoneItemModal = (props) => {
     </div>);
 }
 
-export default CreateMilestoneItemModal;
+export default EditMilestoneItemModal;

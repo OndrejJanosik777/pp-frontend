@@ -113,7 +113,7 @@ const MilestoneTag = (props) => {
                     <li className='context-item'>
                         <span
                             className="badge bg-warning"
-                        // onClick={() => displayNewMilestone(project)}
+                            onClick={() => props.updateMilestoneItem(props.project, props.milestoneItem)}
                         >
                             Edit Milestone
                         </span>
