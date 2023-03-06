@@ -326,7 +326,7 @@ const Dashboard = () => {
                 />
                 :
                 ""}
-            <header>
+            <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
                     <div className="container-fluid">
                         <div className="navbar-brand">Dashboard</div>
@@ -340,7 +340,7 @@ const Dashboard = () => {
                     <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
                 </nav>
             </header>
-            <main>
+            <main className='main'>
                 {
                     displayedProjects.map((project) => {
                         project.milestone_items.sort((a, b) => {
@@ -427,23 +427,24 @@ const Dashboard = () => {
                         </main>
                     })
                 }
-                <div className='wrapper-project'>
-                    <div className='timeline-controls'>
-                        <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>- 1 DAY</div>
-                        <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 7)}>- 7 DAYS</div>
-                        <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 30)}>- 30 DAYS</div>
-                    </div>
-                    <Timeline
-                        dateOffset={dateOffset}
-                        displayLimit={displayedDays}
-                    />
-                    <div className='timeline-controls'>
-                        <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 1)}>+ 1 DAY</div>
-                        <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 7)}>+ 7 DAYS</div>
-                        <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 30)}>+ 30 DAYS</div>
-                    </div>
-                </div>
             </main>
+            <footer className='footer'>
+                <div className='timeline-controls'>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>- 1 DAY</div>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 7)}>- 7 DAYS</div>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 30)}>- 30 DAYS</div>
+                </div>
+                <Timeline
+                    dateOffset={dateOffset}
+                    displayLimit={displayedDays}
+                />
+                <div className='timeline-controls'>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 1)}>+ 1 DAY</div>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 7)}>+ 7 DAYS</div>
+                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 30)}>+ 30 DAYS</div>
+                </div>
+
+            </footer>
         </div>);
 }
 
