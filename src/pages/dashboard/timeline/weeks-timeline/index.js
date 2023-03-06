@@ -8,7 +8,7 @@ const WeeksTimeLine = (props) => {
     const [loaded, setLoaded] = useState([]);
     const [weeks, setWeeks] = useState([]);
     const [intervals, setIntervals] = useState('');
-    const [paddingLeft, setPaddingLeft] = useState(8);
+    const [paddingLeft, setPaddingLeft] = useState(0);
 
     useEffect(() => {
         let startingWeek = props.startDate.isoWeek();

@@ -7,7 +7,7 @@ import moment from 'moment';
 const MonthTimeLine = (props) => {
     const [months, setMonths] = useState([]);
     const [intervals, setIntervals] = useState('')
-    const [paddingLeft, setPaddingLeft] = useState(8);
+    const [paddingLeft, setPaddingLeft] = useState(0);
 
     useEffect(() => {
         let startingMonth = props.startDate.format('M');

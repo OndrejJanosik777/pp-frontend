@@ -7,7 +7,7 @@ const DaysTimeLine = (props) => {
     const [loaded, setLoaded] = useState([]);
     const [days, setDays] = useState([]);
     const [intervals, setIntervals] = useState('');
-    const [paddingLeft, setPaddingLeft] = useState(8);
+    const [paddingLeft, setPaddingLeft] = useState(0);
 
     useEffect(() => {
         let numberOfDays = props.endDate.diff(props.startDate, 'days') + 1;

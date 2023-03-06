@@ -8,7 +8,7 @@ const YearsTimeLine = (props) => {
     const [loaded, setLoaded] = useState([]);
     const [years, setYears] = useState(['2021']);
     const [intervals, setIntervals] = useState('100rem')
-    const [paddingLeft, setPaddingLeft] = useState(8);
+    const [paddingLeft, setPaddingLeft] = useState(0);
 
     useEffect(() => {
         let startingYear = props.startDate.format('YYYY');
