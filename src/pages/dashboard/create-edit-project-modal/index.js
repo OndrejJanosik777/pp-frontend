@@ -27,7 +27,7 @@ const CreateEditProjectModal = (props) => {
 
             axios({
                 method: 'post',
-                url: baseUrl + '/company/project/',
+                url: baseUrl + '/company/projects/',
                 headers: {
                     "Authorization": token
                 },
@@ -62,7 +62,7 @@ const CreateEditProjectModal = (props) => {
 
             axios({
                 method: 'put',
-                url: baseUrl + `/company/project/${props.project.id}/`,
+                url: baseUrl + `/company/projects/${props.project.id}/`,
                 headers: {
                     "Authorization": token
                 },

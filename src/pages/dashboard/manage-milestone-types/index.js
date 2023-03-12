@@ -35,7 +35,7 @@ const ManageMilestoneTypes = (props) => {
 
         axios({
             method: 'get',
-            url: baseUrl + '/company/milestone-item-type/',
+            url: baseUrl + '/company/milestone-item-types/',
             headers: {
                 "Authorization": token
             }
@@ -64,7 +64,7 @@ const ManageMilestoneTypes = (props) => {
 
         axios({
             method: 'post',
-            url: baseUrl + '/company/milestone-item-type/',
+            url: baseUrl + '/company/milestone-item-types/',
             headers: {
                 "Authorization": token
             },
@@ -88,7 +88,9 @@ const ManageMilestoneTypes = (props) => {
 
                 setMilestoneTypes([...updatedMilestoneItems]);
 
-                alert('problem with creating new milestone Item');
+                alert('problem with creating new milestone Item Types');
+
+                setCreatingNewMilestoneType(false);
             })
 
     }
@@ -123,7 +125,7 @@ const ManageMilestoneTypes = (props) => {
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/milestone-item-type/${id}/`,
+            url: baseUrl + `/company/milestone-item-types/${id}/`,
             headers: {
                 "Authorization": token
             }
@@ -161,7 +163,7 @@ const ManageMilestoneTypes = (props) => {
 
         axios({
             method: 'put',
-            url: baseUrl + `/company/milestone-item-type/${updatedId}/`,
+            url: baseUrl + `/company/milestone-item-types/${updatedId}/`,
             headers: {
                 "Authorization": token
             },

@@ -59,7 +59,7 @@ const Dashboard = () => {
 
         axios({
             method: 'get',
-            url: baseUrl + '/company/project/',
+            url: baseUrl + '/company/projects/',
             headers: {
                 "Authorization": token
             }
@@ -104,7 +104,7 @@ const Dashboard = () => {
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/project/${project.id}/`,
+            url: baseUrl + `/company/projects/${project.id}/`,
             headers: {
                 "Authorization": token
             }
@@ -122,7 +122,7 @@ const Dashboard = () => {
     const updateProject = (projectId) => {
         axios({
             method: 'get',
-            url: baseUrl + `/company/project/${projectId}/`,
+            url: baseUrl + `/company/projects/${projectId}/`,
             headers: {
                 "Authorization": token
             }
@@ -190,7 +190,7 @@ const Dashboard = () => {
         // update in database
         axios({
             method: 'patch',
-            url: baseUrl + '/company/milestone-item/' + updatedMilestoneItem.id + "/",
+            url: baseUrl + '/company/milestone-items/' + updatedMilestoneItem.id + "/",
             headers: {
                 "Authorization": token
             },
@@ -250,7 +250,7 @@ const Dashboard = () => {
         // update in database
         axios({
             method: 'delete',
-            url: baseUrl + '/company/milestone-item/' + milestoneItem.id + "/",
+            url: baseUrl + '/company/milestone-items/' + milestoneItem.id + "/",
             headers: {
                 "Authorization": token
             }

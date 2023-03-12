@@ -36,7 +36,7 @@ const CreateMilestoneItemModal = (props) => {
 
         axios({
             method: 'get',
-            url: baseUrl + '/company/milestone-item-type/',
+            url: baseUrl + '/company/milestone-item-types/',
             headers: {
                 "Authorization": token
             }
@@ -70,48 +70,52 @@ const CreateMilestoneItemModal = (props) => {
         setShowSpinnerCreate(true);
 
         // first create a milestone
-        try {
-            const response = await axios({
-                method: 'post',
-                url: baseUrl + '/company/milestone-item/',
-                headers: {
-                    "Authorization": token
-                },
-                data: {
-                    name: nameElement.value,
-                    milestone_item_type: selectedMilestoneItemType.id,
-                    date: deadlineElement.value,
-                    comment: commentElement.value
-                }
-            })
+        // try {
+        //     const response = await axios({
+        //         method: 'post',
+        //         url: baseUrl + '/company/milestone-items/',
+        //         headers: {
+        //             "Authorization": token
+        //         },
+        //         data: {
+        //             name: nameElement.value,
+        //             milestone_item_type: selectedMilestoneItemType.id,
+        //             date: deadlineElement.value,
+        //             comment: commentElement.value,
+        //             project: props.project.id,
+        //         }
+        //     })
 
-            // console.log('response.data: ', response.data)
-            newMilestoneItemId = response.data.id;
-        }
-        catch (error) {
-            console.log(error);
+        //     // console.log('response.data: ', response.data)
+        //     newMilestoneItemId = response.data.id;
+        // }
+        // catch (error) {
+        //     console.log(error);
 
-            alert('problem with creating new milestone item')
+        //     alert('problem with creating new milestone item')
 
-            setShowSpinnerCreate(false);
+        //     setShowSpinnerCreate(false);
 
-            props.toogleVisibility();
-        }
+        //     props.toogleVisibility();
+        // }
 
-        // now assign new milestone to project
+        // create a milestone
         axios({
             method: 'post',
-            url: baseUrl + `/company/register-milestone`,
+            url: baseUrl + `/company/milestone-items/`,
             headers: {
                 "Authorization": token
             },
             data: {
-                projectId: props.project.id,
-                newMilestoneItemId: newMilestoneItemId
+                name: nameElement.value,
+                milestone_item_type: selectedMilestoneItemType.id,
+                date: deadlineElement.value,
+                comment: commentElement.value,
+                project: props.project.id,
             }
         })
             .then((response => {
-                // console.log('succesfully assigned to project: ', response.data);
+                // alert('problem with creating new milestone item')
 
                 props.updateProject(props.project.id);
 
@@ -122,7 +126,7 @@ const CreateMilestoneItemModal = (props) => {
             .catch((error) => {
                 console.log(error);
 
-                alert('problem with fetching milestone item types')
+                alert('problem with creating new milestone item')
 
                 setShowSpinnerCreate(false);
 

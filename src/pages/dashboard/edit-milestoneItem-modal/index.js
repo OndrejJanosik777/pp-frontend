@@ -36,7 +36,7 @@ const EditMilestoneItemModal = (props) => {
 
         axios({
             method: 'get',
-            url: baseUrl + '/company/milestone-item-type/',
+            url: baseUrl + '/company/milestone-item-types/',
             headers: {
                 "Authorization": token
             }
@@ -73,7 +73,7 @@ const EditMilestoneItemModal = (props) => {
         try {
             const response = await axios({
                 method: 'post',
-                url: baseUrl + '/company/milestone-item/',
+                url: baseUrl + '/company/milestone-items/',
                 headers: {
                     "Authorization": token
                 },
@@ -170,7 +170,7 @@ const EditMilestoneItemModal = (props) => {
         // update milestoneItem in database
         axios({
             method: 'put',
-            url: baseUrl + `/company/milestone-item/${updateMilestoneItem.id}/`,
+            url: baseUrl + `/company/milestone-items/${updateMilestoneItem.id}/`,
             headers: {
                 "Authorization": token
             },
@@ -179,6 +179,7 @@ const EditMilestoneItemModal = (props) => {
                 milestone_item_type: updateMilestoneItem.milestone_item_type.id,
                 date: updateMilestoneItem.date,
                 comment: updateMilestoneItem.comment,
+                project: updateMilestoneItem.project.id,
             }
         })
             .then((response => {
