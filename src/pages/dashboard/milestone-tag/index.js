@@ -8,9 +8,6 @@ const MilestoneTag = (props) => {
     const [leftOffset, setLeftOffset] = useState(0);
     const [originalLeftOffset, setOriginalLeftOffset] = useState(0);
     const [isMoving, setIsMoving] = useState(false);
-    const [deltaX, setDeltaX] = useState(0);
-    const [mouseX, setMouseX] = useState(0);
-    const [mouseY, setMouseY] = useState(0);
     const [visible, setVisible] = useState(false);
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
@@ -40,7 +37,6 @@ const MilestoneTag = (props) => {
         // console.log("leftOffset: ", leftOffset);
         // console.log("newLeftOffset: ", newLeftOffset);
 
-        setDeltaX(newLeftOffset);
         setLeftOffset(newLeftOffset);
     })
 
@@ -87,8 +83,20 @@ const MilestoneTag = (props) => {
         zIndex: `15`,
     }
 
+    const TasksStyle = {
+        position: 'absolute',
+        marginLeft: `${leftOffset - 18}px`,
+        marginTop: `${-45}px`,
+        zIndex: `15`,
+        backgroundColor: `lightgreen`,
+        width: `25px`,
+        textAlign: `center`,
+        borderRadius: `50%`,
+    }
+
     const TagStyle = {
         paddingLeft: `${leftOffset}px`,
+        paddingTop: `${20}px`,
     }
 
     return (<div className='milestone-tag'>
@@ -146,6 +154,9 @@ const MilestoneTag = (props) => {
             </div>
             :
             <div></div>}
+        <div style={TasksStyle}>
+            {props.milestoneItem.tasks.length}
+        </div>
     </div>);
 }
 
