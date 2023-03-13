@@ -10,7 +10,7 @@ import CreateEditProjectModal from './create-edit-project-modal';
 import EditMilestoneItemModal from './edit-milestoneItem-modal';
 import CreateMilestoneItemModal from './create-milestone-modal';
 import ManageMilestoneTypes from './manage-milestone-types';
-import DeleteWarning from './delete-warning';
+import DeleteWarning from './delete-warning-modal';
 import './index.scss';
 
 const Dashboard = () => {
@@ -41,7 +41,6 @@ const Dashboard = () => {
     const [activeProject, setActiveProject] = useState(undefined);
     const [activeMilestoneItem, setActiveMilestoneItem] = useState(undefined);
     const [warningText, setWarningText] = useState('');
-    // const [deleteFunction, setDeleteFunction] = useState();
 
     const handleResize = useRef((event) => {
         // console.log('event.target.innerWidth', event.target.innerWidth);
@@ -273,59 +272,61 @@ const Dashboard = () => {
 
     return (
         <div className='dashboard'>
-            {createProject_toogle ?
-                <CreateEditProjectModal
-                    project={activeProject}
-                    addNewProject={addNewProjectToState}
-                    updateProject={updateExistingProjectInState}
-                    toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
-                />
-                : ""}
-            {deleteProjectWarning_toogle ?
-                <DeleteWarning
-                    // project={activeProject}
-                    text={warningText}
-                    action={() => deleteProject(activeProject)}
-                    toogleVisibility={() => setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle)}
-                />
-                : ""}
-            {editMilestone_toogle ?
-                <EditMilestoneItemModal
-                    project={activeProject}
-                    milestoneItem={activeMilestoneItem}
-                    updateProject={updateProject}
-                    createNewMilestone={addNewProjectToState}
-                    toogleVisibility={() => setEditMilestone_toogle(!editMilestone_toogle)}
-                />
-                :
-                ""}
-            {createMilestone_toogle ?
-                <CreateMilestoneItemModal
-                    project={activeProject}
-                    // milestoneItem={activeMilestoneItem}
-                    updateProject={updateProject}
-                    createNewMilestone={addNewProjectToState}
-                    toogleVisibility={() => setCreateMilestone_toogle(!createMilestone_toogle)}
-                />
-                :
-                ""}
-            {deleteMilestoneWarning_toogle ?
-                <DeleteWarning
-                    // project={activeProject}
-                    text={warningText}
-                    action={() => deleteMilestoneItem(activeProject, activeMilestoneItem)}
-                    toogleVisibility={() => setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
-                />
-                : ""}
-            {manageMilestoneTypes_toogle ?
-                <ManageMilestoneTypes
-                    project={activeProject}
-                    updateProject={updateProject}
-                    createNewMilestone={addNewProjectToState}
-                    toogleVisibility={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
-                />
-                :
-                ""}
+            <div className='modals-container'>
+                {createProject_toogle ?
+                    <CreateEditProjectModal
+                        project={activeProject}
+                        addNewProject={addNewProjectToState}
+                        updateProject={updateExistingProjectInState}
+                        toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
+                    />
+                    : ""}
+                {deleteProjectWarning_toogle ?
+                    <DeleteWarning
+                        // project={activeProject}
+                        text={warningText}
+                        action={() => deleteProject(activeProject)}
+                        toogleVisibility={() => setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle)}
+                    />
+                    : ""}
+                {editMilestone_toogle ?
+                    <EditMilestoneItemModal
+                        project={activeProject}
+                        milestoneItem={activeMilestoneItem}
+                        updateProject={updateProject}
+                        createNewMilestone={addNewProjectToState}
+                        toogleVisibility={() => setEditMilestone_toogle(!editMilestone_toogle)}
+                    />
+                    :
+                    ""}
+                {createMilestone_toogle ?
+                    <CreateMilestoneItemModal
+                        project={activeProject}
+                        // milestoneItem={activeMilestoneItem}
+                        updateProject={updateProject}
+                        createNewMilestone={addNewProjectToState}
+                        toogleVisibility={() => setCreateMilestone_toogle(!createMilestone_toogle)}
+                    />
+                    :
+                    ""}
+                {deleteMilestoneWarning_toogle ?
+                    <DeleteWarning
+                        // project={activeProject}
+                        text={warningText}
+                        action={() => deleteMilestoneItem(activeProject, activeMilestoneItem)}
+                        toogleVisibility={() => setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
+                    />
+                    : ""}
+                {manageMilestoneTypes_toogle ?
+                    <ManageMilestoneTypes
+                        project={activeProject}
+                        updateProject={updateProject}
+                        createNewMilestone={addNewProjectToState}
+                        toogleVisibility={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
+                    />
+                    :
+                    ""}
+            </div>
             <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
                     <div className="container-fluid">
@@ -352,6 +353,19 @@ const Dashboard = () => {
                             let m_date = moment(elem.date);
 
                             return m_date.diff(now, 'days') < 0;
+                        })
+
+                        let totalTasks = 0;
+                        let completedTasks = 0;
+
+                        project.milestone_items.map((milestoneItem) => {
+                            totalTasks += milestoneItem.tasks.length;
+
+                            milestoneItem.tasks.map((task) => {
+                                if (task.status === 100) {
+                                    completedTasks += 1;
+                                }
+                            })
                         })
 
                         const middleStyle = {
@@ -381,8 +395,12 @@ const Dashboard = () => {
                                 <div className='row-left'>
                                     {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
                                 </div>
-                                <div className='row-left'>{`Tasks: ${0}/${0}`}</div>
-                                <div className='row-left'>{`Monuments: ${project.monuments.length}`}</div>
+                                <div className='row-left'>
+                                    {`Tasks: ${completedTasks}/${totalTasks}`}
+                                </div>
+                                <div className='row-left'>
+                                    {`Monuments: ${project.monuments.length}`}
+                                </div>
                             </div>
                             <div style={middleStyle}>
                                 {

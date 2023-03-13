@@ -7,6 +7,11 @@
     justify-content: space-between;
     position: relative;
 
+    .modals-container {
+        position: absolute;
+        width: 100%;
+    }
+
     .slight-side-margin {
         margin-left: 0.1rem;
         margin-right: 0.1rem;
