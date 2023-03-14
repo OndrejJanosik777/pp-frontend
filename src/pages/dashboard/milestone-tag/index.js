@@ -87,7 +87,7 @@ const MilestoneTag = (props) => {
         position: 'absolute',
         marginLeft: `${leftOffset - 18}px`,
         marginTop: `${-45}px`,
-        zIndex: `15`,
+        zIndex: `0`,
         backgroundColor: `lightgreen`,
         width: `25px`,
         textAlign: `center`,
@@ -137,7 +137,7 @@ const MilestoneTag = (props) => {
                     <li className='context-item'>
                         <span
                             className="badge bg-primary"
-                        // onClick={() => displayNewMilestone(project)}
+                            onClick={() => props.display_modal_createNewTask(props.project, props.milestoneItem)}
                         >
                             Add Task
                         </span>
