@@ -10,6 +10,7 @@ import CreateEditProjectModal from './create-edit-project-modal';
 import EditMilestoneItemModal from './edit-milestoneItem-modal';
 import CreateMilestoneItemModal from './create-milestone-modal';
 import ManageMilestoneTypes from './manage-milestone-types';
+import ManageTasksTypes from './manage-tasks-types';
 import DeleteWarning from './delete-warning-modal';
 import './index.scss';
 
@@ -37,6 +38,7 @@ const Dashboard = () => {
     const [createMilestone_toogle, setCreateMilestone_toogle] = useState(false);
     const [editMilestone_toogle, setEditMilestone_toogle] = useState(false);
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
+    const [manageTasksTypes_toogle, setManageTasksTypes_toogle] = useState(false);
     // rest
     const [activeProject, setActiveProject] = useState(undefined);
     const [activeMilestoneItem, setActiveMilestoneItem] = useState(undefined);
@@ -326,6 +328,15 @@ const Dashboard = () => {
                     />
                     :
                     ""}
+                {manageTasksTypes_toogle ?
+                    <ManageTasksTypes
+                        project={activeProject}
+                        updateProject={updateProject}
+                        createNewMilestone={addNewProjectToState}
+                        toogleVisibility={() => setManageTasksTypes_toogle(!manageTasksTypes_toogle)}
+                    />
+                    :
+                    ""}
             </div>
             <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
@@ -336,9 +347,10 @@ const Dashboard = () => {
                         <div className="navbar-brand">username</div>
                     </div>
                 </nav>
-                <nav>
+                <nav className='nav-buttons'>
                     <button type="button" className="btn btn-success slight-side-margin" onClick={() => showModal_ManageProject()} >Create New Project</button>
                     <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
+                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageTasksTypes_toogle(!manageTasksTypes_toogle)} >Manage Task Types</button>
                 </nav>
             </header>
             <main className='main'>
