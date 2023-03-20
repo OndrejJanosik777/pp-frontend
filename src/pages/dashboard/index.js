@@ -12,6 +12,7 @@ import CreateMilestoneItemModal from './create-milestone-modal';
 import CreateTaskModal from './create-task-modal';
 import ManageMilestoneTypes from './manage-milestone-types';
 import ManageTasksTypes from './manage-tasks-types';
+import ManageMonuments from './manage-monuments';
 import DeleteWarning from './delete-warning-modal';
 import './index.scss';
 
@@ -41,6 +42,7 @@ const Dashboard = () => {
     const [editMilestone_toogle, setEditMilestone_toogle] = useState(false);
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
     const [manageTasksTypes_toogle, setManageTasksTypes_toogle] = useState(false);
+    const [manageMonuments_toogle, setManageMonuments_toogle] = useState(false);
     // rest
     const [activeProject, setActiveProject] = useState(undefined);
     const [activeMilestoneItem, setActiveMilestoneItem] = useState(undefined);
@@ -285,6 +287,12 @@ const Dashboard = () => {
         setCreateProject_toogle(!createProject_toogle)
     }
 
+    const showModal_ManageMonuments = (project) => {
+        setActiveProject(project);
+
+        setManageMonuments_toogle(!manageMonuments_toogle);
+    }
+
     const showState = () => {
         console.log('displayedProjects: ', displayedProjects);
     }
@@ -364,6 +372,15 @@ const Dashboard = () => {
                     />
                     :
                     ""}
+                {manageMonuments_toogle ?
+                    <ManageMonuments
+                        project={activeProject}
+                        updateProject={updateProject}
+                        createNewMilestone={addNewProjectToState}
+                        toogleVisibility={() => setManageMonuments_toogle(!manageMonuments_toogle)}
+                    />
+                    :
+                    ""}
             </div>
             <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
@@ -407,6 +424,12 @@ const Dashboard = () => {
                             })
                         })
 
+                        let numberOfDocuments = 0;
+
+                        project.monuments.map((monument) => {
+                            numberOfDocuments += monument.certification_documents.length;
+                        })
+
                         const middleStyle = {
                             display: 'flex',
                             flexDirection: 'column',
@@ -422,6 +445,7 @@ const Dashboard = () => {
 
                         return <main className='wrapper-project' key={Math.random() * 100000}>
                             <div className='left-container'>
+                                <div>{project.number}</div>
                                 <div>{project.short_name}</div>
                                 <div>
                                     <img
@@ -439,6 +463,9 @@ const Dashboard = () => {
                                 </div>
                                 <div className='row-left'>
                                     {`Monuments: ${project.monuments.length}`}
+                                </div>
+                                <div className='row-left'>
+                                    {`Documents: ${numberOfDocuments}`}
                                 </div>
                             </div>
                             <div style={middleStyle}>
@@ -475,6 +502,19 @@ const Dashboard = () => {
                                     onClick={() => showModal_ManageProject(project)}
                                 >
                                     Update Project
+                                </span>
+                                <span
+                                    className="badge bg-info"
+                                    onClick={console.log('managing certification documents')}
+                                >
+                                    Certification Doc.
+                                </span>
+                                <span
+                                    className="badge bg-info"
+                                    // onClick={console.log('managing monuments')}
+                                    onClick={() => showModal_ManageMonuments(project)}
+                                >
+                                    Monuments
                                 </span>
                                 <span
                                     className="badge bg-danger"

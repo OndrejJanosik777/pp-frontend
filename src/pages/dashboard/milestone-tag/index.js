@@ -105,7 +105,7 @@ const MilestoneTag = (props) => {
                 <button
                     type="button"
                     className="dragable"
-                    title={props.milestoneItem.milestone_item_type.name}
+                    title={props.milestoneItem.milestone_item_type.name + '\n' + props.milestoneItem.date}
                     onContextMenu={(e) => contextMenuClicked(e)}
                     onClick={(e) => mouseClicked(e)}
                 >
