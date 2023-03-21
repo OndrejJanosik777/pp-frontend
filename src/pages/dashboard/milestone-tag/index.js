@@ -154,9 +154,13 @@ const MilestoneTag = (props) => {
             </div>
             :
             <div></div>}
-        <div style={TasksStyle}>
-            {props.milestoneItem.tasks.length}
-        </div>
+        {visible ?
+            <div style={TasksStyle}>
+                {props.milestoneItem.tasks.length}
+            </div>
+            :
+            <div></div>
+        }
     </div>);
 }
 
