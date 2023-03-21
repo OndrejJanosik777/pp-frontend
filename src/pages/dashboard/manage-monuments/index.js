@@ -95,6 +95,7 @@ const ManageMonuments = (props) => {
 
                 setMonuments([...monuments, newMonument]);
                 setCreatingNewMonument_spinner(false);
+                props.updateProject(props.project.id);
             }))
             .catch((error) => {
                 console.log(error);
@@ -151,7 +152,7 @@ const ManageMonuments = (props) => {
             }
         })
             .then((response => {
-
+                props.updateProject(props.project.id);
             }))
             .catch((error) => {
                 console.log(error);
