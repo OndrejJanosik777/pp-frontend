@@ -44,10 +44,10 @@ const ManageMonuments = (props) => {
         })
             .then((response => {
                 console.log('fetched monuments: ', response.data);
-                // let monuments = response.data;
-                // tasksTypes.sort((a, b) => a.id - b.id);
+                let monuments = response.data;
+                monuments.sort((a, b) => parseInt(a.part_number) - parseInt(b.part_number));
 
-                setMonuments([...response.data]);
+                setMonuments([...monuments]);
                 setFetchingMonuments_spinner(false);
             }))
             .catch((error) => {
