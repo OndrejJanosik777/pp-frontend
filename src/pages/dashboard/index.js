@@ -13,6 +13,7 @@ import CreateTaskModal from './create-task-modal';
 import ManageMilestoneTypes from './manage-milestone-types';
 import ManageTasksTypes from './manage-tasks-types';
 import ManageMonuments from './manage-monuments';
+import ManageCertificationDocuments from './manage-certification-documents';
 import DeleteWarning from './delete-warning-modal';
 import './index.scss';
 
@@ -43,6 +44,7 @@ const Dashboard = () => {
     const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
     const [manageTasksTypes_toogle, setManageTasksTypes_toogle] = useState(false);
     const [manageMonuments_toogle, setManageMonuments_toogle] = useState(false);
+    const [manageCertificationDocuments_toogle, setManageCertificationDocuments_toogle] = useState(false);
     // rest
     const [activeProject, setActiveProject] = useState(undefined);
     const [activeMilestoneItem, setActiveMilestoneItem] = useState(undefined);
@@ -293,6 +295,12 @@ const Dashboard = () => {
         setManageMonuments_toogle(!manageMonuments_toogle);
     }
 
+    const showModal_ManageCertificationDocuments = (project) => {
+        setActiveProject(project);
+
+        setManageCertificationDocuments_toogle(!manageCertificationDocuments_toogle);
+    }
+
     const showState = () => {
         console.log('displayedProjects: ', displayedProjects);
     }
@@ -381,6 +389,15 @@ const Dashboard = () => {
                     />
                     :
                     ""}
+                {manageCertificationDocuments_toogle ?
+                    <ManageCertificationDocuments
+                        project={activeProject}
+                        updateProject={updateProject}
+                        createNewMilestone={addNewProjectToState}
+                        toogleVisibility={() => setManageCertificationDocuments_toogle(!manageCertificationDocuments_toogle)}
+                    />
+                    :
+                    ""}
             </div>
             <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
@@ -424,10 +441,17 @@ const Dashboard = () => {
                             })
                         })
 
-                        let numberOfDocuments = 0;
+                        let certificationDocumentIds = [];
 
                         project.monuments.map((monument) => {
-                            numberOfDocuments += monument.certification_documents.length;
+                            monument.certification_documents.map((document) => {
+                                console.log('document: ', document);
+                                let index = certificationDocumentIds.findIndex((elem) => elem === document.id);
+
+                                if (index === -1) {
+                                    certificationDocumentIds.push(document.id)
+                                }
+                            })
                         })
 
                         const middleStyle = {
@@ -445,7 +469,7 @@ const Dashboard = () => {
 
                         return <main className='wrapper-project' key={Math.random() * 100000}>
                             <div className='left-container'>
-                                <div>{project.number}</div>
+                                <div>{`#${project.id} : ${project.number}`}</div>
                                 <div>{project.short_name}</div>
                                 <div>
                                     <img
@@ -465,7 +489,7 @@ const Dashboard = () => {
                                     {`Monuments: ${project.monuments.length}`}
                                 </div>
                                 <div className='row-left'>
-                                    {`Documents: ${numberOfDocuments}`}
+                                    {`Documents: ${certificationDocumentIds.length}`}
                                 </div>
                             </div>
                             <div style={middleStyle}>
@@ -505,7 +529,8 @@ const Dashboard = () => {
                                 </span>
                                 <span
                                     className="badge bg-info"
-                                    onClick={console.log('managing certification documents')}
+                                    // onClick={console.log('managing certification documents')}
+                                    onClick={() => showModal_ManageCertificationDocuments(project)}
                                 >
                                     Certification Doc.
                                 </span>
