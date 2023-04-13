@@ -5,6 +5,10 @@ import moment from 'moment';
 import planeSVG from './assets/airplane.svg';
 import MilestoneTag from './milestone-tag';
 import Timeline from './timeline';
+import home from './assets/home.png';
+import small_arrow_down from './assets/small_arrow_down.png';
+import arrow_left from './assets/arrow_left.png';
+import magnifier_dark from './assets/magnifier_dark.png';
 // modal components
 import CreateEditProjectModal from './create-edit-project-modal';
 import EditMilestoneItemModal from './edit-milestoneItem-modal';
@@ -17,6 +21,7 @@ import ManageCertificationDocuments from './manage-certification-documents';
 import DeleteWarning from './delete-warning-modal';
 // components
 import NavBar from '../../components/nav-bar';
+
 import './index.scss';
 
 const Dashboard = () => {
@@ -402,7 +407,23 @@ const Dashboard = () => {
                     ""}
             </div>
             <NavBar />
-            <header className='header'>
+            <div className='center-section'>
+                <div className='upper-part'>
+                    <img className='img-home' src={home} alt='' />
+                    <button className='button-container'>
+                        <div className='button-name'>Quick Links</div>
+                        <img className='img' src={small_arrow_down} alt='' />
+                    </button>
+                </div>
+                <div className='bottom-part'>
+
+                </div>
+            </div>
+            <div  className='left-section'>
+                <img className='img' src={arrow_left} alt='' />
+                <img className='img' src={magnifier_dark} alt='' />
+            </div>
+            {/* <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
                     <div className="container-fluid">
                         <div className="navbar-brand">Dashboard</div>
@@ -571,7 +592,7 @@ const Dashboard = () => {
                     <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 30)}>+ 30 DAYS</div>
                 </div>
 
-            </footer>
+            </footer> */}
         </div>);
 }
 
