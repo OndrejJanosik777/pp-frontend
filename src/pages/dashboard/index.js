@@ -15,6 +15,8 @@ import ManageTasksTypes from './manage-tasks-types';
 import ManageMonuments from './manage-monuments';
 import ManageCertificationDocuments from './manage-certification-documents';
 import DeleteWarning from './delete-warning-modal';
+// components
+import NavBar from '../../components/nav-bar';
 import './index.scss';
 
 const Dashboard = () => {
@@ -29,26 +31,26 @@ const Dashboard = () => {
         }
     }
 
-    const [displayedProjects, setDisplayProjects] = useState([]);
-    const [dateOffset, setDateOffset] = useState(0);    // offset from today...
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
-    const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [displayedDays, setDisplayedDays] = useState(parseInt((window.innerWidth - 8 * 16 - 8 * 16 - 4 * 16) / 16));
+    const [displayedProjects, set_displayedProjects] = useState([]);
+    const [dateOffset, set_dateOffset] = useState(0);    // offset from today...
+    const [baseUrl, set_baseUrl] = useState(getBaseUrl());
+    const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
+    const [displayedDays, set_displayedDays] = useState(parseInt((window.innerWidth - 8 * 16 - 8 * 16 - 4 * 16) / 16));
     // modal toogles
-    const [createProject_toogle, setCreateProject_toogle] = useState(false);
-    const [deleteProjectWarning_toogle, setDeleteProjectWarning_toogle] = useState(false);
-    const [deleteMilestoneWarning_toogle, setDeleteMilestoneWarning_toogle] = useState(false);
-    const [createMilestone_toogle, setCreateMilestone_toogle] = useState(false);
-    const [createTask_toogle, setCreateTask_toogle] = useState(false);
-    const [editMilestone_toogle, setEditMilestone_toogle] = useState(false);
-    const [manageMilestoneTypes_toogle, setManageMilestoneTypes_toogle] = useState(false);
-    const [manageTasksTypes_toogle, setManageTasksTypes_toogle] = useState(false);
-    const [manageMonuments_toogle, setManageMonuments_toogle] = useState(false);
-    const [manageCertificationDocuments_toogle, setManageCertificationDocuments_toogle] = useState(false);
+    const [createProject_toogle, set_createProject_toogle] = useState(false);
+    const [deleteProjectWarning_toogle, set_deleteProjectWarning_toogle] = useState(false);
+    const [deleteMilestoneWarning_toogle, set_deleteMilestoneWarning_toogle] = useState(false);
+    const [createMilestone_toogle, set_createMilestone_toogle] = useState(false);
+    const [createTask_toogle, set_createTask_toogle] = useState(false);
+    const [editMilestone_toogle, set_editMilestone_toogle] = useState(false);
+    const [manageMilestoneTypes_toogle, set_manageMilestoneTypes_toogle] = useState(false);
+    const [manageTasksTypes_toogle, set_manageTasksTypes_toogle] = useState(false);
+    const [manageMonuments_toogle, set_manageMonuments_toogle] = useState(false);
+    const [manageCertificationDocuments_toogle, set_manageCertificationDocuments_toogle] = useState(false);
     // rest
-    const [activeProject, setActiveProject] = useState(undefined);
-    const [activeMilestoneItem, setActiveMilestoneItem] = useState(undefined);
-    const [warningText, setWarningText] = useState('');
+    const [activeProject, set_activeProject] = useState(undefined);
+    const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
+    const [warningText, set_warningText] = useState('');
 
     const handleResize = useRef((event) => {
         // console.log('event.target.innerWidth', event.target.innerWidth);
@@ -58,7 +60,7 @@ const Dashboard = () => {
 
         let daysToDisplay = parseInt(availableWidth / 16);
         // console.log('daysToDisplay: ', daysToDisplay);
-        setDisplayedDays(daysToDisplay);
+        set_displayedDays(daysToDisplay);
     })
     // hook to run while loading component
     useEffect(() => {
@@ -72,7 +74,7 @@ const Dashboard = () => {
             }
         })
             .then((response => {
-                setDisplayProjects(response.data);
+                set_displayedProjects(response.data);
             }))
             .catch((error) => {
                 console.log(error);
@@ -82,8 +84,8 @@ const Dashboard = () => {
     }, []);
     // functions for managing projects
     const addNewProjectToState = (project) => {
-        setDisplayProjects([...displayedProjects, project]);
-        setCreateProject_toogle(!createProject_toogle);
+        set_displayedProjects([...displayedProjects, project]);
+        set_createProject_toogle(!createProject_toogle);
     }
 
     const createTask = (milestoneItem) => {
@@ -106,7 +108,7 @@ const Dashboard = () => {
         updatedProjects[projectIndex].milestone_items.splice(milestoneItemIndex, 1);
         console.log(`updatedProjects:`, updatedProjects);
 
-        setDisplayProjects([...updatedProjects]);
+        set_displayedProjects([...updatedProjects]);
 
         // update in database
         axios({
@@ -119,12 +121,12 @@ const Dashboard = () => {
             .then((response => {
                 console.log('milestone deleted from database: ', response.data);
 
-                setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
+                set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
             }))
             .catch((error) => {
                 console.log('problem with deleting milestone item: ', error);
 
-                setDisplayProjects([...originalProjects]);
+                set_displayedProjects([...originalProjects]);
             })
     }
 
@@ -134,7 +136,7 @@ const Dashboard = () => {
         let modifiedProjects = [...displayedProjects];
         modifiedProjects.splice(index, 1);
 
-        setDisplayProjects([...modifiedProjects]);
+        set_displayedProjects([...modifiedProjects]);
 
         axios({
             method: 'delete',
@@ -144,7 +146,7 @@ const Dashboard = () => {
             }
         })
             .then((response => {
-                setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle);
+                set_deleteProjectWarning_toogle(!deleteProjectWarning_toogle);
             }))
             .catch((error) => {
                 console.log(error);
@@ -154,53 +156,53 @@ const Dashboard = () => {
     }
 
     const displayWarning_DeleteProject = (project) => {
-        setActiveProject(project);
-        setWarningText(`Are you sure to delete project: ${project.name}?`);
+        set_activeProject(project);
+        set_warningText(`Are you sure to delete project: ${project.name}?`);
         // setDeleteFunction(deleteProject(project));
-        setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle);
+        set_deleteProjectWarning_toogle(!deleteProjectWarning_toogle);
     }
 
     const display_modal_warning_deleteMilestoneItem = (project, milestone) => {
-        setActiveProject(project);
-        setActiveMilestoneItem(milestone);
-        setWarningText(`Are you sure to delete milestone ${milestone.name} from project ${project.name}?`);
+        set_activeProject(project);
+        set_activeMilestoneItem(milestone);
+        set_warningText(`Are you sure to delete milestone ${milestone.name} from project ${project.name}?`);
         // setDeleteFunction(deleteProject(project));
-        setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
+        set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
     }
 
     const display_modal_createNewMilestone = (project) => {
         // console.log(`creating new Milestone for project ${project.id}`);
 
-        setActiveProject(project);
-        setActiveMilestoneItem(undefined);
+        set_activeProject(project);
+        set_activeMilestoneItem(undefined);
 
-        setCreateMilestone_toogle(!createMilestone_toogle);
+        set_createMilestone_toogle(!createMilestone_toogle);
     }
 
     const display_modal_createNewTask = (project, milestoneItem) => {
         console.log(`creating new Task for milestone ${milestoneItem.id} within project ${project.id}`);
 
-        setActiveProject(project);
-        setActiveMilestoneItem(milestoneItem);
+        set_activeProject(project);
+        set_activeMilestoneItem(milestoneItem);
 
-        setCreateTask_toogle(!createTask_toogle);
+        set_createTask_toogle(!createTask_toogle);
     }
 
     const updateExistingProjectInState = (project) => {
         let index = displayedProjects.findIndex(element => element.id === project.id);
         let newProjects = [...displayedProjects];
         newProjects[index] = { ...project };
-        setDisplayProjects([...newProjects]);
-        setCreateProject_toogle(!createProject_toogle);
+        set_displayedProjects([...newProjects]);
+        set_createProject_toogle(!createProject_toogle);
     }
 
     const updateMilestoneItem = (project, milestoneItem) => {
         console.log(`updating milestone item ${milestoneItem.name} within project ${project.name}`);
 
-        setActiveProject(project);
-        setActiveMilestoneItem(milestoneItem);
+        set_activeProject(project);
+        set_activeMilestoneItem(milestoneItem);
 
-        setEditMilestone_toogle(!editMilestone_toogle);
+        set_editMilestone_toogle(!editMilestone_toogle);
     }
 
     const updateMilestoneItemDeadline = (days, project, milestoneItem) => {
@@ -220,7 +222,7 @@ const Dashboard = () => {
         updatedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
         // console.log('updateddisplayedProjects: ', updateddisplayedProjects);
         // updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
-        setDisplayProjects([...updatedProjects]);
+        set_displayedProjects([...updatedProjects]);
 
         let updatedMilestoneItem = { ...updatedProjects[projectIndex].milestone_items[milestoneIndex] };
 
@@ -245,7 +247,7 @@ const Dashboard = () => {
             .catch((error) => {
                 console.log('problem with updating milestone item: ', error);
 
-                setDisplayProjects([...originalProjects]);
+                set_displayedProjects([...originalProjects]);
             })
     }
 
@@ -263,7 +265,7 @@ const Dashboard = () => {
                 let newArray = [...displayedProjects];
                 newArray[index] = { ...response.data };
 
-                setDisplayProjects([...newArray]);
+                set_displayedProjects([...newArray]);
             }))
             .catch((error) => {
                 console.log(error);
@@ -278,27 +280,27 @@ const Dashboard = () => {
         if (project === undefined) {
             // alert('showing create new project');
 
-            setActiveProject({});
+            set_activeProject({});
         }
         else {
             // alert('showing modify existing project')
 
-            setActiveProject(project);
+            set_activeProject(project);
         }
 
-        setCreateProject_toogle(!createProject_toogle)
+        set_createProject_toogle(!createProject_toogle)
     }
 
     const showModal_ManageMonuments = (project) => {
-        setActiveProject(project);
+        set_activeProject(project);
 
-        setManageMonuments_toogle(!manageMonuments_toogle);
+        set_manageMonuments_toogle(!manageMonuments_toogle);
     }
 
     const showModal_ManageCertificationDocuments = (project) => {
-        setActiveProject(project);
+        set_activeProject(project);
 
-        setManageCertificationDocuments_toogle(!manageCertificationDocuments_toogle);
+        set_manageCertificationDocuments_toogle(!manageCertificationDocuments_toogle);
     }
 
     const showState = () => {
@@ -313,7 +315,7 @@ const Dashboard = () => {
                         project={activeProject}
                         addNewProject={addNewProjectToState}
                         updateProject={updateExistingProjectInState}
-                        toogleVisibility={() => setCreateProject_toogle(!createProject_toogle)}
+                        toogleVisibility={() => set_createProject_toogle(!createProject_toogle)}
                     />
                     : ""}
                 {deleteProjectWarning_toogle ?
@@ -321,7 +323,7 @@ const Dashboard = () => {
                         // project={activeProject}
                         text={warningText}
                         action={() => deleteProject(activeProject)}
-                        toogleVisibility={() => setDeleteProjectWarning_toogle(!deleteProjectWarning_toogle)}
+                        toogleVisibility={() => set_deleteProjectWarning_toogle(!deleteProjectWarning_toogle)}
                     />
                     : ""}
                 {editMilestone_toogle ?
@@ -330,7 +332,7 @@ const Dashboard = () => {
                         milestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => setEditMilestone_toogle(!editMilestone_toogle)}
+                        toogleVisibility={() => set_editMilestone_toogle(!editMilestone_toogle)}
                     />
                     :
                     ""}
@@ -340,7 +342,7 @@ const Dashboard = () => {
                         // milestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => setCreateMilestone_toogle(!createMilestone_toogle)}
+                        toogleVisibility={() => set_createMilestone_toogle(!createMilestone_toogle)}
                     />
                     :
                     ""}
@@ -350,7 +352,7 @@ const Dashboard = () => {
                         milestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => setCreateTask_toogle(!createTask_toogle)}
+                        toogleVisibility={() => set_createTask_toogle(!createTask_toogle)}
                     />
                     :
                     ""}
@@ -359,7 +361,7 @@ const Dashboard = () => {
                         // project={activeProject}
                         text={warningText}
                         action={() => deleteMilestoneItem(activeProject, activeMilestoneItem)}
-                        toogleVisibility={() => setDeleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
+                        toogleVisibility={() => set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
                     />
                     : ""}
                 {manageMilestoneTypes_toogle ?
@@ -367,7 +369,7 @@ const Dashboard = () => {
                         project={activeProject}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
+                        toogleVisibility={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
                     />
                     :
                     ""}
@@ -376,7 +378,7 @@ const Dashboard = () => {
                         project={activeProject}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => setManageTasksTypes_toogle(!manageTasksTypes_toogle)}
+                        toogleVisibility={() => set_manageTasksTypes_toogle(!manageTasksTypes_toogle)}
                     />
                     :
                     ""}
@@ -385,7 +387,7 @@ const Dashboard = () => {
                         project={activeProject}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => setManageMonuments_toogle(!manageMonuments_toogle)}
+                        toogleVisibility={() => set_manageMonuments_toogle(!manageMonuments_toogle)}
                     />
                     :
                     ""}
@@ -394,24 +396,25 @@ const Dashboard = () => {
                         project={activeProject}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => setManageCertificationDocuments_toogle(!manageCertificationDocuments_toogle)}
+                        toogleVisibility={() => set_manageCertificationDocuments_toogle(!manageCertificationDocuments_toogle)}
                     />
                     :
                     ""}
             </div>
+            <NavBar />
             <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>
                     <div className="container-fluid">
                         <div className="navbar-brand">Dashboard</div>
                         <div className="navbar-brand">Months / Weeks / Days</div>
-                        <div className="navbar-brand clicable" onClick={() => setDateOffset(0)}>{moment().format('LLLL')}</div>
+                        <div className="navbar-brand clicable" onClick={() => set_dateOffset(0)}>{moment().format('LLLL')}</div>
                         <div className="navbar-brand">username</div>
                     </div>
                 </nav>
                 <nav className='nav-buttons'>
                     <button type="button" className="btn btn-success slight-side-margin" onClick={() => showModal_ManageProject()} >Create New Project</button>
-                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
-                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => setManageTasksTypes_toogle(!manageTasksTypes_toogle)} >Manage Task Types</button>
+                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Manage Milestone Types</button>
+                    <button type="button" className="btn btn-success slight-side-margin" onClick={() => set_manageTasksTypes_toogle(!manageTasksTypes_toogle)} >Manage Task Types</button>
                 </nav>
             </header>
             <main className='main'>
@@ -554,18 +557,18 @@ const Dashboard = () => {
             </main>
             <footer className='footer'>
                 <div className='timeline-controls'>
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 1)}>- 1 DAY</div>
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 7)}>- 7 DAYS</div>
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset - 30)}>- 30 DAYS</div>
+                    <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 1)}>- 1 DAY</div>
+                    <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 7)}>- 7 DAYS</div>
+                    <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 30)}>- 30 DAYS</div>
                 </div>
                 <Timeline
                     dateOffset={dateOffset}
                     displayLimit={displayedDays}
                 />
                 <div className='timeline-controls'>
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 1)}>+ 1 DAY</div>
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 7)}>+ 7 DAYS</div>
-                    <div className='cell-footer clicable starting' onClick={() => setDateOffset(dateOffset + 30)}>+ 30 DAYS</div>
+                    <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 1)}>+ 1 DAY</div>
+                    <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 7)}>+ 7 DAYS</div>
+                    <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 30)}>+ 30 DAYS</div>
                 </div>
 
             </footer>

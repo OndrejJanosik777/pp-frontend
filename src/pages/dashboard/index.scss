@@ -8,7 +8,7 @@
     position: relative;
 
     .modals-container {
-        position: absolute;
+        // position: absolute;
         width: 100%;
     }
 
@@ -19,7 +19,7 @@
 
     .header {
         background-color: burlywood;
-        position: fixed;
+        // position: fixed;
         z-index: 5;
         border-bottom: 1px solid black;
         width: 100%;
@@ -34,7 +34,7 @@
     }
 
     .main {
-        margin-top: 7rem;
+        // margin-top: 7rem;
         margin-bottom: 7rem;
         // position: absolute;
         bottom: 0;

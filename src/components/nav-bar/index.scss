@@ -1,0 +1,76 @@
+.nav-bar {
+    background-color: rgb(255, 255, 255);
+    // height: 40px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: helvetica;
+    font-size: 11px;
+
+    .left-container {
+        display: flex;
+        align-items: center;
+
+        .logo {
+            height: initial;
+    
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    
+        .username {
+            padding-left: 10px;
+        }
+    }
+
+    .right-container {
+        display: flex;
+        align-items: center;
+
+        .textbox-container {
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            padding: 0 5px;
+            
+            &:hover {
+                cursor: pointer;
+            }
+    
+            .textbox {
+                width: 160px;
+                height: 20px;
+            }
+    
+            .img {
+    
+            }
+        }
+    
+        .button-container {
+            display: flex;
+            align-items: end;
+            border: 1px solid grey;
+            border-radius: 3px;
+            height: 18px;
+            margin: 0 10px;
+    
+            .button-name {
+                text-decoration: underline;
+                color: rgb(78, 78, 78);
+            }
+    
+            .img {
+                padding-bottom: 2px;
+                padding-left: 1px;
+            }
+    
+            &:hover {
+                cursor: pointer;
+                background-color: orange;
+            }
+        }
+    }
+}
