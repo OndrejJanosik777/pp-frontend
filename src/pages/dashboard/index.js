@@ -19,13 +19,13 @@ import ManageTasksTypes from './manage-tasks-types';
 import ManageMonuments from './manage-monuments';
 import ManageCertificationDocuments from './manage-certification-documents';
 import DeleteWarning from './delete-warning-modal';
+import ManageProjects from './manage-projects';
 // components
 import NavBar from '../../components/nav-bar';
 
 import './index.scss';
 
 const Dashboard = () => {
-
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -52,13 +52,14 @@ const Dashboard = () => {
     const [manageTasksTypes_toogle, set_manageTasksTypes_toogle] = useState(false);
     const [manageMonuments_toogle, set_manageMonuments_toogle] = useState(false);
     const [manageCertificationDocuments_toogle, set_manageCertificationDocuments_toogle] = useState(false);
+    const [manageProjects_toogle, set_manageProjects_toogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
     const [warningText, set_warningText] = useState('');
 
     const handleResize = useRef((event) => {
-        // console.log('event.target.innerWidth', event.target.innerWidth);
+        console.log('event.target.innerWidth', event.target.innerWidth);
 
         let availableWidth = event.target.innerWidth;
         availableWidth = availableWidth - 5 * 16 - 8 * 16 - 4 * 16;
@@ -408,20 +409,182 @@ const Dashboard = () => {
             </div>
             <NavBar />
             <div className='center-section'>
-                <div className='upper-part'>
+                <div  className='left-section'>
+                    <img className='img' src={arrow_left} alt='' />
+                    <img className='img' src={magnifier_dark} alt='' />
+                </div>
+                <div className='main-section' id='main-section' name='main-section'>
+                    {manageProjects_toogle ?
+                    <ManageProjects />
+                    : ""}
                     <img className='img-home' src={home} alt='' />
                     <button className='button-container'>
                         <div className='button-name'>Quick Links</div>
                         <img className='img' src={small_arrow_down} alt='' />
                     </button>
-                </div>
-                <div className='bottom-part'>
+                    <div className='nav-bar'>
+                        <div className='item' onClick={() => set_manageProjects_toogle(!manageProjects_toogle)}>Projects</div>
+                        <div className='item'>|</div>
+                        <div className='item'>Milestone Types</div>
+                        <div className='item'>|</div>
+                        <div className='item'>Task types</div>
+                    </div>
+                    <main className='main'>
+                    {
+                        displayedProjects.map((project) => {
+                            project.milestone_items.sort((a, b) => {
+                                return moment(a.date) - moment(b.date);
+                            })
 
+                            let achievedMilestones = project.milestone_items.filter(elem => {
+                                let now = moment();
+                                let m_date = moment(elem.date);
+
+                                return m_date.diff(now, 'days') < 0;
+                            })
+
+                            let totalTasks = 0;
+                            let completedTasks = 0;
+
+                            project.milestone_items.map((milestoneItem) => {
+                                totalTasks += milestoneItem.tasks.length;
+
+                                milestoneItem.tasks.map((task) => {
+                                    if (task.status === 100) {
+                                        completedTasks += 1;
+                                    }
+                                })
+                            })
+
+                            let certificationDocumentIds = [];
+
+                            project.monuments.map((monument) => {
+                                monument.certification_documents.map((document) => {
+                                    console.log('document: ', document);
+                                    let index = certificationDocumentIds.findIndex((elem) => elem === document.id);
+
+                                    if (index === -1) {
+                                        certificationDocumentIds.push(document.id)
+                                    }
+                                })
+                            })
+
+                            const middleStyle = {
+                                display: 'flex',
+                                flexDirection: 'column',
+                                height: `${project.milestone_items.length * 50}px`,
+                                minHeight: '10rem',
+                                borderWidth: '1px',
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                position: 'relative',
+                                // backgroundColor: 'green',
+                                width: '100%',
+                            }
+
+                            return <main className='wrapper-project' key={Math.random() * 100000}>
+                                <div className='left-container'>
+                                    <div>{`#${project.id} : ${project.number}`}</div>
+                                    <div>{project.short_name}</div>
+                                    <div>
+                                        <img
+                                            className='plane-icons'
+                                            src={planeSVG}
+                                            alt=''
+                                        // onClick={() => editMilestoneType(milestoneType.id)} 
+                                        />
+                                    </div>
+                                    <div className='row-left'>
+                                        {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
+                                    </div>
+                                    <div className='row-left'>
+                                        {`Tasks: ${completedTasks}/${totalTasks}`}
+                                    </div>
+                                    <div className='row-left'>
+                                        {`Monuments: ${project.monuments.length}`}
+                                    </div>
+                                    <div className='row-left'>
+                                        {`Documents: ${certificationDocumentIds.length}`}
+                                    </div>
+                                </div>
+                                <div style={middleStyle}>
+                                    {
+                                        project.milestone_items.map((milestoneItem, index) => {
+                                            // console.log('drawing milestone items: ', index)
+
+                                            return < MilestoneTag
+                                                key={Math.random() * 100000}
+                                                dateOffset={dateOffset}
+                                                topOffset={(index - 1) * 30}  // offset in px from top
+                                                project={project}
+                                                milestoneItem={milestoneItem}
+                                                displayLimit={displayedDays}
+                                                updateMilestoneItemDeadline={updateMilestoneItemDeadline}
+                                                updateMilestoneItem={updateMilestoneItem}
+                                                display_modal_createNewTask={display_modal_createNewTask}
+                                                // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
+                                                // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
+                                                deleteMilestoneItem={() => display_modal_warning_deleteMilestoneItem(project, milestoneItem)}
+                                            />
+                                        })
+                                    }
+                                </div>
+                                <div className='right-container'>
+                                    <span
+                                        className="badge bg-primary"
+                                        onClick={() => display_modal_createNewMilestone(project)}
+                                    >
+                                        Create Milestone
+                                    </span>
+                                    <span
+                                        className="badge bg-warning"
+                                        onClick={() => showModal_ManageProject(project)}
+                                    >
+                                        Update Project
+                                    </span>
+                                    <span
+                                        className="badge bg-info"
+                                        // onClick={console.log('managing certification documents')}
+                                        onClick={() => showModal_ManageCertificationDocuments(project)}
+                                    >
+                                        Certification Doc.
+                                    </span>
+                                    <span
+                                        className="badge bg-info"
+                                        // onClick={console.log('managing monuments')}
+                                        onClick={() => showModal_ManageMonuments(project)}
+                                    >
+                                        Monuments
+                                    </span>
+                                    <span
+                                        className="badge bg-danger"
+                                        onClick={() => displayWarning_DeleteProject(project)}
+                                    >
+                                        Delete Project
+                                    </span>
+                                </div>
+                            </main>
+                        })
+                    }
+                    </main>
+                    <footer className='footer'>
+                        <div className='timeline-controls-left'>
+                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 1)}>- 1 DAY</div>
+                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 7)}>- 7 DAYS</div>
+                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 30)}>- 30 DAYS</div>
+                        </div>
+                        <Timeline
+                            dateOffset={dateOffset}
+                            displayLimit={displayedDays}
+                            // displayLimit={100}
+                        />
+                        <div className='timeline-controls-right'>
+                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 1)}>+ 1 DAY</div>
+                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 7)}>+ 7 DAYS</div>
+                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 30)}>+ 30 DAYS</div>
+                        </div>
+                    </footer>
                 </div>
-            </div>
-            <div  className='left-section'>
-                <img className='img' src={arrow_left} alt='' />
-                <img className='img' src={magnifier_dark} alt='' />
             </div>
             {/* <header className='header'>
                 <nav className="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" onClick={showState}>

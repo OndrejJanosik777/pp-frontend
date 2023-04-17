@@ -9,10 +9,12 @@ import './index.scss';
 
 //dateOffset, displayLimit
 const Timeline = (props) => {
-    const [loaded, setLoaded] = useState([]);
+
 
     useEffect(() => {
-    }, [loaded]);
+        console.log('timeline created...');
+        // console.log('box width: ', props.box.clientWidth);
+    }, []);
 
     return (<div>
         <DaysTimeLine

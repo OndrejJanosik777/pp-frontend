@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import LandingPage from './pages/landing-page';
 import Dashboard from './pages/dashboard';
+import Playground from './pages/playground';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,6 +14,7 @@ root.render(
     <Routes>
       <Route path="/" element={<LandingPage />} ></Route>
       <Route path="/Dashboard/" element={<Dashboard />} ></Route>
+      <Route path="/playground/" element={<Playground />} ></Route>
     </Routes>
   </BrowserRouter>
   // <React.StrictMode>
