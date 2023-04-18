@@ -1,55 +1,12 @@
 import React, { Component } from 'react';
-import { useState, useEffect, useRef } from 'react';
 import create_new from './assets/create_new.png';
 import edit_panels from './assets/edit_panels.png';
 import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
-import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import './index.scss';
-import axios from 'axios';
 
 const ManageProjects = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
-
-    const [baseUrl, set_baseUrl] = useState(getBaseUrl());
-    const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [projects, set_projects] = useState([]);
-
-    useEffect(() => {
-        console.log('props.projects: ', props.projects);
-
-        set_projects(props.projects);
-    }, []);
-
-    const checkboxChanged = (project) => {
-        console.log('checkbox checked...', project);
-
-        let updatedProjects = [...projects];
-
-        let index = updatedProjects.findIndex((elem) => elem.id === project.id);
-
-        updatedProjects[index].displayed = !updatedProjects[index].displayed;
-
-        set_projects(updatedProjects);
-    }
-
-    const saveChanges = () => {
-        props.set_projects(projects);
-
-        props.set_manageProjects_toogle(false);
-    }
-
-
-
     return ( <div className='c1-manage-projects'>
         <div className='c1-background'></div>
         <div className='c1-window'>
@@ -79,18 +36,34 @@ const ManageProjects = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {projects.map((project) => {
-                            return <tr key={Math.random() * 100000}>
-                                <td><input type='checkbox' checked={project.displayed} onChange={() => checkboxChanged(project)} /></td>
-                                <td>{project.name}</td>
-                                <td>{project.number}</td>
-                                <td>{project.short_name}</td>
-                                <td>
-                                    <img className='c1-icons' src={pencil_edit} alt='' />
-                                    <img className='c1-icons' src={delete_cross} alt='' />
-                                </td>
-                            </tr>
-                        })}
+                        <tr>
+                            <td><input type='checkbox' /></td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                        </tr>
+                        <tr>
+                            <td><input type='checkbox' /></td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                        </tr>
+                        <tr>
+                            <td><input type='checkbox' /></td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                        </tr>
+                        <tr>
+                            <td><input type='checkbox' /></td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                            <td>col1</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -121,7 +94,7 @@ const ManageProjects = (props) => {
                 </div>
                 <div className='c1-footer-row2'>
                     <div className='c1-row2-col1'>
-                        <input type='button' className='button' value='Save' onClick={saveChanges} />
+                        <input type='button' className='button' value='Save' />
                     </div>
                     <div className='c1-row2-col2'>
                         <input type='button' className='button' value='Cancel' onClick={() => props.set_manageProjects_toogle(false)} />

@@ -36,7 +36,7 @@ const Dashboard = () => {
         }
     }
 
-    const [displayedProjects, set_displayedProjects] = useState([]);
+    const [projects, set_projects] = useState([]);
     const [dateOffset, set_dateOffset] = useState(0);    // offset from today...
     const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
@@ -80,7 +80,13 @@ const Dashboard = () => {
             }
         })
             .then((response => {
-                set_displayedProjects(response.data);
+                let newProjects = [];
+                response.data.map((item) => {
+                    newProjects.push({...item, displayed: true})
+                })
+
+                // set_projects(response.data);
+                set_projects(newProjects);
             }))
             .catch((error) => {
                 console.log(error);
@@ -90,7 +96,7 @@ const Dashboard = () => {
     }, []);
     // functions for managing projects
     const addNewProjectToState = (project) => {
-        set_displayedProjects([...displayedProjects, project]);
+        set_projects([...projects, project]);
         set_createProject_toogle(!createProject_toogle);
     }
 
@@ -102,19 +108,19 @@ const Dashboard = () => {
         console.log(`deleting item: ${milestoneItem.id}`);
 
         // update in component state
-        let projectIndex = displayedProjects.findIndex(elem => elem.id === project.id)
-        let milestoneItemIndex = displayedProjects[projectIndex].milestone_items.findIndex(elem => elem.id === milestoneItem.id)
+        let projectIndex = projects.findIndex(elem => elem.id === project.id)
+        let milestoneItemIndex = projects[projectIndex].milestone_items.findIndex(elem => elem.id === milestoneItem.id)
 
         // console.log(`projectIndex: ${projectIndex}`);
         // console.log(`milestoneItemIndex: ${milestoneItemIndex}`);
 
-        let originalProjects = [...displayedProjects];
-        let updatedProjects = [...displayedProjects];
+        let originalProjects = [...projects];
+        let updatedProjects = [...projects];
 
         updatedProjects[projectIndex].milestone_items.splice(milestoneItemIndex, 1);
         console.log(`updatedProjects:`, updatedProjects);
 
-        set_displayedProjects([...updatedProjects]);
+        set_projects([...updatedProjects]);
 
         // update in database
         axios({
@@ -132,17 +138,17 @@ const Dashboard = () => {
             .catch((error) => {
                 console.log('problem with deleting milestone item: ', error);
 
-                set_displayedProjects([...originalProjects]);
+                set_projects([...originalProjects]);
             })
     }
 
     const deleteProject = (project) => {
-        const index = displayedProjects.findIndex(elem => elem.id === project.id)
+        const index = projects.findIndex(elem => elem.id === project.id)
 
-        let modifiedProjects = [...displayedProjects];
+        let modifiedProjects = [...projects];
         modifiedProjects.splice(index, 1);
 
-        set_displayedProjects([...modifiedProjects]);
+        set_projects([...modifiedProjects]);
 
         axios({
             method: 'delete',
@@ -195,10 +201,10 @@ const Dashboard = () => {
     }
 
     const updateExistingProjectInState = (project) => {
-        let index = displayedProjects.findIndex(element => element.id === project.id);
-        let newProjects = [...displayedProjects];
+        let index = projects.findIndex(element => element.id === project.id);
+        let newProjects = [...projects];
         newProjects[index] = { ...project };
-        set_displayedProjects([...newProjects]);
+        set_projects([...newProjects]);
         set_createProject_toogle(!createProject_toogle);
     }
 
@@ -215,20 +221,20 @@ const Dashboard = () => {
         // update in component state
         // console.log(`moving milestone with id ${milestoneItemId} within project with id ${projectId} by ${days}... `);
 
-        let projectIndex = displayedProjects.findIndex(element => element.id === project.id);
-        let milestoneIndex = displayedProjects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItem.id);
-        let originalDate = displayedProjects[projectIndex].milestone_items[milestoneIndex].date;
+        let projectIndex = projects.findIndex(element => element.id === project.id);
+        let milestoneIndex = projects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItem.id);
+        let originalDate = projects[projectIndex].milestone_items[milestoneIndex].date;
         // console.log('originalDate: ', originalDate);
 
         let newDate = moment(originalDate).add(days, 'days').format("YYYY-MM-DD");
         // console.log('newDate: ', newDate);
 
-        let originalProjects = [...displayedProjects];
-        let updatedProjects = [...displayedProjects];
+        let originalProjects = [...projects];
+        let updatedProjects = [...projects];
         updatedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
         // console.log('updateddisplayedProjects: ', updateddisplayedProjects);
         // updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
-        set_displayedProjects([...updatedProjects]);
+        set_projects([...updatedProjects]);
 
         let updatedMilestoneItem = { ...updatedProjects[projectIndex].milestone_items[milestoneIndex] };
 
@@ -253,7 +259,7 @@ const Dashboard = () => {
             .catch((error) => {
                 console.log('problem with updating milestone item: ', error);
 
-                set_displayedProjects([...originalProjects]);
+                set_projects([...originalProjects]);
             })
     }
 
@@ -266,12 +272,12 @@ const Dashboard = () => {
             }
         })
             .then((response => {
-                const index = displayedProjects.findIndex((elem) => elem.id === projectId);
+                const index = projects.findIndex((elem) => elem.id === projectId);
 
-                let newArray = [...displayedProjects];
+                let newArray = [...projects];
                 newArray[index] = { ...response.data };
 
-                set_displayedProjects([...newArray]);
+                set_projects([...newArray]);
             }))
             .catch((error) => {
                 console.log(error);
@@ -310,7 +316,7 @@ const Dashboard = () => {
     }
 
     const showState = () => {
-        console.log('displayedProjects: ', displayedProjects);
+        console.log('displayedProjects: ', projects);
     }
 
     return (
@@ -415,7 +421,11 @@ const Dashboard = () => {
                 </div>
                 <div className='main-section' id='main-section' name='main-section'>
                     {manageProjects_toogle ?
-                    <ManageProjects />
+                    <ManageProjects 
+                        set_manageProjects_toogle={set_manageProjects_toogle} 
+                        projects={projects}
+                        set_projects={set_projects}
+                    />
                     : ""}
                     <img className='img-home' src={home} alt='' />
                     <button className='button-container'>
@@ -431,7 +441,7 @@ const Dashboard = () => {
                     </div>
                     <main className='main'>
                     {
-                        displayedProjects.map((project) => {
+                        projects.map((project) => {
                             project.milestone_items.sort((a, b) => {
                                 return moment(a.date) - moment(b.date);
                             })
@@ -481,89 +491,91 @@ const Dashboard = () => {
                                 // backgroundColor: 'green',
                                 width: '100%',
                             }
-
-                            return <main className='wrapper-project' key={Math.random() * 100000}>
-                                <div className='left-container'>
-                                    <div>{`#${project.id} : ${project.number}`}</div>
-                                    <div>{project.short_name}</div>
-                                    <div>
-                                        <img
-                                            className='plane-icons'
-                                            src={planeSVG}
-                                            alt=''
-                                        // onClick={() => editMilestoneType(milestoneType.id)} 
-                                        />
-                                    </div>
-                                    <div className='row-left'>
-                                        {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
-                                    </div>
-                                    <div className='row-left'>
-                                        {`Tasks: ${completedTasks}/${totalTasks}`}
-                                    </div>
-                                    <div className='row-left'>
-                                        {`Monuments: ${project.monuments.length}`}
-                                    </div>
-                                    <div className='row-left'>
-                                        {`Documents: ${certificationDocumentIds.length}`}
-                                    </div>
-                                </div>
-                                <div style={middleStyle}>
-                                    {
-                                        project.milestone_items.map((milestoneItem, index) => {
-                                            // console.log('drawing milestone items: ', index)
-
-                                            return < MilestoneTag
-                                                key={Math.random() * 100000}
-                                                dateOffset={dateOffset}
-                                                topOffset={(index - 1) * 30}  // offset in px from top
-                                                project={project}
-                                                milestoneItem={milestoneItem}
-                                                displayLimit={displayedDays}
-                                                updateMilestoneItemDeadline={updateMilestoneItemDeadline}
-                                                updateMilestoneItem={updateMilestoneItem}
-                                                display_modal_createNewTask={display_modal_createNewTask}
-                                                // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
-                                                // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
-                                                deleteMilestoneItem={() => display_modal_warning_deleteMilestoneItem(project, milestoneItem)}
+                            
+                            if (project.displayed) {
+                                return <main className='wrapper-project' key={Math.random() * 100000}>
+                                    <div className='left-container'>
+                                        <div>{`#${project.id} : ${project.number}`}</div>
+                                        <div>{project.short_name}</div>
+                                        <div>
+                                            <img
+                                                className='plane-icons'
+                                                src={planeSVG}
+                                                alt=''
+                                            // onClick={() => editMilestoneType(milestoneType.id)} 
                                             />
-                                        })
-                                    }
-                                </div>
-                                <div className='right-container'>
-                                    <span
-                                        className="badge bg-primary"
-                                        onClick={() => display_modal_createNewMilestone(project)}
-                                    >
-                                        Create Milestone
-                                    </span>
-                                    <span
-                                        className="badge bg-warning"
-                                        onClick={() => showModal_ManageProject(project)}
-                                    >
-                                        Update Project
-                                    </span>
-                                    <span
-                                        className="badge bg-info"
-                                        // onClick={console.log('managing certification documents')}
-                                        onClick={() => showModal_ManageCertificationDocuments(project)}
-                                    >
-                                        Certification Doc.
-                                    </span>
-                                    <span
-                                        className="badge bg-info"
-                                        // onClick={console.log('managing monuments')}
-                                        onClick={() => showModal_ManageMonuments(project)}
-                                    >
-                                        Monuments
-                                    </span>
-                                    <span
-                                        className="badge bg-danger"
-                                        onClick={() => displayWarning_DeleteProject(project)}
-                                    >
-                                        Delete Project
-                                    </span>
-                                </div>
-                            </main>
+                                        </div>
+                                        <div className='row-left'>
+                                            {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
+                                        </div>
+                                        <div className='row-left'>
+                                            {`Tasks: ${completedTasks}/${totalTasks}`}
+                                        </div>
+                                        <div className='row-left'>
+                                            {`Monuments: ${project.monuments.length}`}
+                                        </div>
+                                        <div className='row-left'>
+                                            {`Documents: ${certificationDocumentIds.length}`}
+                                        </div>
+                                    </div>
+                                    <div style={middleStyle}>
+                                        {
+                                            project.milestone_items.map((milestoneItem, index) => {
+                                                // console.log('drawing milestone items: ', index)
+
+                                                return < MilestoneTag
+                                                    key={Math.random() * 100000}
+                                                    dateOffset={dateOffset}
+                                                    topOffset={(index - 1) * 30}  // offset in px from top
+                                                    project={project}
+                                                    milestoneItem={milestoneItem}
+                                                    displayLimit={displayedDays}
+                                                    updateMilestoneItemDeadline={updateMilestoneItemDeadline}
+                                                    updateMilestoneItem={updateMilestoneItem}
+                                                    display_modal_createNewTask={display_modal_createNewTask}
+                                                    // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
+                                                    // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
+                                                    deleteMilestoneItem={() => display_modal_warning_deleteMilestoneItem(project, milestoneItem)}
+                                                />
+                                            })
+                                        }
+                                    </div>
+                                    <div className='right-container'>
+                                        <span
+                                            className="badge bg-primary"
+                                            onClick={() => display_modal_createNewMilestone(project)}
+                                        >
+                                            Create Milestone
+                                        </span>
+                                        <span
+                                            className="badge bg-warning"
+                                            onClick={() => showModal_ManageProject(project)}
+                                        >
+                                            Update Project
+                                        </span>
+                                        <span
+                                            className="badge bg-info"
+                                            // onClick={console.log('managing certification documents')}
+                                            onClick={() => showModal_ManageCertificationDocuments(project)}
+                                        >
+                                            Certification Doc.
+                                        </span>
+                                        <span
+                                            className="badge bg-info"
+                                            // onClick={console.log('managing monuments')}
+                                            onClick={() => showModal_ManageMonuments(project)}
+                                        >
+                                            Monuments
+                                        </span>
+                                        <span
+                                            className="badge bg-danger"
+                                            onClick={() => displayWarning_DeleteProject(project)}
+                                        >
+                                            Delete Project
+                                        </span>
+                                    </div>
+                                </main>
+                            }
                         })
                     }
                     </main>
