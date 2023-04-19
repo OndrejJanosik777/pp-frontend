@@ -12,10 +12,33 @@
     position: relative;
     // overflow: hidden;
 
+    .modals-container {
+        // position: absolute;
+        width: 100%;
+    }
+
     .center-section {
         display: flex;
         height: 100%;
+        max-height: 95%;
         position: relative;
+
+        .left-section {
+            background-color: rgb(61, 70, 71);
+            width: 32px;
+            height: 100%;
+            // position: absolute;
+            top: 40px;
+            border-right: 2px solid rgb(91, 183, 59);
+            display: flex;
+            flex-direction: column;
+            // justify-content: center;
+            align-items: center;
+    
+            .img {
+                padding-top: 15px;
+            }
+        }
 
         .main-section {
             margin-left: 50px;
@@ -24,14 +47,15 @@
             margin-bottom: 5px;
             position: relative;
             width: 100%;
-            height: 95%;
+            height: 90%;
+            max-height: 95%;
             background-color: white;
             box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
             border-radius: 2px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            // overflow: scroll;
+            overflow: hidden;
     
             .nav-bar {
                 display: flex;
@@ -55,6 +79,91 @@
                     padding-left: 3px;
                     padding-right: 3px;
                 }
+            }
+
+            .main {
+                // margin-top: 7rem;
+                margin-bottom: 7rem;
+                // position: absolute;
+                bottom: 0;
+                width: 100%;
+                // height: 50%;
+                // max-height: 100%;
+                overflow-x: hidden;
+                overflow-y: scroll;
+                // scroll-behavior: smooth;
+                // overflow: scroll;
+        
+                .wrapper-project {
+                    display: grid;
+                    grid-template-columns: 8rem 1fr 8rem;
+                    position: relative;
+        
+                    .left-container {
+                        border: 1px solid black;
+                        min-height: 10rem;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: start;
+                        align-items: center;
+                        background-color: rgb(81, 182, 126);
+                        width: 8rem;
+                        max-width: 8rem;
+                        overflow: hidden;
+        
+                        .row-left {
+                            width: 100%;
+                            text-align: left;
+                            padding-left: 0.2rem;
+                            padding-right: 0.2rem;
+                        }
+                    }
+        
+                    .right-container {
+                        border: 1px solid black;
+                        min-height: 10rem;
+                        background-color: rgb(81, 182, 126);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+                        align-items: center;
+                        max-width: 8rem;
+                        overflow: hidden;
+        
+                        .badge {
+                            width: 90%;
+        
+                            &:hover {
+                                cursor: pointer;
+                                transform: scale(1.1);
+                                transition: 0.1s;
+                            }
+                        }
+                    }
+        
+                    .timeline-controls {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-around;
+                        align-items: center;
+        
+                        .cell-footer {
+                            border: 1px solid black;
+                            min-height: 1.5rem;
+                            width: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            // font-size: 0.5rem;
+        
+                            &:hover {
+                                font-weight: bold;
+                                background-color: chocolate;
+                            }
+                        }
+                    }
+                }
+        
             }
 
             .img-home {
@@ -173,22 +282,6 @@
             }
         }
     
-        .left-section {
-            background-color: rgb(61, 70, 71);
-            width: 32px;
-            height: 100%;
-            // position: absolute;
-            top: 40px;
-            border-right: 2px solid rgb(91, 183, 59);
-            display: flex;
-            flex-direction: column;
-            // justify-content: center;
-            align-items: center;
-    
-            .img {
-                padding-top: 15px;
-            }
-        }
 
         .footer {
             display: grid;
@@ -272,11 +365,6 @@
         }
     }
 
-    .modals-container {
-        // position: absolute;
-        width: 100%;
-    }
-
     .slight-side-margin {
         margin-left: 0.1rem;
         margin-right: 0.1rem;
@@ -296,90 +384,6 @@
             padding-left: 0.25rem;
             padding-right: 0.25rem;
         }
-    }
-
-    .main {
-        // margin-top: 7rem;
-        margin-bottom: 7rem;
-        // position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: scroll;
-        // scroll-behavior: smooth;
-        // overflow: scroll;
-
-        .wrapper-project {
-            display: grid;
-            grid-template-columns: 8rem 1fr 8rem;
-            position: relative;
-
-            .left-container {
-                border: 1px solid black;
-                min-height: 10rem;
-                display: flex;
-                flex-direction: column;
-                justify-content: start;
-                align-items: center;
-                background-color: rgb(81, 182, 126);
-                width: 8rem;
-                max-width: 8rem;
-                overflow: hidden;
-
-                .row-left {
-                    width: 100%;
-                    text-align: left;
-                    padding-left: 0.2rem;
-                    padding-right: 0.2rem;
-                }
-            }
-
-            .right-container {
-                border: 1px solid black;
-                min-height: 10rem;
-                background-color: rgb(81, 182, 126);
-                display: flex;
-                flex-direction: column;
-                justify-content: space-around;
-                align-items: center;
-                max-width: 8rem;
-                overflow: hidden;
-
-                .badge {
-                    width: 90%;
-
-                    &:hover {
-                        cursor: pointer;
-                        transform: scale(1.1);
-                        transition: 0.1s;
-                    }
-                }
-            }
-
-            .timeline-controls {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-around;
-                align-items: center;
-
-                .cell-footer {
-                    border: 1px solid black;
-                    min-height: 1.5rem;
-                    width: 100%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    // font-size: 0.5rem;
-
-                    &:hover {
-                        font-weight: bold;
-                        background-color: chocolate;
-                    }
-                }
-            }
-        }
-
     }
 
     .footer {

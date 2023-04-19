@@ -23,6 +23,10 @@ const ManageProjects = (props) => {
     const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [projects, set_projects] = useState([]);
+    const [showSpinner_CreateUpdateProject, set_showSpinner_CreateUpdateProject] = useState(false);
+    const [updateMode, set_updateMode] = useState(false);
+    const [createMode, set_createMode] = useState(false);
+    const [selectedProject, set_selectedProject] = useState({});
 
     useEffect(() => {
         console.log('props.projects: ', props.projects);
@@ -42,13 +46,142 @@ const ManageProjects = (props) => {
         set_projects(updatedProjects);
     }
 
-    const saveChanges = () => {
-        props.set_projects(projects);
+    const deleteProject = (project) => {
 
-        props.set_manageProjects_toogle(false);
+        let index = projects.findIndex(elem => elem.id === project.id)
+
+        let updatedProjects = [...projects];
+
+        updatedProjects.splice(index, 1);
+
+        set_projects(updatedProjects);
+
+        props.set_projects(updatedProjects);
+
+        axios({
+            method: 'delete',
+            url: baseUrl + `/company/projects/${project.id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            console.log("projects deleted sucessfully");
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with creating project')
+        })
     }
 
+    const createNewProject = () => {
+        let name = document.getElementById('name').value;
+        let number = document.getElementById('number').value;
+        let short_name = document.getElementById('short_name').value;
 
+        console.log('name: ', name);
+        console.log('number: ', number);
+        console.log('short_name: ', short_name);
+
+        if (name == "" || short_name == "" || number == "")  {
+            return alert('Missing input: name, number or short name')
+        }
+
+        set_showSpinner_CreateUpdateProject(true);
+
+        axios({
+            method: 'post',
+            url: baseUrl + '/company/projects/',
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                name: name,
+                number: number,
+                short_name: short_name,
+                milestone_items: [],
+                monuments: []
+            }
+        })
+        .then((response => {
+            console.log("projects created sucessfully");
+
+            let newProject = {...response.data, displayed: true};
+
+            let updatedProjects = [...projects, newProject];
+
+            set_projects(updatedProjects);
+
+            props.set_projects(updatedProjects);
+
+            set_showSpinner_CreateUpdateProject(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with creating project')
+        })
+    }
+
+    const switchToUpdateMode = (project) => {
+        set_updateMode(true);
+        set_selectedProject(project);
+
+        document.getElementById('name').value = project.name;
+        document.getElementById('number').value = project.number;
+        document.getElementById('short_name').value = project.short_name;
+
+    }
+
+    const updateProject = () => {
+        let updateProject = {...selectedProject};
+
+        updateProject.name = document.getElementById('name').value;
+        updateProject.number = document.getElementById('number').value;
+        updateProject.short_name = document.getElementById('short_name').value;
+
+        if (updateProject.name == "" || updateProject.number == "" || updateProject.short_name == "")  {
+            return alert('Missing input: name, number or short name')
+        }
+
+        set_showSpinner_CreateUpdateProject(true);
+
+        axios({
+            method: 'put',
+            url: baseUrl + `/company/projects/${updateProject.id}/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                name: updateProject.name,
+                number: updateProject.number,
+                short_name: updateProject.short_name,
+                // milestone_items: [],
+                // monuments: []
+            }
+        })
+        .then((response => {
+            console.log("projects updated sucessfully");
+
+            let index = projects.findIndex(elem => elem.id === response.data.id);
+
+            let updatedProjects = [...projects];
+
+            updatedProjects[index] = {...response.data, displayed: updateProject.displayed};
+
+            set_projects(updatedProjects);
+
+            props.set_projects(updatedProjects);
+
+            set_showSpinner_CreateUpdateProject(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with creating project')
+        })
+    }
 
     return ( <div className='c1-manage-projects'>
         <div className='c1-background'></div>
@@ -56,7 +189,7 @@ const ManageProjects = (props) => {
             <div className='c1-nav-bar'>
                 <div className='c1-nav-bar-left'>
                     <img className='c1-icons' src={delete_cross} alt='' />
-                    <img className='c1-icons' src={create_new} alt='' />
+                    <img className='c1-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
                 </div>
                 <div className='c1-nav-bar-right'>
                     <div className='c1-textbox-container'>
@@ -86,48 +219,58 @@ const ManageProjects = (props) => {
                                 <td>{project.number}</td>
                                 <td>{project.short_name}</td>
                                 <td>
-                                    <img className='c1-icons' src={pencil_edit} alt='' />
-                                    <img className='c1-icons' src={delete_cross} alt='' />
+                                    <img className='c1-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
+                                    <img className='c1-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
                                 </td>
                             </tr>
                         })}
                     </tbody>
                 </table>
             </div>
-            <div className='c1-win-footer'>
-                <div className='c1-footer-row1'>
-                    <div className='c1-row1-col1'>name</div>
-                    <div className='c1-row1-col2'>
-                        <div className='c1-textbox-container'>
-                            <input className='c1-textbox' type='text' placeholder='Search ...' />
+            {createMode || updateMode ? 
+                <div className='c1-win-footer'>
+                    <div className='c1-footer-row1'>
+                        <div className='c1-row1-col1'>name</div>
+                        <div className='c1-row1-col2'>
+                            <div className='c1-textbox-container'>
+                                <input className='c1-textbox' type='text' id='name' placeholder='...' />
+                            </div>
+                        </div>
+                    </div>
+                    <div className='c1-footer-row1'>
+                        <div className='c1-row1-col1'>number</div>
+                        <div className='c1-row1-col2'>
+                            <div className='c1-textbox-container'>
+                                <input className='c1-textbox' type='text' id='number' placeholder='...' />
+                            </div>
+                        </div>
+                    </div>
+                    <div className='c1-footer-row1'>
+                        <div className='c1-row1-col1'>short name</div>
+                        <div className='c1-row1-col2'>
+                            <div className='c1-textbox-container'>
+                                <input className='c1-textbox' type='text' id='short_name' placeholder='...' />
+                            </div>
+                        </div>
+                    </div>
+                    <div className='c1-footer-row2'>
+                        <div className='c1-row2-col1'>
+                            {showSpinner_CreateUpdateProject ?
+                                <div className="spinner-border" role="status">
+                                    <span className="sr-only"></span>
+                                </div>
+                                :
+                                <input type='button' className='button' value={updateMode ? 'Update' : 'Create'} onClick={updateMode ? updateProject : createNewProject} />
+                            }
+                        </div>
+                        <div className='c1-row2-col2'>
+                            <input type='button' className='button' value={updateMode ? 'Cancel' : 'Close'} onClick={updateMode ? () => set_updateMode(false) : () => props.set_manageProjects_toogle(false)} />
                         </div>
                     </div>
                 </div>
-                <div className='c1-footer-row1'>
-                    <div className='c1-row1-col1'>number</div>
-                    <div className='c1-row1-col2'>
-                        <div className='c1-textbox-container'>
-                            <input className='c1-textbox' type='text' placeholder='Search ...' />
-                        </div>
-                    </div>
-                </div>
-                <div className='c1-footer-row1'>
-                    <div className='c1-row1-col1'>short name</div>
-                    <div className='c1-row1-col2'>
-                        <div className='c1-textbox-container'>
-                            <input className='c1-textbox' type='text' placeholder='Search ...' />
-                        </div>
-                    </div>
-                </div>
-                <div className='c1-footer-row2'>
-                    <div className='c1-row2-col1'>
-                        <input type='button' className='button' value='Save' onClick={saveChanges} />
-                    </div>
-                    <div className='c1-row2-col2'>
-                        <input type='button' className='button' value='Cancel' onClick={() => props.set_manageProjects_toogle(false)} />
-                    </div>
-                </div>
-            </div>
+                :
+                <span></span>
+            }
         </div>
     </div> );
 }
