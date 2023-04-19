@@ -31,7 +31,8 @@ const MilestoneTag = (props) => {
     }, [props.dateOffset]);
 
     const handleMilestoneTagMove = useRef((event) => {
-        let newLeftOffset = event.clientX - 9 * 16;
+        // let newLeftOffset = event.clientX - 9 * 16;
+        let newLeftOffset = event.clientX - 22 * 10;
         // console.log("event.clientX: ", event.clientX);
         // console.log("startingX: ", startingX);
         // console.log("leftOffset: ", leftOffset);
@@ -80,13 +81,13 @@ const MilestoneTag = (props) => {
         position: 'absolute',
         marginLeft: `${leftOffset}px`,
         marginTop: `${0}px`,
-        zIndex: `15`,
+        zIndex: `25`,
     }
 
     const TasksStyle = {
         position: 'absolute',
         marginLeft: `${leftOffset - 18}px`,
-        marginTop: `${-45}px`,
+        marginTop: `${-32}px`,
         zIndex: `0`,
         backgroundColor: `lightgreen`,
         width: `25px`,

@@ -62,6 +62,21 @@
                         // height: 25px;
                     }
                 }
+
+                .button {
+                    font-weight: bold;
+                    padding: 1px 5px;
+                    background-color: #44759D;
+                    color: white;
+                    border: none;
+                    margin: 0.2rem;
+                    border-radius: 25%;
+
+                    &:hover {
+                        // color: rgb(201, 201, 201);
+                        background-color: #2c5c83;
+                    }
+                }
             }
 
             .c1-icons {
