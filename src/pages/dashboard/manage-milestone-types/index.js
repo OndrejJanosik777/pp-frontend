@@ -16,7 +16,6 @@ const ManageMilestoneTypes = (props) => {
         }
     }
 
-    const [loaded, setLoaded] = useState([]);
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [milestoneTypes, setMilestoneTypes] = useState([]);
@@ -28,7 +27,7 @@ const ManageMilestoneTypes = (props) => {
 
     useEffect(() => {
         fetchMilestoneItemTypes();
-    }, [loaded]);
+    }, []);
 
     const fetchMilestoneItemTypes = () => {
         // console.log('fetching project with id: ', projectId);
@@ -187,73 +186,95 @@ const ManageMilestoneTypes = (props) => {
     }
 
     return (<div className='manage-milestone-types'>
-        <div className='background'></div>
-        <div className='container'>
-            <div className='text-center fs-4' onClick={showState}>MANAGE MILESTONE TYPES</div>
-            {fetchingMilestoneTypes ?
-                <div className="d-flex justify-content-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only"></span>
+                {/* <div className='c1-background'></div>
+                <div className='c1-window'>
+            <div className='c1-nav-bar'>
+                <div className='c1-nav-bar-left'>
+                    <img className='c1-icons' src={delete_cross} alt='' />
+                    <img className='c1-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
+                </div>
+                <div className='c1-nav-bar-right'>
+                    <div className='c1-textbox-container'>
+                        <input className='c1-textbox' type='text' placeholder='Search ...' />
+                        <img className='c1-img' src={magnifier} alt='' />
+                    </div>
+                    <img className='c1-icons' src={edit_panels} alt='' />
+                    <img className='c1-icons' src={questionmark_blue} alt='' />
+                    <input type='button' className='button' value={'X'} onClick={() => props.set_manageProjects_toogle(false)} />
+                </div>
+            </div>
+            <div className='c1-content'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>show</th>
+                            <th>name</th>
+                            <th>number</th>
+                            <th>description</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {projects.map((project) => {
+                            return <tr key={Math.random() * 100000}>
+                                <td><input type='checkbox' checked={project.displayed} onChange={() => checkboxChanged(project)} /></td>
+                                <td>{project.name}</td>
+                                <td>{project.number}</td>
+                                <td>{project.short_name}</td>
+                                <td>
+                                    <img className='c1-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
+                                    <img className='c1-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
+                                </td>
+                            </tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
+            {createMode || updateMode ? 
+                <div className='c1-win-footer'>
+                    <div className='c1-footer-row1'>
+                        <div className='c1-row1-col1'>name</div>
+                        <div className='c1-row1-col2'>
+                            <div className='c1-textbox-container'>
+                                <input className='c1-textbox' type='text' id='name' placeholder='...' />
+                            </div>
+                        </div>
+                    </div>
+                    <div className='c1-footer-row1'>
+                        <div className='c1-row1-col1'>number</div>
+                        <div className='c1-row1-col2'>
+                            <div className='c1-textbox-container'>
+                                <input className='c1-textbox' type='text' id='number' placeholder='...' />
+                            </div>
+                        </div>
+                    </div>
+                    <div className='c1-footer-row1'>
+                        <div className='c1-row1-col1'>short name</div>
+                        <div className='c1-row1-col2'>
+                            <div className='c1-textbox-container'>
+                                <input className='c1-textbox' type='text' id='short_name' placeholder='...' />
+                            </div>
+                        </div>
+                    </div>
+                    <div className='c1-footer-row2'>
+                        <div className='c1-row2-col1'>
+                            {showSpinner_CreateUpdateProject ?
+                                <div className="spinner-border" role="status">
+                                    <span className="sr-only"></span>
+                                </div>
+                                :
+                                <input type='button' className='button' value={updateMode ? 'Update' : 'Create'} onClick={updateMode ? updateProject : createNewProject} />
+                            }
+                        </div>
+                        <div className='c1-row2-col2'>
+                            <input type='button' className='button' value={updateMode ? 'Cancel' : 'Close'} onClick={updateMode ? () => set_updateMode(false) : () => props.set_manageProjects_toogle(false)} />
+                        </div>
                     </div>
                 </div>
                 :
-                <div>
-                    <table className="table table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">short name</th>
-                                <th scope="col">name</th>
-                                <th scope="col">edit</th>
-                                <th scope="col">delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {milestoneTypes.map((milestoneType) => {
-                                return <tr key={Math.random() * 100000}>
-                                    <th scope="row">{milestoneType.id}</th>
-                                    <td>{milestoneType.short_name}</td>
-                                    <td>{milestoneType.name}</td>
-                                    <td><img className='icons' src={editSVG} alt='' onClick={() => editMilestoneType(milestoneType.id)} /></td>
-                                    <td><img className='icons' src={deleteSVG} alt='' onClick={() => deleteMilestoneType(milestoneType.id)} /></td>
-                                </tr>
-                            })}
-                        </tbody>
-                    </table>
-                    <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="short_name" />
-                        <label htmlFor="short_name">short name</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="name" />
-                        <label htmlFor="name">name</label>
-                    </div>
-                    {updateMode ?
-                        <div className='actions'>
-                            {updatingMilestoneType ?
-                                <div className="spinner-border" role="status">
-                                    <span className="sr-only"></span>
-                                </div>
-                                :
-                                <button type="button" className="btn btn-primary close" onClick={updateMilestoneType}>UPDATE</button>
-                            }
-                            <button type="button" className="btn btn-danger close" onClick={() => setUpdateMode(false)}>CANCEL UPDATE</button>
-                        </div>
-                        :
-                        <div className='actions'>
-                            {creatingNewMilestoneType ?
-                                <div className="spinner-border" role="status">
-                                    <span className="sr-only"></span>
-                                </div>
-                                :
-                                <button type="button" className="btn btn-primary close" onClick={createNewMilestoneType}>CREATE</button>
-                            }
-                            <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
-                        </div>
-                    }
-                </div>
+                <span></span>
             }
-        </div>
+        </div> */}
     </div>);
 }
 

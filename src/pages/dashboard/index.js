@@ -22,6 +22,7 @@ import DeleteWarning from './delete-warning-modal';
 import ManageProjects from './manage-projects';
 // components
 import NavBar from '../../components/nav-bar';
+import SideBar from '../../components/side-bar';
 
 import './index.scss';
 
@@ -48,10 +49,11 @@ const Dashboard = () => {
     const [createMilestone_toogle, set_createMilestone_toogle] = useState(false);
     const [createTask_toogle, set_createTask_toogle] = useState(false);
     const [editMilestone_toogle, set_editMilestone_toogle] = useState(false);
-    const [manageMilestoneTypes_toogle, set_manageMilestoneTypes_toogle] = useState(false);
     const [manageTasksTypes_toogle, set_manageTasksTypes_toogle] = useState(false);
     const [manageMonuments_toogle, set_manageMonuments_toogle] = useState(false);
     const [manageCertificationDocuments_toogle, set_manageCertificationDocuments_toogle] = useState(false);
+    // after refactoring
+    const [manageMilestoneTypes_toogle, set_manageMilestoneTypes_toogle] = useState(false);
     const [manageProjects_toogle, set_manageProjects_toogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
@@ -376,7 +378,7 @@ const Dashboard = () => {
                         toogleVisibility={() => set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
                     />
                     : ""}
-                {manageMilestoneTypes_toogle ?
+                {/* {manageMilestoneTypes_toogle ?
                     <ManageMilestoneTypes
                         project={activeProject}
                         updateProject={updateProject}
@@ -384,7 +386,7 @@ const Dashboard = () => {
                         toogleVisibility={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
                     />
                     :
-                    ""}
+                    ""} */}
                 {manageTasksTypes_toogle ?
                     <ManageTasksTypes
                         project={activeProject}
@@ -414,11 +416,8 @@ const Dashboard = () => {
                     ""}
             </div>
             <NavBar />
+            <SideBar />
             <div className='center-section'>
-                <div  className='left-section'>
-                    <img className='img' src={arrow_left} alt='' />
-                    <img className='img' src={magnifier_dark} alt='' />
-                </div>
                 <div className='main-section' id='main-section' name='main-section'>
                     {manageProjects_toogle ?
                     <ManageProjects 
@@ -427,6 +426,15 @@ const Dashboard = () => {
                         set_projects={set_projects}
                     />
                     : ""}
+                    {manageMilestoneTypes_toogle ?
+                    <ManageMilestoneTypes
+                        project={activeProject}
+                        updateProject={updateProject}
+                        createNewMilestone={addNewProjectToState}
+                        toogleVisibility={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
+                    />
+                    :
+                    ""}
                     <img className='img-home' src={home} alt='' />
                     <button className='button-container'>
                         <div className='button-name'>Quick Links</div>
@@ -435,7 +443,7 @@ const Dashboard = () => {
                     <div className='nav-bar'>
                         <div className='item' onClick={() => set_manageProjects_toogle(!manageProjects_toogle)}>Projects</div>
                         <div className='item'>|</div>
-                        <div className='item'>Milestone Types</div>
+                        <div className='item' onClick={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Milestone Types</div>
                         <div className='item'>|</div>
                         <div className='item'>Task types</div>
                     </div>

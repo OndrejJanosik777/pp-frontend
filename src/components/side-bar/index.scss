@@ -1,0 +1,17 @@
+.side-bar {
+    background-color: rgb(61, 70, 71);
+    width: 32px;
+    height: calc(100% - 50px);
+    position: absolute;
+    bottom: 0;
+    border-right: 2px solid rgb(91, 183, 59);
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    align-items: center;
+    z-index: 5;
+
+    .img {
+        padding-top: 15px;
+    }
+}
