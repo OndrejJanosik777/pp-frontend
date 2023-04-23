@@ -49,12 +49,12 @@ const Dashboard = () => {
     const [createMilestone_toogle, set_createMilestone_toogle] = useState(false);
     const [createTask_toogle, set_createTask_toogle] = useState(false);
     const [editMilestone_toogle, set_editMilestone_toogle] = useState(false);
-    const [manageTasksTypes_toogle, set_manageTasksTypes_toogle] = useState(false);
     const [manageMonuments_toogle, set_manageMonuments_toogle] = useState(false);
     const [manageCertificationDocuments_toogle, set_manageCertificationDocuments_toogle] = useState(false);
     // after refactoring
     const [manageMilestoneTypes_toogle, set_manageMilestoneTypes_toogle] = useState(false);
     const [manageProjects_toogle, set_manageProjects_toogle] = useState(false);
+    const [manageTasksTypes_toogle, set_manageTasksTypes_toogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
@@ -378,24 +378,6 @@ const Dashboard = () => {
                         toogleVisibility={() => set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
                     />
                     : ""}
-                {/* {manageMilestoneTypes_toogle ?
-                    <ManageMilestoneTypes
-                        project={activeProject}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
-                    />
-                    :
-                    ""} */}
-                {manageTasksTypes_toogle ?
-                    <ManageTasksTypes
-                        project={activeProject}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_manageTasksTypes_toogle(!manageTasksTypes_toogle)}
-                    />
-                    :
-                    ""}
                 {manageMonuments_toogle ?
                     <ManageMonuments
                         project={activeProject}
@@ -428,11 +410,13 @@ const Dashboard = () => {
                     : ""}
                     {manageMilestoneTypes_toogle ?
                     <ManageMilestoneTypes
-                        project={activeProject}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
-                        set_manageMilestoneTypes_toogle={set_manageMilestoneTypes_toogle}
+                        toogleVisibility={set_manageMilestoneTypes_toogle}
+                    />
+                    :
+                    ""}
+                    {manageTasksTypes_toogle ?
+                    <ManageTasksTypes
+                        toogleVisibility={set_manageTasksTypes_toogle}
                     />
                     :
                     ""}
@@ -442,11 +426,20 @@ const Dashboard = () => {
                         <img className='img' src={small_arrow_down} alt='' />
                     </button>
                     <div className='p02-nav-bar'>
-                        <div className='p02-item' onClick={() => set_manageProjects_toogle(!manageProjects_toogle)}>Projects</div>
+                        <div 
+                            className='p02-item' 
+                            onClick={() => set_manageProjects_toogle(!manageProjects_toogle)}
+                        >Projects</div>
                         <div className='p02-item'>|</div>
-                        <div className='p02-item' onClick={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Milestone Types</div>
+                        <div 
+                            className='p02-item' 
+                            onClick={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} 
+                        >Milestone Types</div>
                         <div className='p02-item'>|</div>
-                        <div className='p02-item'>Task types</div>
+                        <div 
+                            className='p02-item'
+                            onClick={() => set_manageTasksTypes_toogle(true)}
+                        >Task types</div>
                     </div>
                     <main className='p02-main'>
                     {

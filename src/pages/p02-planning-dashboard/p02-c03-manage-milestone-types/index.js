@@ -45,19 +45,19 @@ const ManageMilestoneTypes = (props) => {
                 "Authorization": token
             }
         })
-            .then((response => {
-                let milestoneTypes = response.data;
-                milestoneTypes.sort((a, b) => a.id - b.id);
+        .then((response => {
+            let milestoneTypes = response.data;
+            milestoneTypes.sort((a, b) => a.id - b.id);
 
-                set_milestoneTypes([...milestoneTypes]);
+            set_milestoneTypes([...milestoneTypes]);
 
-                set_showSpinner_FetchingItems(false);
-            }))
-            .catch((error) => {
-                console.log(error);
+            set_showSpinner_FetchingItems(false);
+        }))
+        .catch((error) => {
+            console.log(error);
 
-                alert('problem with fetching milestone item types')
-            })
+            alert('problem with fetching milestone item types')
+        })
     }
 
     const createNewItem = () => {
@@ -209,12 +209,21 @@ const ManageMilestoneTypes = (props) => {
                 </div>
                 <div className='p02-c03-nav-bar-right'>
                     <div className='p02-c03-textbox-container'>
-                        <input className='p02-c03-textbox' type='text' placeholder='Search ...' />
+                        <input 
+                            className='p02-c03-textbox' 
+                            type='text' 
+                            placeholder='Search ...' 
+                        />
                         <img className='p02-c03-img' src={magnifier} alt='' />
                     </div>
                     <img className='p02-c03-icons' src={edit_panels} alt='' />
                     <img className='p02-c03-icons' src={questionmark_blue} alt='' />
-                    <input type='button' className='p02-c03-button' value={'X'} onClick={() => props.set_manageMilestoneTypes_toogle(false)} />
+                    <input 
+                        type='button' 
+                        className='p02-c03-button' 
+                        value={'X'} 
+                        onClick={() => props.toogleVisibility(false)} 
+                    />
                 </div>
             </div>
             {showSpinner_FetchingItems ?
@@ -267,41 +276,41 @@ const ManageMilestoneTypes = (props) => {
                     <div className='p02-c03-row1-col1'>short name</div>
                     <div className='p02-c03-row1-col2'>
                         <div className='p02-c03-textbox-container'>
-                                    <input 
-                                        className='p02-c03-textbox' 
-                                        type='text' 
-                                        id='short_name' 
-                                        placeholder='...' 
-                                    />
+                            <input 
+                                className='p02-c03-textbox' 
+                                type='text' 
+                                id='short_name' 
+                                placeholder='...' 
+                            />
                         </div>
                     </div>
                 </div>
                 <div className='p02-c03-footer-row1'>
-                        <div className='p02-c03-row1-col1'>name</div>
-                        <div className='p02-c03-row1-col2'>
-                            <div className='p02-c03-textbox-container'>
-                                <input 
-                                    type='text' 
-                                    className='p02-c03-textbox' 
-                                    id='name' 
-                                    placeholder='...' 
-                                />
-                            </div>
+                    <div className='p02-c03-row1-col1'>name</div>
+                    <div className='p02-c03-row1-col2'>
+                        <div className='p02-c03-textbox-container'>
+                            <input 
+                                type='text' 
+                                className='p02-c03-textbox' 
+                                id='name' 
+                                placeholder='...' 
+                            />
                         </div>
+                    </div>
                 </div>
                 <div className='p02-c03-footer-row2'>
                     <div className='p02-c03-row2-col1'>
                         {showSpinner_CreateUpdateItem ?
-                            <div className="spinner-border p02-c03-spinner" role="status">
-                                <span className="sr-only"></span>
-                            </div>
-                            :
-                            <input 
-                                type='button' 
-                                className='p02-c03-button' 
-                                value={updateMode ? 'Update' : 'Create'} 
-                                onClick={updateMode ? () => updateItem(selectedItem) : createNewItem} 
-                            />
+                        <div className="spinner-border p02-c03-spinner" role="status">
+                            <span className="sr-only"></span>
+                        </div>
+                        :
+                        <input 
+                            type='button' 
+                            className='p02-c03-button' 
+                            value={updateMode ? 'Update' : 'Create'} 
+                            onClick={updateMode ? () => updateItem(selectedItem) : createNewItem} 
+                        />
                         }
                     </div>
                     <div className='p02-c03-row2-col2'>

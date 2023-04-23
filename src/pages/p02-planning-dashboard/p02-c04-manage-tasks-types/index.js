@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
 import editSVG from './assets/pencil-square.svg';
 import deleteSVG from './assets/trash3.svg';
+import create_new from './assets/create_new.png';
+import edit_panels from './assets/edit_panels.png';
+import questionmark_blue from './assets/questionmark_blue.png';
+import delete_cross from './assets/delete_cross.png';
+import pencil_edit from './assets/pencil_edit.png';
+import magnifier from './assets/magnifier.png';
 import axios from 'axios';
 import './index.scss';
 
@@ -18,18 +24,18 @@ const ManageTasksTypes = (props) => {
 
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [tasksTypes, setTasksTypes] = useState([]);
-    const [fetchingTasksTypes, setFetchingTasksTypes] = useState(true);
-    const [creatingNewMilestoneType, setCreatingNewTaskType] = useState(false);
-    const [updateMode, setUpdateMode] = useState(false);
-    const [updatedId, setUpdatedId] = useState(0);
-    const [updatingTaskType, setUpdatingTaskType] = useState(false);
+    const [taskTypes, set_taskTypes] = useState([]);
+    const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
+    const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(true);
+    const [updateMode, set_updateMode] = useState(false);
+    const [createMode, set_createMode] = useState(false);
+    const [selectedItem, set_selectedItem] = useState(undefined);
 
     useEffect(() => {
-        fetchTasksTypes();
+        fetchItems();
     }, []);
 
-    const fetchTasksTypes = () => {
+    const fetchItems = () => {
         // console.log('fetching project with id: ', projectId);
 
         axios({
@@ -39,25 +45,29 @@ const ManageTasksTypes = (props) => {
                 "Authorization": token
             }
         })
-            .then((response => {
-                console.log('fetch tasks types: ', response.data);
-                let tasksTypes = response.data;
-                tasksTypes.sort((a, b) => a.id - b.id);
+        .then((response => {
+            console.log('fetch tasks types: ', response.data);
 
-                setTasksTypes([...tasksTypes]);
-                setFetchingTasksTypes(false);
-            }))
-            .catch((error) => {
-                console.log(error);
+            let tasksTypes = response.data;
 
-                alert('problem with fetching tasks types');
-            })
+            tasksTypes.sort((a, b) => a.id - b.id);
+
+            set_taskTypes([...tasksTypes]);
+
+            set_showSpinner_FetchingItems(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with fetching tasks types');
+        })
     }
 
-    const createNewTasksType = () => {
+    const createNewItem = () => {
         const name = document.getElementById('name').value;
         const description = document.getElementById('description').value;
-        setCreatingNewTaskType(true);
+
+        set_showSpinner_CreateUpdateItem(true);
 
         if (name === "" && description === "")
             return alert('missing input');
@@ -73,110 +83,98 @@ const ManageTasksTypes = (props) => {
                 description: description
             }
         })
-            .then((response => {
-                const newTasksType = response.data;
+        .then((response => {
+            const newItem = response.data;
 
-                setTasksTypes([...tasksTypes, newTasksType]);
-                setCreatingNewTaskType(false);
-            }))
-            .catch((error) => {
-                console.log(error);
+            set_taskTypes([...taskTypes, newItem]);
 
-                let updatedTaskType = [...tasksTypes];
+            set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log(error);
 
-                updatedTaskType.pop();
+            let updatedItem = [...taskTypes];
 
-                setTasksTypes([...updatedTaskType]);
+            updatedItem.pop();
 
-                alert('problem with creating new milestone Item Types');
+            set_taskTypes([...updatedItem]);
 
-                setCreatingNewTaskType(false);
-            })
+            alert('problem with creating new milestone Item Types');
 
+        })
     }
 
-    const showState = () => {
-        console.log('milestoneTypes: ', tasksTypes)
-    }
+    const deleteItem = (item) => {
+        const index = taskTypes.findIndex(elem => elem.id === item.id)
 
-    const editTaskType = (id) => {
-        // alert(`updating milestoneType ${id}`);
+        let updatedItems = [...taskTypes];
 
-        const index = tasksTypes.findIndex(elem => elem.id === id);
-        let selectedTaskType = tasksTypes[index];
+        updatedItems.splice(index, 1);
 
-        document.getElementById('name').value = selectedTaskType.name;
-        document.getElementById('description').value = selectedTaskType.description;
-
-        setUpdateMode(true);
-        setUpdatedId(id);
-    }
-
-    const deleteTaskType = (id) => {
-        // alert(`deleting milestoneType ${id}`);
-
-        const index = tasksTypes.findIndex(elem => elem.id === id)
-
-        let updatedMilestoneTypes = [...tasksTypes];
-        updatedMilestoneTypes.splice(index, 1);
-
-        setTasksTypes([...updatedMilestoneTypes]);
+        set_taskTypes([...updatedItems]);
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/task-types/${id}/`,
+            url: baseUrl + `/company/task-types/${item.id}/`,
             headers: {
                 "Authorization": token
             }
         })
             .then((response => {
-
+                
             }))
             .catch((error) => {
                 console.log(error);
 
-                alert('cannot delete this task type. It is used in Project.')
+                alert(error);
 
-                let updatedTaskTypes = [...tasksTypes];
+                let updatedItems = [...taskTypes];
 
-                setTasksTypes([...updatedTaskTypes]);
+                set_taskTypes([...updatedItems]);
             })
     }
 
-    const updateTaskType = () => {
-        // alert(`updating milestoneType ${id}`);
-        let newName = document.getElementById('name').value;
-        let newDescription = document.getElementById('description').value;
+    const updateItem = (item) => {
 
-        const index = tasksTypes.findIndex(elem => elem.id === updatedId)
-        let updatedTasksType = tasksTypes[index];
-        updatedTasksType.id = updatedId;
-        updatedTasksType.name = newName;
-        updatedTasksType.description = newDescription;
+        let name = document.getElementById('name').value;
+        let description = document.getElementById('description').value;
 
-        let updatedMilestoneTypes = [...tasksTypes];
-        updatedMilestoneTypes.splice(index, 1, updatedTasksType);
+        if (name === "" && description === "")
+        return alert('missing input');
 
-        setTasksTypes([...updatedMilestoneTypes]);
-        setUpdatingTaskType(true);
+        const index = taskTypes.findIndex(elem => elem.id === item.id)
+        let updatedItem = taskTypes[index];
+
+        updatedItem.id = item.id;
+        updatedItem.name = name;
+        updatedItem.description = description;
+
+        let updatedItems = [...taskTypes];
+        updatedItems.splice(index, 1, updatedItem);
+
+        set_taskTypes([...updatedItems]);
+        set_showSpinner_CreateUpdateItem(true);
 
         axios({
             method: 'put',
-            url: baseUrl + `/company/task-types/${updatedId}/`,
+            url: baseUrl + `/company/task-types/${item.id}/`,
             headers: {
                 "Authorization": token
             },
             data: {
-                id: updatedTasksType.id,
-                name: updatedTasksType.name,
-                description: updatedTasksType.description,
+                id: updatedItem.id,
+                name: updatedItem.name,
+                description: updatedItem.description,
             }
         })
             .then((response => {
-                setUpdatingTaskType(false);
-                setUpdateMode(false);
+                set_showSpinner_CreateUpdateItem(false);
+
                 document.getElementById('name').value = "";
+
                 document.getElementById('description').value = "";
+
+                set_updateMode(false);
             }))
             .catch((error) => {
                 console.log(error);
@@ -184,73 +182,146 @@ const ManageTasksTypes = (props) => {
             })
     }
 
-    return (<div className='manage-milestone-types'>
-        <div className='background'></div>
-        <div className='container'>
-            <div className='text-center fs-4' onClick={showState}>MANAGE TASK TYPES</div>
-            {fetchingTasksTypes ?
-                <div className="d-flex justify-content-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only"></span>
+    const switchToUpdateMode = (item) => {
+        set_updateMode(true);
+        set_selectedItem(item);
+
+        document.getElementById('name').value = item.name;
+        document.getElementById('description').value = item.description;
+    }
+
+    return (<div className='p02-c04-component'>
+        <div className='p02-c04-background'></div>
+        <div className='p02-c04-window'>
+            <div className='p02-c04-nav-bar'>
+                <div className='p02-c04-nav-bar-left'>
+                    <img 
+                        className='p02-c04-icons' 
+                        src={delete_cross} 
+                        alt=''
+                    />
+                    <img 
+                        className='p02-c04-icons' 
+                        src={create_new} alt='' 
+                        onClick={() => set_createMode(!createMode)} 
+                    />
+                </div>
+                <div className='p02-c04-nav-bar-right'>
+                    <div className='p02-c04-textbox-container'>
+                        <input 
+                            className='p02-c04-textbox' 
+                            type='text' 
+                            placeholder='Search ...' 
+                        />
+                        <img className='p02-c04-img' src={magnifier} alt='' />
+                    </div>
+                    <img className='p02-c04-icons' src={edit_panels} alt='' />
+                    <img className='p02-c04-icons' src={questionmark_blue} alt='' />
+                    <input 
+                        type='button' 
+                        className='p02-c04-button' 
+                        value={'X'} 
+                        onClick={() => props.toogleVisibility(false)} 
+                    />
+                </div>
+            </div>
+            {showSpinner_FetchingItems ?
+            <div className='p02-c04-fetching-items'>
+                Loading...
+                <div className="spinner-border p02-c04-spinner" role="status">
+                    <span className="sr-only"></span>
+                </div>
+            </div>
+            :
+            <div className='p02-c04-content'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>name</th>
+                            <th>description</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* TODO:  */}
+                        {taskTypes.map((item) => {
+                            return <tr key={Math.random() * 100000}>
+                                <td>{item.id}</td>
+                                <td>{item.name}</td>
+                                <td>{item.description}</td>
+                                <td>
+                                    <img 
+                                        className='p02-c04-icons' 
+                                        src={pencil_edit} 
+                                        alt='' 
+                                        onClick={() => switchToUpdateMode(item)} 
+                                    />
+                                    <img 
+                                        className='p02-c04-icons' 
+                                        src={delete_cross} 
+                                        alt='' 
+                                        onClick={() => deleteItem(item)} 
+                                    />
+                                </td>
+                            </tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
+            }
+            <div className={createMode || updateMode ? 'p02-c04-win-footer' : 'p02-c04-win-footer-hidden'}>
+                <div className='p02-c04-footer-row1'>
+                    <div className='p02-c04-row1-col1'>name</div>
+                    <div className='p02-c04-row1-col2'>
+                        <div className='p02-c04-textbox-container'>
+                            <input 
+                                className='p02-c04-textbox' 
+                                type='text' 
+                                id='name' 
+                                placeholder='...' 
+                            />
+                        </div>
                     </div>
                 </div>
-                :
-                <div>
-                    <table className="table table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">name</th>
-                                <th scope="col">description</th>
-                                <th scope="col">edit</th>
-                                <th scope="col">delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tasksTypes.map((taskType) => {
-                                return <tr key={Math.random() * 100000}>
-                                    <th scope="row">{taskType.id}</th>
-                                    <td>{taskType.name}</td>
-                                    <td>{taskType.description}</td>
-                                    <td><img className='icons' src={editSVG} alt='' onClick={() => editTaskType(taskType.id)} /></td>
-                                    <td><img className='icons' src={deleteSVG} alt='' onClick={() => deleteTaskType(taskType.id)} /></td>
-                                </tr>
-                            })}
-                        </tbody>
-                    </table>
-                    <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="name" />
-                        <label htmlFor="name">name</label>
+                <div className='p02-c04-footer-row1'>
+                    <div className='p02-c04-row1-col1'>description</div>
+                    <div className='p02-c04-row1-col2'>
+                        <div className='p02-c04-textbox-container'>
+                            <input 
+                                type='text' 
+                                className='p02-c04-textbox' 
+                                id='description' 
+                                placeholder='...' 
+                            />
+                        </div>
                     </div>
-                    <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="description" />
-                        <label htmlFor="description">description</label>
-                    </div>
-                    {updateMode ?
-                        <div className='actions'>
-                            {updatingTaskType ?
-                                <div className="spinner-border" role="status">
-                                    <span className="sr-only"></span>
-                                </div>
-                                :
-                                <button type="button" className="btn btn-primary close" onClick={updateTaskType}>UPDATE</button>
-                            }
-                            <button type="button" className="btn btn-danger close" onClick={() => setUpdateMode(false)}>CANCEL UPDATE</button>
+                </div>
+                <div className='p02-c04-footer-row2'>
+                    <div className='p02-c04-row2-col1'>
+                        {showSpinner_CreateUpdateItem ?
+                        <div className="spinner-border p02-c04-spinner" role="status">
+                            <span className="sr-only"></span>
                         </div>
                         :
-                        <div className='actions'>
-                            {creatingNewMilestoneType ?
-                                <div className="spinner-border" role="status">
-                                    <span className="sr-only"></span>
-                                </div>
-                                :
-                                <button type="button" className="btn btn-primary close" onClick={createNewTasksType}>CREATE</button>
-                            }
-                            <button type="button" className="btn btn-danger close" onClick={props.toogleVisibility}>CANCEL</button>
-                        </div>
-                    }
+                        <input 
+                            type='button' 
+                            className='p02-c04-button' 
+                            value={updateMode ? 'Update' : 'Create'} 
+                            onClick={updateMode ? () => updateItem(selectedItem) : createNewItem} 
+                        />
+                        }
+                    </div>
+                    <div className='p02-c04-row2-col2'>
+                        <input 
+                            type='button' 
+                            className='p02-c04-button' 
+                            value={updateMode ? 'Cancel' : 'Close'} 
+                            onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
+                        />
+                    </div>
                 </div>
-            }
+            </div>
         </div>
     </div>);
 }
