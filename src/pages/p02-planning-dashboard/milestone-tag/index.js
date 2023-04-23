@@ -5,11 +5,13 @@ import moment from 'moment';
 
 const MilestoneTag = (props) => {
     // const [loaded, setLoaded] = useState([]);
-    const [leftOffset, setLeftOffset] = useState(0);
+    const [leftOffset, set_LeftOffset] = useState(0);
     const [originalLeftOffset, setOriginalLeftOffset] = useState(0);
-    const [isMoving, setIsMoving] = useState(false);
+    const [isMoving, set_isMoving] = useState(false);
     const [visible, setVisible] = useState(false);
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
+    const [deltaTag, set_deltaTag] = useState(10);
+    const [deltaStart, set_deltaStart] = useState(document.getElementById('milestone-tag').getBoundingClientRect().left - leftOffset);
 
     useEffect(() => {
         // console.log('props.dateOffset: ', props.dateOffset);
@@ -25,20 +27,27 @@ const MilestoneTag = (props) => {
         if (difference >= 0 && difference < props.displayLimit - 1) {
             // if (difference < props.displayLimit - 1) {
             setVisible(true);
-            setLeftOffset(difference * 16);
+            set_LeftOffset(difference * 16);
             setOriginalLeftOffset(difference * 16);
         }
     }, [props.dateOffset]);
 
     const handleMilestoneTagMove = useRef((event) => {
         // let newLeftOffset = event.clientX - 9 * 16;
-        let newLeftOffset = event.clientX - 22 * 10;
+        // let newLeftOffset = event.clientX - 22 * 10;
+        let newLeftOffset = event.clientX - deltaTag - deltaStart;
         // console.log("event.clientX: ", event.clientX);
         // console.log("startingX: ", startingX);
         // console.log("leftOffset: ", leftOffset);
         // console.log("newLeftOffset: ", newLeftOffset);
+        console.log('event.clientX: ', event.clientX);
+        console.log('leftOffset: ', leftOffset);
+        console.log('deltaTag: ', deltaTag);
+        console.log('deltaStart: ', deltaStart);
+        console.log('newLeftOffset: ', newLeftOffset);
 
-        setLeftOffset(newLeftOffset);
+        set_LeftOffset(newLeftOffset);
+        // setLeftOffset(16);
     })
 
     useEffect(() => {
@@ -63,9 +72,20 @@ const MilestoneTag = (props) => {
     }, [isMoving])
 
     const mouseClicked = (event) => {
-        console.log('mouse clicked: ');
+        // console.log('mouse clicked: ');
+        // console.log('leftOffset: ', leftOffset);
+        // console.log('originalLeftOffset: ', originalLeftOffset);
+        // console.log('event.clientX: ', event.clientX);
+        // console.log('document.getElementById: ', document.getElementById('milestone-tag'));
+       
+        // let bounds = event.target.getBoundingClientRect();
+        // console.log('bounds: ', bounds.left);
+        // console.log('deltaTag: ', event.clientX - bounds.left);
+        // console.log('deltaStart: ', bounds.left - leftOffset);
 
-        setIsMoving(!isMoving);
+        // set_deltaTag(event.clientX - bounds.left);
+        // set_deltaStart(bounds.left - leftOffset);
+        set_isMoving(!isMoving);
     }
 
     const contextMenuClicked = (event) => {
@@ -100,7 +120,7 @@ const MilestoneTag = (props) => {
         paddingTop: `${20}px`,
     }
 
-    return (<div className='milestone-tag'>
+    return (<div className='milestone-tag' id='milestone-tag'>
         {visible ?
             <div style={TagStyle}>
                 <button

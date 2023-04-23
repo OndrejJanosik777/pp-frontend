@@ -440,6 +440,11 @@ const Dashboard = () => {
                             className='p02-item'
                             onClick={() => set_manageTasksTypes_toogle(true)}
                         >Task types</div>
+                        <div className='p02-item'>|</div>
+                        <div 
+                            className='p02-item'
+                            onClick={() => set_dateOffset(0)}
+                        >Today</div>
                     </div>
                     <main className='p02-main'>
                     {

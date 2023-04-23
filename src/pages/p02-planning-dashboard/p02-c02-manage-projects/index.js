@@ -26,7 +26,7 @@ const ManageProjects = (props) => {
     const [showSpinner_CreateUpdateProject, set_showSpinner_CreateUpdateProject] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
-    const [selectedProject, set_selectedProject] = useState({});
+    const [selectedItem, set_selectedItem] = useState({});
 
     useEffect(() => {
         console.log('props.projects: ', props.projects);
@@ -126,7 +126,7 @@ const ManageProjects = (props) => {
 
     const switchToUpdateMode = (project) => {
         set_updateMode(true);
-        set_selectedProject(project);
+        set_selectedItem(project);
 
         document.getElementById('name').value = project.name;
         document.getElementById('number').value = project.number;
@@ -135,7 +135,7 @@ const ManageProjects = (props) => {
     }
 
     const updateProject = () => {
-        let updateProject = {...selectedProject};
+        let updateProject = {...selectedItem};
 
         updateProject.name = document.getElementById('name').value;
         updateProject.number = document.getElementById('number').value;
@@ -183,25 +183,25 @@ const ManageProjects = (props) => {
         })
     }
 
-    return ( <div className='c1-manage-projects'>
-        <div className='c1-background'></div>
-        <div className='c1-window'>
-            <div className='c1-nav-bar'>
-                <div className='c1-nav-bar-left'>
-                    <img className='c1-icons' src={delete_cross} alt='' />
-                    <img className='c1-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
+    return ( <div className='p02-c02-manage-projects'>
+        <div className='p02-c02-background'></div>
+        <div className='p02-c02-window'>
+            <div className='p02-c02-nav-bar'>
+                <div className='p02-c02-nav-bar-left'>
+                    <img className='p02-c02-icons' src={delete_cross} alt='' />
+                    <img className='p02-c02-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
                 </div>
-                <div className='c1-nav-bar-right'>
-                    <div className='c1-textbox-container'>
-                        <input className='c1-textbox' type='text' placeholder='Search ...' />
-                        <img className='c1-img' src={magnifier} alt='' />
+                <div className='p02-c02-nav-bar-right'>
+                    <div className='p02-c02-textbox-container'>
+                        <input className='p02-c02-textbox' type='text' placeholder='Search ...' />
+                        <img className='p02-c02-img' src={magnifier} alt='' />
                     </div>
-                    <img className='c1-icons' src={edit_panels} alt='' />
-                    <img className='c1-icons' src={questionmark_blue} alt='' />
+                    <img className='p02-c02-icons' src={edit_panels} alt='' />
+                    <img className='p02-c02-icons' src={questionmark_blue} alt='' />
                     <input type='button' className='button' value={'X'} onClick={() => props.set_manageProjects_toogle(false)} />
                 </div>
             </div>
-            <div className='c1-content'>
+            <div className='p02-c02-content'>
                 <table>
                     <thead>
                         <tr>
@@ -220,44 +220,43 @@ const ManageProjects = (props) => {
                                 <td>{project.number}</td>
                                 <td>{project.short_name}</td>
                                 <td>
-                                    <img className='c1-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
-                                    <img className='c1-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
+                                    <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
+                                    <img className='p02-c02-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
                                 </td>
                             </tr>
                         })}
                     </tbody>
                 </table>
             </div>
-            {createMode || updateMode ? 
-                <div className='c1-win-footer'>
-                    <div className='c1-footer-row1'>
-                        <div className='c1-row1-col1'>name</div>
-                        <div className='c1-row1-col2'>
-                            <div className='c1-textbox-container'>
-                                <input className='c1-textbox' type='text' id='name' placeholder='...' />
+                <div className={createMode || updateMode ? 'p02-c02-win-footer' : 'p02-c02-win-footer-hidden'}>
+                    <div className='p02-c02-footer-row1'>
+                        <div className='p02-c02-row1-col1'>name</div>
+                        <div className='p02-c02-row1-col2'>
+                            <div className='p02-c02-textbox-container'>
+                                <input className='p02-c02-textbox' type='text' id='name' placeholder='...' />
                             </div>
                         </div>
                     </div>
-                    <div className='c1-footer-row1'>
-                        <div className='c1-row1-col1'>number</div>
-                        <div className='c1-row1-col2'>
-                            <div className='c1-textbox-container'>
-                                <input className='c1-textbox' type='text' id='number' placeholder='...' />
+                    <div className='p02-c02-footer-row1'>
+                        <div className='p02-c02-row1-col1'>number</div>
+                        <div className='p02-c02-row1-col2'>
+                            <div className='p02-c02-textbox-container'>
+                                <input className='p02-c02-textbox' type='text' id='number' placeholder='...' />
                             </div>
                         </div>
                     </div>
-                    <div className='c1-footer-row1'>
-                        <div className='c1-row1-col1'>short name</div>
-                        <div className='c1-row1-col2'>
-                            <div className='c1-textbox-container'>
-                                <input className='c1-textbox' type='text' id='short_name' placeholder='...' />
+                    <div className='p02-c02-footer-row1'>
+                        <div className='p02-c02-row1-col1'>short name</div>
+                        <div className='p02-c02-row1-col2'>
+                            <div className='p02-c02-textbox-container'>
+                                <input className='p02-c02-textbox' type='text' id='short_name' placeholder='...' />
                             </div>
                         </div>
                     </div>
-                    <div className='c1-footer-row2'>
-                        <div className='c1-row2-col1'>
+                    <div className='p02-c02-footer-row2'>
+                        <div className='p02-c02-row2-col1'>
                             {showSpinner_CreateUpdateProject ?
-                                <div className="spinner-border" role="status">
+                                <div className="spinner-border p02-c02-spinner" role="status">
                                     <span className="sr-only"></span>
                                 </div>
                                 :
@@ -269,19 +268,16 @@ const ManageProjects = (props) => {
                                 />
                             }
                         </div>
-                        <div className='c1-row2-col2'>
+                        <div className='p02-c02-row2-col2'>
                             <input 
                                 type='button' 
                                 className='button' 
                                 value={updateMode ? 'Cancel' : 'Close'} 
-                                onClick={updateMode ? () => set_updateMode(false) : () => props.toogleVisibility(false)} 
+                                onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
                             />
                         </div>
                     </div>
                 </div>
-                :
-                <span></span>
-            }
         </div>
     </div> );
 }
