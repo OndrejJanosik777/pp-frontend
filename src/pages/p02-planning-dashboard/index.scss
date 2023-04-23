@@ -1,4 +1,4 @@
-.dashboard {
+.p02-dashboard {
     width: 100%;
     height: 100vh;
     background-color: rgb(200, 201, 199);
@@ -12,19 +12,19 @@
     position: relative;
     // overflow: hidden;
 
-    .modals-container {
+    .p02-modals-container {
         // position: absolute;
         width: 100%;
     }
 
-    .center-section {
+    .p02-center-section {
         display: flex;
         height: 100%;
         max-height: 95%;
         position: relative;
         margin-top: 50px;
 
-        .main-section {
+        .p02-main-section {
             margin-left: 50px;
             margin-right: 10px;
             margin-top: 35px;
@@ -41,7 +41,7 @@
             justify-content: space-between;
             overflow: hidden;
     
-            .img-home {
+            .p02-img-home {
                 height: 16px;
                 width: 16px;
                 position: absolute;
@@ -54,14 +54,14 @@
                 }
             }
 
-            .nav-bar {
+            .p02-nav-bar {
                 display: flex;
                 justify-content: start;
                 color: rgb(64, 99, 122);
                 font-weight: bold;
                 // font-size: 1.0rem;
 
-                .item {
+                .p02-item {
                     padding-left: 5px;
                     padding-right: 5px;
                     padding-top: 5px;
@@ -71,14 +71,9 @@
                         cursor: pointer;
                     }
                 }
-
-                .separator {
-                    padding-left: 3px;
-                    padding-right: 3px;
-                }
             }
 
-            .main {
+            .p02-main {
                 // margin-top: 7rem;
                 margin-bottom: 7rem;
                 // position: absolute;
@@ -91,12 +86,12 @@
                 // scroll-behavior: smooth;
                 // overflow: scroll;
         
-                .wrapper-project {
+                .p02-wrapper-project {
                     display: grid;
                     grid-template-columns: 8rem 1fr 8rem;
                     position: relative;
         
-                    .left-container {
+                    .p02-left-container {
                         border: 1px solid black;
                         min-height: 10rem;
                         display: flex;
@@ -108,7 +103,7 @@
                         max-width: 8rem;
                         overflow: hidden;
         
-                        .row-left {
+                        .p02-row-left {
                             width: 100%;
                             text-align: left;
                             padding-left: 0.2rem;
@@ -116,7 +111,7 @@
                         }
                     }
         
-                    .right-container {
+                    .p02-right-container {
                         border: 1px solid black;
                         min-height: 10rem;
                         background-color: #F1F1F1;
@@ -269,7 +264,7 @@
         }
     
 
-        .footer {
+        .p02-footer {
             display: grid;
             grid-template-columns: 8rem 1fr 8rem;
             background-color: rgb(207, 191, 169);
@@ -282,7 +277,7 @@
             color: black;
 
     
-            .timeline-controls-left {
+            .p02-timeline-controls-left {
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -292,7 +287,7 @@
                 background-color: white;
                 height: 100%;
     
-                .cell-footer {
+                .p02-cell-footer {
                     border: 1px solid black;
                     min-height: 1.5rem;
                     width: 8rem;
@@ -309,7 +304,7 @@
     
             }
 
-            .timeline-controls-right {
+            .p02-timeline-controls-right {
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -320,7 +315,7 @@
                 background-color: white;
                 height: 100%;
     
-                .cell-footer {
+                .p02-cell-footer {
                     border: 1px solid black;
                     min-height: 1.5rem;
                     width: 8rem;

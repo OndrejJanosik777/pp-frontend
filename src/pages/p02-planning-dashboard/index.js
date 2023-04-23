@@ -4,25 +4,25 @@ import axios from 'axios';
 import moment from 'moment';
 import planeSVG from './assets/airplane.svg';
 import MilestoneTag from './milestone-tag';
-import Timeline from './timeline';
 import home from './assets/home.png';
 import small_arrow_down from './assets/small_arrow_down.png';
 import arrow_left from './assets/arrow_left.png';
 import magnifier_dark from './assets/magnifier_dark.png';
-// modal components
+// components
+import Timeline from './p02-c01-timeline';
+import ManageProjects from './p02-c02-manage-projects';
+import ManageMilestoneTypes from './p02-c03-manage-milestone-types';
+import ManageTasksTypes from './p02-c04-manage-tasks-types';
 import CreateEditProjectModal from './create-edit-project-modal';
 import EditMilestoneItemModal from './edit-milestoneItem-modal';
 import CreateMilestoneItemModal from './create-milestone-modal';
 import CreateTaskModal from './create-task-modal';
-import ManageMilestoneTypes from './manage-milestone-types';
-import ManageTasksTypes from './manage-tasks-types';
 import ManageMonuments from './manage-monuments';
 import ManageCertificationDocuments from './manage-certification-documents';
 import DeleteWarning from './delete-warning-modal';
-import ManageProjects from './manage-projects';
 // components
-import NavBar from '../../components/nav-bar';
-import SideBar from '../../components/side-bar';
+import NavBar from '../../components/c01-nav-bar'
+import SideBar from '../../components/c02-side-bar';
 
 import './index.scss';
 
@@ -322,8 +322,8 @@ const Dashboard = () => {
     }
 
     return (
-        <div className='dashboard'>
-            <div className='modals-container'>
+        <div className='p02-dashboard'>
+            <div className='p02-modals-container'>
                 {createProject_toogle ?
                     <CreateEditProjectModal
                         project={activeProject}
@@ -417,8 +417,8 @@ const Dashboard = () => {
             </div>
             <NavBar />
             <SideBar />
-            <div className='center-section'>
-                <div className='main-section' id='main-section' name='main-section'>
+            <div className='p02-center-section'>
+                <div className='p02-main-section' id='main-section' name='main-section'>
                     {manageProjects_toogle ?
                     <ManageProjects 
                         set_manageProjects_toogle={set_manageProjects_toogle} 
@@ -432,22 +432,23 @@ const Dashboard = () => {
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
                         toogleVisibility={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)}
+                        set_manageMilestoneTypes_toogle={set_manageMilestoneTypes_toogle}
                     />
                     :
                     ""}
-                    <img className='img-home' src={home} alt='' />
+                    <img className='p02-img-home' src={home} alt='' />
                     <button className='button-container'>
                         <div className='button-name'>Quick Links</div>
                         <img className='img' src={small_arrow_down} alt='' />
                     </button>
-                    <div className='nav-bar'>
-                        <div className='item' onClick={() => set_manageProjects_toogle(!manageProjects_toogle)}>Projects</div>
-                        <div className='item'>|</div>
-                        <div className='item' onClick={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Milestone Types</div>
-                        <div className='item'>|</div>
-                        <div className='item'>Task types</div>
+                    <div className='p02-nav-bar'>
+                        <div className='p02-item' onClick={() => set_manageProjects_toogle(!manageProjects_toogle)}>Projects</div>
+                        <div className='p02-item'>|</div>
+                        <div className='p02-item' onClick={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} >Milestone Types</div>
+                        <div className='p02-item'>|</div>
+                        <div className='p02-item'>Task types</div>
                     </div>
-                    <main className='main'>
+                    <main className='p02-main'>
                     {
                         projects.map((project) => {
                             project.milestone_items.sort((a, b) => {
@@ -501,8 +502,8 @@ const Dashboard = () => {
                             }
                             
                             if (project.displayed) {
-                                return <main className='wrapper-project' key={Math.random() * 100000}>
-                                    <div className='left-container'>
+                                return <main className='p02-wrapper-project' key={Math.random() * 100000}>
+                                    <div className='p02-left-container'>
                                         <div>{`#${project.id} : ${project.number}`}</div>
                                         <div>{project.short_name}</div>
                                         <div>
@@ -513,16 +514,16 @@ const Dashboard = () => {
                                             // onClick={() => editMilestoneType(milestoneType.id)} 
                                             />
                                         </div>
-                                        <div className='row-left'>
+                                        <div className='p02-row-left'>
                                             {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
                                         </div>
-                                        <div className='row-left'>
+                                        <div className='p02-row-left'>
                                             {`Tasks: ${completedTasks}/${totalTasks}`}
                                         </div>
-                                        <div className='row-left'>
+                                        <div className='p02-row-left'>
                                             {`Monuments: ${project.monuments.length}`}
                                         </div>
-                                        <div className='row-left'>
+                                        <div className='p02-row-left'>
                                             {`Documents: ${certificationDocumentIds.length}`}
                                         </div>
                                     </div>
@@ -548,7 +549,7 @@ const Dashboard = () => {
                                             })
                                         }
                                     </div>
-                                    <div className='right-container'>
+                                    <div className='p02-right-container'>
                                         <span
                                             className="badge bg-primary"
                                             onClick={() => display_modal_createNewMilestone(project)}
@@ -587,21 +588,21 @@ const Dashboard = () => {
                         })
                     }
                     </main>
-                    <footer className='footer'>
-                        <div className='timeline-controls-left'>
-                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 1)}>- 1 DAY</div>
-                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 7)}>- 7 DAYS</div>
-                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 30)}>- 30 DAYS</div>
+                    <footer className='p02-footer'>
+                        <div className='p02-timeline-controls-left'>
+                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 1)}>- 1 DAY</div>
+                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 7)}>- 7 DAYS</div>
+                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 30)}>- 30 DAYS</div>
                         </div>
                         <Timeline
                             dateOffset={dateOffset}
                             displayLimit={displayedDays}
                             // displayLimit={100}
                         />
-                        <div className='timeline-controls-right'>
-                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 1)}>+ 1 DAY</div>
-                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 7)}>+ 7 DAYS</div>
-                            <div className='cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 30)}>+ 30 DAYS</div>
+                        <div className='p02-timeline-controls-right'>
+                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 1)}>+ 1 DAY</div>
+                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 7)}>+ 7 DAYS</div>
+                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 30)}>+ 30 DAYS</div>
                         </div>
                     </footer>
                 </div>

@@ -54,13 +54,13 @@ const LandingPage = () => {
             })
     }
 
-    return (<div className='landing-page'>
-        <div className='container'>
-            <div className="form-floating mb-3 input">
+    return (<div className='p01-landing-page'>
+        <div className='p01-container'>
+            <div className="form-floating mb-3 p01-input">
                 <input type="text" className="form-control" id="floatingInput" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <label htmlFor="floatingInput">username</label>
             </div>
-            <div className="form-floating input">
+            <div className="form-floating p01-input">
                 <input type="password" className="form-control" id="floatingPassword" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <label htmlFor="floatingPassword">password</label>
             </div>

@@ -3,9 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
-import LandingPage from './pages/landing-page';
-import Dashboard from './pages/dashboard';
-import Playground from './pages/playground';
+import LandingPage from './pages/p01-landing-page';
+import Dashboard from './pages/p02-planning-dashboard';
+import Playground from './pages/p00-playground';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

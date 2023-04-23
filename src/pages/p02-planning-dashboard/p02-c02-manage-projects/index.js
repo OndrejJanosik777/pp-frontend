@@ -261,11 +261,21 @@ const ManageProjects = (props) => {
                                     <span className="sr-only"></span>
                                 </div>
                                 :
-                                <input type='button' className='button' value={updateMode ? 'Update' : 'Create'} onClick={updateMode ? updateProject : createNewProject} />
+                                <input 
+                                    type='button' 
+                                    className='button' 
+                                    value={updateMode ? 'Update' : 'Create'} 
+                                    onClick={updateMode ? updateProject : createNewProject} 
+                                />
                             }
                         </div>
                         <div className='c1-row2-col2'>
-                            <input type='button' className='button' value={updateMode ? 'Cancel' : 'Close'} onClick={updateMode ? () => set_updateMode(false) : () => props.set_manageProjects_toogle(false)} />
+                            <input 
+                                type='button' 
+                                className='button' 
+                                value={updateMode ? 'Cancel' : 'Close'} 
+                                onClick={updateMode ? () => set_updateMode(false) : () => props.toogleVisibility(false)} 
+                            />
                         </div>
                     </div>
                 </div>

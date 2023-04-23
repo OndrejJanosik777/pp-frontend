@@ -1,4 +1,4 @@
-.playground {
+.p00-playground {
     background-color: rgb(71, 71, 71);
     width: 100%;
     height: 100vh;
@@ -8,12 +8,12 @@
 
     // overflow: hidden;
 
-    .nav-bar {
+    .p00-nav-bar {
         background-color: rgb(92, 111, 146);
         height: 10rem;
     }
 
-    .main-body {
+    .p00-main-body {
         background-color: rgb(213, 219, 206);
         // height: 80vh;
         height: 100%;
@@ -23,7 +23,7 @@
         margin-bottom: 1rem;
         position: relative;
 
-        .small-footer {
+        .p00-small-footer {
             background-color: cadetblue;
             position: absolute;
             bottom: 0;
@@ -32,7 +32,7 @@
         }
     }
 
-    .side-bar {
+    .p00-side-bar {
         width: 4rem;
         background-color: orange;
         position: absolute;
