@@ -20,13 +20,14 @@ import CreateTaskModal from './create-task-modal';
 import ManageMonuments from './manage-monuments';
 import ManageCertificationDocuments from './manage-certification-documents';
 import DeleteWarning from './delete-warning-modal';
+// import Project from './p02-c05-project';
 // components
 import NavBar from '../../components/c01-nav-bar'
 import SideBar from '../../components/c02-side-bar';
 
 import './index.scss';
 
-const Dashboard = () => {
+const PlanningDashboard = () => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -41,7 +42,7 @@ const Dashboard = () => {
     const [dateOffset, set_dateOffset] = useState(0);    // offset from today...
     const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [displayedDays, set_displayedDays] = useState(parseInt((window.innerWidth - 8 * 16 - 8 * 16 - 4 * 16) / 16));
+    const [displayedDays, set_displayedDays] = useState(parseInt((window.innerWidth - 8 * 16 - 0 * 16 - 4 * 16) / 16));
     // modal toogles
     const [createProject_toogle, set_createProject_toogle] = useState(false);
     const [deleteProjectWarning_toogle, set_deleteProjectWarning_toogle] = useState(false);
@@ -525,7 +526,7 @@ const Dashboard = () => {
                                             {`Documents: ${certificationDocumentIds.length}`}
                                         </div>
                                     </div>
-                                    <div style={middleStyle}>
+                                    <div style={middleStyle} id='p02-milestone-container'>
                                         {
                                             project.milestone_items.map((milestoneItem, index) => {
                                                 // console.log('drawing milestone items: ', index)
@@ -536,6 +537,7 @@ const Dashboard = () => {
                                                     topOffset={(index - 1) * 30}  // offset in px from top
                                                     project={project}
                                                     milestoneItem={milestoneItem}
+                                                    deltaStart={50 + 8*16}
                                                     displayLimit={displayedDays}
                                                     updateMilestoneItemDeadline={updateMilestoneItemDeadline}
                                                     updateMilestoneItem={updateMilestoneItem}
@@ -547,40 +549,6 @@ const Dashboard = () => {
                                             })
                                         }
                                     </div>
-                                    <div className='p02-right-container'>
-                                        <span
-                                            className="badge bg-primary"
-                                            onClick={() => display_modal_createNewMilestone(project)}
-                                        >
-                                            Create Milestone
-                                        </span>
-                                        <span
-                                            className="badge bg-warning"
-                                            onClick={() => showModal_ManageProject(project)}
-                                        >
-                                            Update Project
-                                        </span>
-                                        <span
-                                            className="badge bg-info"
-                                            // onClick={console.log('managing certification documents')}
-                                            onClick={() => showModal_ManageCertificationDocuments(project)}
-                                        >
-                                            Certification Doc.
-                                        </span>
-                                        <span
-                                            className="badge bg-info"
-                                            // onClick={console.log('managing monuments')}
-                                            onClick={() => showModal_ManageMonuments(project)}
-                                        >
-                                            Monuments
-                                        </span>
-                                        <span
-                                            className="badge bg-danger"
-                                            onClick={() => displayWarning_DeleteProject(project)}
-                                        >
-                                            Delete Project
-                                        </span>
-                                    </div>
                                 </main>
                             }
                         })
@@ -588,9 +556,18 @@ const Dashboard = () => {
                     </main>
                     <footer className='p02-footer'>
                         <div className='p02-timeline-controls-left'>
-                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 1)}>- 1 DAY</div>
-                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 7)}>- 7 DAYS</div>
-                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset - 30)}>- 30 DAYS</div>
+                            <div 
+                                className='p02-cell-footer clicable starting' 
+                                onClick={() => set_dateOffset(dateOffset - 1)}
+                            >- 1 DAY</div>
+                            <div 
+                                className='p02-cell-footer clicable starting' 
+                                onClick={() => set_dateOffset(dateOffset - 7)}
+                            >- 7 DAYS</div>
+                            <div 
+                                className='p02-cell-footer clicable starting' 
+                                onClick={() => set_dateOffset(dateOffset - 30)}
+                            >- 30 DAYS</div>
                         </div>
                         <Timeline
                             dateOffset={dateOffset}
@@ -598,9 +575,18 @@ const Dashboard = () => {
                             // displayLimit={100}
                         />
                         <div className='p02-timeline-controls-right'>
-                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 1)}>+ 1 DAY</div>
-                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 7)}>+ 7 DAYS</div>
-                            <div className='p02-cell-footer clicable starting' onClick={() => set_dateOffset(dateOffset + 30)}>+ 30 DAYS</div>
+                            <div 
+                                className='p02-cell-footer clicable starting' 
+                                onClick={() => set_dateOffset(dateOffset + 1)}
+                            >+ 1 DAY</div>
+                            <div 
+                                className='p02-cell-footer clicable starting' 
+                                onClick={() => set_dateOffset(dateOffset + 7)}
+                            >+ 7 DAYS</div>
+                            <div 
+                                className='p02-cell-footer clicable starting' 
+                                onClick={() => set_dateOffset(dateOffset + 30)}
+                            >+ 30 DAYS</div>
                         </div>
                     </footer>
                 </div>
@@ -609,4 +595,4 @@ const Dashboard = () => {
     );
 }
 
-export default Dashboard;
+export default PlanningDashboard;

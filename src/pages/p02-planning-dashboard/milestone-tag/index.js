@@ -4,6 +4,15 @@ import './index.scss';
 import moment from 'moment';
 
 const MilestoneTag = (props) => {
+    const getStartPosition = () => {
+        if (document.getElementById('milestone-tag') === null) {
+            return 0;
+        }
+        else {
+            return document.getElementById('milestone-tag').getBoundingClientRect().left - leftOffset;
+        }
+    }
+
     // const [loaded, setLoaded] = useState([]);
     const [leftOffset, set_LeftOffset] = useState(0);
     const [originalLeftOffset, setOriginalLeftOffset] = useState(0);
@@ -11,7 +20,11 @@ const MilestoneTag = (props) => {
     const [visible, setVisible] = useState(false);
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
     const [deltaTag, set_deltaTag] = useState(10);
-    const [deltaStart, set_deltaStart] = useState(document.getElementById('milestone-tag').getBoundingClientRect().left - leftOffset);
+    const [deltaStart, set_deltaStart] = useState(props.deltaStart);
+
+    useEffect(() => {
+        console.log('props.deltaStart: ', props.deltaStart)
+    }, [])
 
     useEffect(() => {
         // console.log('props.dateOffset: ', props.dateOffset);
@@ -117,7 +130,7 @@ const MilestoneTag = (props) => {
 
     const TagStyle = {
         paddingLeft: `${leftOffset}px`,
-        paddingTop: `${20}px`,
+        paddingTop: `${10}px`,
     }
 
     return (<div className='milestone-tag' id='milestone-tag'>
