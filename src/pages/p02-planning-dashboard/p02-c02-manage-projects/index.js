@@ -198,7 +198,7 @@ const ManageProjects = (props) => {
                     </div>
                     <img className='p02-c02-icons' src={edit_panels} alt='' />
                     <img className='p02-c02-icons' src={questionmark_blue} alt='' />
-                    <input type='button' className='button' value={'X'} onClick={() => props.set_manageProjects_toogle(false)} />
+                    <input type='button' className='button' value={'X'} onClick={() => props.toogleVisibility(false)} />
                 </div>
             </div>
             <div className='p02-c02-content'>

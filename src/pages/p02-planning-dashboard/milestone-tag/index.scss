@@ -2,9 +2,11 @@
     position: relative;
 
     .dragable {
+        // border-radius: 8px;
 
         &:hover {
             background-color: brown;
+            color: white;
         }
     }
 

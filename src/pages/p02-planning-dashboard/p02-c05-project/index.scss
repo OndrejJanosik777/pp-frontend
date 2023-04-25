@@ -20,6 +20,14 @@
             text-align: left;
             padding-left: 0.2rem;
             padding-right: 0.2rem;
+            margin-top: 0.2rem;
+            margin-bottom: 0.2rem;
+
+            &:hover {
+                cursor: pointer;
+                background-color: #797474;
+                color: #F1F1F1;
+            }
         }
     }
     

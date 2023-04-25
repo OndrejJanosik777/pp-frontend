@@ -9,21 +9,22 @@ import small_arrow_down from './assets/small_arrow_down.png';
 import arrow_left from './assets/arrow_left.png';
 import magnifier_dark from './assets/magnifier_dark.png';
 // components
-import Timeline from './p02-c01-timeline';
-import ManageProjects from './p02-c02-manage-projects';
-import ManageMilestoneTypes from './p02-c03-manage-milestone-types';
-import ManageTasksTypes from './p02-c04-manage-tasks-types';
 import CreateEditProjectModal from './create-edit-project-modal';
-import EditMilestoneItemModal from './edit-milestoneItem-modal';
 import CreateMilestoneItemModal from './create-milestone-modal';
 import CreateTaskModal from './create-task-modal';
+import DeleteWarning from './delete-warning-modal';
+import EditMilestoneItemModal from './edit-milestoneItem-modal';
+import ManageProjects from './p02-c02-manage-projects';
+import ManageMilestoneTypes from './p02-c03-manage-milestone-types';
+import ManageMilestones from './p02-c06-manage-milestones';
+import ManageTasksTypes from './p02-c04-manage-tasks-types';
 import ManageMonuments from './manage-monuments';
 import ManageCertificationDocuments from './manage-certification-documents';
-import DeleteWarning from './delete-warning-modal';
-// import Project from './p02-c05-project';
-// components
 import NavBar from '../../components/c01-nav-bar'
+import Project from './p02-c05-project';
 import SideBar from '../../components/c02-side-bar';
+import Timeline from './p02-c01-timeline';
+// components
 
 import './index.scss';
 
@@ -53,9 +54,10 @@ const PlanningDashboard = () => {
     const [manageMonuments_toogle, set_manageMonuments_toogle] = useState(false);
     const [manageCertificationDocuments_toogle, set_manageCertificationDocuments_toogle] = useState(false);
     // after refactoring
-    const [manageMilestoneTypes_toogle, set_manageMilestoneTypes_toogle] = useState(false);
-    const [manageProjects_toogle, set_manageProjects_toogle] = useState(false);
-    const [manageTasksTypes_toogle, set_manageTasksTypes_toogle] = useState(false);
+    const [manageMilestoneTypes_modalToogle, set_manageMilestoneTypes_modalToogle] = useState(false);
+    const [manageProjects_modalToogle, set_manageProjects_modalToogle] = useState(false);
+    const [manageTasksTypes_modalToogle, set_manageTasksTypes_modalToogle] = useState(false);
+    const [manageMilestones_modalToogle, set_manageMilestones_modalToogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
@@ -101,10 +103,6 @@ const PlanningDashboard = () => {
     const addNewProjectToState = (project) => {
         set_projects([...projects, project]);
         set_createProject_toogle(!createProject_toogle);
-    }
-
-    const createTask = (milestoneItem) => {
-        console.log('creating task for milestone item nr: ', milestoneItem.id)
     }
 
     const deleteMilestoneItem = (project, milestoneItem) => {
@@ -170,13 +168,6 @@ const PlanningDashboard = () => {
             })
     }
 
-    const displayWarning_DeleteProject = (project) => {
-        set_activeProject(project);
-        set_warningText(`Are you sure to delete project: ${project.name}?`);
-        // setDeleteFunction(deleteProject(project));
-        set_deleteProjectWarning_toogle(!deleteProjectWarning_toogle);
-    }
-
     const display_modal_warning_deleteMilestoneItem = (project, milestone) => {
         set_activeProject(project);
         set_activeMilestoneItem(milestone);
@@ -185,85 +176,12 @@ const PlanningDashboard = () => {
         set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
     }
 
-    const display_modal_createNewMilestone = (project) => {
-        // console.log(`creating new Milestone for project ${project.id}`);
-
-        set_activeProject(project);
-        set_activeMilestoneItem(undefined);
-
-        set_createMilestone_toogle(!createMilestone_toogle);
-    }
-
-    const display_modal_createNewTask = (project, milestoneItem) => {
-        console.log(`creating new Task for milestone ${milestoneItem.id} within project ${project.id}`);
-
-        set_activeProject(project);
-        set_activeMilestoneItem(milestoneItem);
-
-        set_createTask_toogle(!createTask_toogle);
-    }
-
     const updateExistingProjectInState = (project) => {
         let index = projects.findIndex(element => element.id === project.id);
         let newProjects = [...projects];
         newProjects[index] = { ...project };
         set_projects([...newProjects]);
         set_createProject_toogle(!createProject_toogle);
-    }
-
-    const updateMilestoneItem = (project, milestoneItem) => {
-        console.log(`updating milestone item ${milestoneItem.name} within project ${project.name}`);
-
-        set_activeProject(project);
-        set_activeMilestoneItem(milestoneItem);
-
-        set_editMilestone_toogle(!editMilestone_toogle);
-    }
-
-    const updateMilestoneItemDeadline = (days, project, milestoneItem) => {
-        // update in component state
-        // console.log(`moving milestone with id ${milestoneItemId} within project with id ${projectId} by ${days}... `);
-
-        let projectIndex = projects.findIndex(element => element.id === project.id);
-        let milestoneIndex = projects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItem.id);
-        let originalDate = projects[projectIndex].milestone_items[milestoneIndex].date;
-        // console.log('originalDate: ', originalDate);
-
-        let newDate = moment(originalDate).add(days, 'days').format("YYYY-MM-DD");
-        // console.log('newDate: ', newDate);
-
-        let originalProjects = [...projects];
-        let updatedProjects = [...projects];
-        updatedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
-        // console.log('updateddisplayedProjects: ', updateddisplayedProjects);
-        // updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
-        set_projects([...updatedProjects]);
-
-        let updatedMilestoneItem = { ...updatedProjects[projectIndex].milestone_items[milestoneIndex] };
-
-        // update in database
-        axios({
-            method: 'patch',
-            url: baseUrl + '/company/milestone-items/' + updatedMilestoneItem.id + "/",
-            headers: {
-                "Authorization": token
-            },
-            data: {
-                // id: milestoneItem.id,
-                name: updatedMilestoneItem.name,
-                // milestone_item_type: milestoneItem.id,
-                date: updatedMilestoneItem.date,
-                comment: updatedMilestoneItem.comment
-            }
-        })
-            .then((response => {
-                console.log('milestone deadline updated in database: ', response.data);
-            }))
-            .catch((error) => {
-                console.log('problem with updating milestone item: ', error);
-
-                set_projects([...originalProjects]);
-            })
     }
 
     const updateProject = (projectId) => {
@@ -287,35 +205,6 @@ const PlanningDashboard = () => {
 
                 alert('problem with fetching projects')
             })
-    }
-
-    const showModal_ManageProject = (project) => {
-        // creating new project or updating existing project
-
-        if (project === undefined) {
-            // alert('showing create new project');
-
-            set_activeProject({});
-        }
-        else {
-            // alert('showing modify existing project')
-
-            set_activeProject(project);
-        }
-
-        set_createProject_toogle(!createProject_toogle)
-    }
-
-    const showModal_ManageMonuments = (project) => {
-        set_activeProject(project);
-
-        set_manageMonuments_toogle(!manageMonuments_toogle);
-    }
-
-    const showModal_ManageCertificationDocuments = (project) => {
-        set_activeProject(project);
-
-        set_manageCertificationDocuments_toogle(!manageCertificationDocuments_toogle);
     }
 
     const showState = () => {
@@ -402,22 +291,30 @@ const PlanningDashboard = () => {
             <SideBar />
             <div className='p02-center-section'>
                 <div className='p02-main-section' id='main-section' name='main-section'>
-                    {manageProjects_toogle ?
+                    {/* MODAL COMPONENTS IN MAIN SECTION */}
+                    {manageProjects_modalToogle ?
                     <ManageProjects 
-                        set_manageProjects_toogle={set_manageProjects_toogle} 
+                        toogleVisibility={set_manageProjects_modalToogle} 
                         projects={projects}
                         set_projects={set_projects}
                     />
                     : ""}
-                    {manageMilestoneTypes_toogle ?
+                    {manageMilestoneTypes_modalToogle ?
                     <ManageMilestoneTypes
-                        toogleVisibility={set_manageMilestoneTypes_toogle}
+                        toogleVisibility={set_manageMilestoneTypes_modalToogle}
                     />
                     :
                     ""}
-                    {manageTasksTypes_toogle ?
+                    {manageTasksTypes_modalToogle ?
                     <ManageTasksTypes
-                        toogleVisibility={set_manageTasksTypes_toogle}
+                        toogleVisibility={set_manageTasksTypes_modalToogle}
+                    />
+                    :
+                    ""}
+                    {manageMilestones_modalToogle ?
+                    <ManageMilestones
+                        activeProject={activeProject}
+                        toogleVisibility={set_manageMilestones_modalToogle}
                     />
                     :
                     ""}
@@ -429,17 +326,17 @@ const PlanningDashboard = () => {
                     <div className='p02-nav-bar'>
                         <div 
                             className='p02-item' 
-                            onClick={() => set_manageProjects_toogle(!manageProjects_toogle)}
+                            onClick={() => set_manageProjects_modalToogle(!manageProjects_modalToogle)}
                         >Projects</div>
                         <div className='p02-item'>|</div>
                         <div 
                             className='p02-item' 
-                            onClick={() => set_manageMilestoneTypes_toogle(!manageMilestoneTypes_toogle)} 
+                            onClick={() => set_manageMilestoneTypes_modalToogle(!manageMilestoneTypes_modalToogle)} 
                         >Milestone Types</div>
                         <div className='p02-item'>|</div>
                         <div 
                             className='p02-item'
-                            onClick={() => set_manageTasksTypes_toogle(true)}
+                            onClick={() => set_manageTasksTypes_modalToogle(true)}
                         >Task types</div>
                         <div className='p02-item'>|</div>
                         <div 
@@ -501,55 +398,21 @@ const PlanningDashboard = () => {
                             }
                             
                             if (project.displayed) {
-                                return <main className='p02-wrapper-project' key={Math.random() * 100000}>
-                                    <div className='p02-left-container'>
-                                        <div>{`#${project.id} : ${project.number}`}</div>
-                                        <div>{project.short_name}</div>
-                                        <div>
-                                            <img
-                                                className='plane-icons'
-                                                src={planeSVG}
-                                                alt=''
-                                            // onClick={() => editMilestoneType(milestoneType.id)} 
-                                            />
-                                        </div>
-                                        <div className='p02-row-left'>
-                                            {`Milestones: ${achievedMilestones.length}/${project.milestone_items.length}`}
-                                        </div>
-                                        <div className='p02-row-left'>
-                                            {`Tasks: ${completedTasks}/${totalTasks}`}
-                                        </div>
-                                        <div className='p02-row-left'>
-                                            {`Monuments: ${project.monuments.length}`}
-                                        </div>
-                                        <div className='p02-row-left'>
-                                            {`Documents: ${certificationDocumentIds.length}`}
-                                        </div>
-                                    </div>
-                                    <div style={middleStyle} id='p02-milestone-container'>
-                                        {
-                                            project.milestone_items.map((milestoneItem, index) => {
-                                                // console.log('drawing milestone items: ', index)
-
-                                                return < MilestoneTag
-                                                    key={Math.random() * 100000}
-                                                    dateOffset={dateOffset}
-                                                    topOffset={(index - 1) * 30}  // offset in px from top
-                                                    project={project}
-                                                    milestoneItem={milestoneItem}
-                                                    deltaStart={50 + 8*16}
-                                                    displayLimit={displayedDays}
-                                                    updateMilestoneItemDeadline={updateMilestoneItemDeadline}
-                                                    updateMilestoneItem={updateMilestoneItem}
-                                                    display_modal_createNewTask={display_modal_createNewTask}
-                                                    // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
-                                                    // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
-                                                    deleteMilestoneItem={() => display_modal_warning_deleteMilestoneItem(project, milestoneItem)}
-                                                />
-                                            })
-                                        }
-                                    </div>
-                                </main>
+                                return <Project 
+                                    createTask_toogle={createTask_toogle}
+                                    dateOffset={dateOffset}
+                                    displayedDays={displayedDays}
+                                    display_modal_warning_deleteMilestoneItem={display_modal_warning_deleteMilestoneItem}
+                                    editMilestone_toogle={editMilestone_toogle}
+                                    project={project} 
+                                    projects={projects}
+                                    set_projects={set_projects}
+                                    set_activeProject={set_activeProject}
+                                    set_activeMilestoneItem={set_activeMilestoneItem}
+                                    set_editMilestone_toogle={set_editMilestone_toogle}
+                                    set_createTask_toogle={set_createTask_toogle}
+                                    set_manageMilestones_modalToogle={set_manageMilestones_modalToogle}
+                                />
                             }
                         })
                     }

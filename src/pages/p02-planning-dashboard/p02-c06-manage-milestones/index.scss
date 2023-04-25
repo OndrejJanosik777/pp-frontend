@@ -1,4 +1,4 @@
-.c1-manage-projects {
+.p02-c06-manage-milestones {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -7,18 +7,19 @@
     justify-content: center;
     align-items: center;
 
-    .c1-background {
+    .p02-c06-background {
         background-color: #464646;
         opacity: 0.8;
         width: 100%;
         height: 100%;
         position: absolute;
     }
-    .c1-window {
+
+    .p02-c06-window {
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
         height: 30rem;
-        width: 45rem;
+        width: 75rem;
         opacity: 1;
         z-index: 20;
         display: flex;
@@ -26,7 +27,7 @@
         justify-content: space-between;
         align-items: center;
 
-        .c1-nav-bar {
+        .p02-c06-nav-bar {
             background-color: #F1F1F1;
             width: 100%;
             display: flex;
@@ -34,15 +35,15 @@
             align-items: center;
             border-bottom: 2px solid #D0D0D0;
 
-            .c1-nav-bar-left {
+            .p02-c06-nav-bar-left {
                 
             }
-            .c1-nav-bar-right {
+            .p02-c06-nav-bar-right {
                 display: flex;
                 justify-content: center;
                 align-items: center;
 
-                .c1-textbox-container {
+                .p02-c06-textbox-container {
                     height: 20px;
                     display: flex;
                     justify-content: center;
@@ -53,18 +54,33 @@
                         cursor: pointer;
                     }
             
-                    .c1-textbox {
+                    .p02-c06-textbox {
                         width: 160px;
                         height: 20px;
                     }
             
-                    .c1-img {
+                    .p02-c06-img {
                         // height: 25px;
+                    }
+                }
+
+                .p02-c06-button {
+                    font-weight: bold;
+                    padding: 1px 5px;
+                    background-color: #44759D;
+                    color: white;
+                    border: none;
+                    margin: 0.2rem;
+                    border-radius: 25%;
+
+                    &:hover {
+                        // color: rgb(201, 201, 201);
+                        background-color: #2c5c83;
                     }
                 }
             }
 
-            .c1-icons {
+            .p02-c06-icons {
                 padding: 3px 5px;
 
                 &:hover {
@@ -73,7 +89,7 @@
             }
         }
 
-        .c1-content {
+        .p02-c06-content {
             background-color: #FFFFFF;
             width: 100%;
             height: 100%;
@@ -87,7 +103,7 @@
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 5%  20% 20% 40% 15%;
+                        grid-template-columns: 5% 15% 20% 10% 40% 10%;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
@@ -114,18 +130,40 @@
                             justify-content: center;
                             align-items: center;
                         }
+
+                        td:last-child {
+                            display: flex;
+                            justify-content: space-around;
+                            align-items: center;
+
+                            img {
+                                &:hover {
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+
+                        td {
+                            .p02-c06-icons {
+                                padding: 3px 5px;
+                
+                                &:hover {
+                                    cursor: pointer;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
-        .c1-win-footer {
+        .p02-c06-win-footer {
             background-color: #F1F1F1;
             width: 100%;
             border-top: 2px solid #D0D0D0;
             // height: 125px;
 
-            .button-container {
+            .p02-c06-button-container {
                 display: flex;
                 align-items: end;
                 border: 1px solid grey;
@@ -134,12 +172,12 @@
                 margin: 0 10px;
                 z-index: 25;
         
-                .button-name {
+                .p02-c06-button-name {
                     text-decoration: underline;
                     color: rgb(78, 78, 78);
                 }
         
-                .img {
+                .p02-c06-img {
                     padding-bottom: 2px;
                     padding-left: 1px;
                 }
@@ -150,24 +188,24 @@
                 }
             }
 
-            .c1-footer-row1 {
+            .p02-c06-footer-row1 {
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
                 // grid-template-columns: 1fr 5fr;
                 // padding: 2px;
 
-                .c1-row1-col1 {
+                .p02-c06-row1-col1 {
                     text-align: left;
                     padding: 2px 10px;
                     width: 80px;
                 }
 
-                .c1-row1-col2 {
+                .p02-c06-row1-col2 {
                     // text-align: right;
                     padding: 2px 10px;
 
-                    .c1-textbox-container {
+                    .p02-c06-textbox-container {
                         height: 20px;
                         display: flex;
                         justify-content: center;
@@ -178,7 +216,7 @@
                             cursor: pointer;
                         }
                 
-                        .c1-textbox {
+                        .p02-c06-textbox {
                             width: 500px;
                             height: 20px;
                         }
@@ -190,32 +228,37 @@
                 }
             }
 
-            .c1-footer-row2 {
+            .p02-c06-footer-row2 {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 // grid-template-columns: 1fr 5fr;
                 // padding: 2px;
 
-                .c1-row2-col1 {
+                .p02-c06-row2-col1 {
                     text-align: right;
                     padding: 2px 10px;
                     // width: 65px;
 
-                    .button {
+                    .p02-c06-button {
                         &:hover {
                             background-color: rgb(226, 156, 27);
                             // border: none;
                             
                         }
                     }
+
+                    .p02-c06-spinner {
+                        height: 15px;
+                        width: 15px;
+                    }
                 }
 
-                .c1-row2-col2 {
+                .p02-c06-row2-col2 {
                     // text-align: right;
                     padding: 2px 10px;
 
-                    .c1-textbox-container {
+                    .p02-c06-textbox-container {
                         height: 20px;
                         display: flex;
                         justify-content: center;
@@ -226,17 +269,17 @@
                             cursor: pointer;
                         }
                 
-                        .c1-textbox {
+                        .p02-c06-textbox {
                             width: 260px;
                             height: 20px;
                         }
                 
-                        .c1-img {
+                        .p02-c06-img {
                             // height: 25px;
                         }
                     }
 
-                    .button {
+                    .p02-c06-button {
                         &:hover {
                             background-color: rgb(226, 156, 27);
                             // border: none;
@@ -246,6 +289,10 @@
                 }
 
             }
+        }
+
+        .p02-c06-win-footer-hidden {
+            visibility: collapse;
         }
     }
 }
