@@ -103,7 +103,7 @@
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 5% 15% 20% 10% 40% 10%;
+                        grid-template-columns: 3% 7% 20% 10% 50% 10%;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
@@ -144,6 +144,9 @@
                         }
 
                         td {
+                            display: flex;
+                            align-items: center;
+
                             .p02-c06-icons {
                                 padding: 3px 5px;
                 
@@ -217,6 +220,11 @@
                         }
                 
                         .p02-c06-textbox {
+                            width: 500px;
+                            height: 20px;
+                        }
+                
+                        .p02-c06-date {
                             width: 500px;
                             height: 20px;
                         }

@@ -26,13 +26,13 @@ const ManageMilestoneTypes = (props) => {
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [milestoneTypes, set_milestoneTypes] = useState([]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
-    const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(true);
+    const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
 
     useEffect(() => {
-        fetchItems();
+        // fetchItems();
     }, []);
 
     const fetchItems = () => {
@@ -83,18 +83,18 @@ const ManageMilestoneTypes = (props) => {
         .then((response => {
             const newMilestoneItem = response.data;
 
-            set_milestoneTypes([...milestoneTypes, newMilestoneItem]);
+            props.set_milestoneTypes([...props.milestoneTypes, newMilestoneItem]);
 
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
             console.log(error);
 
-            let updatedMilestoneItems = [...milestoneTypes];
+            let updatedMilestoneItems = [...props.milestoneTypes];
 
             updatedMilestoneItems.pop();
 
-            set_milestoneTypes([...updatedMilestoneItems]);
+            props.set_milestoneTypes([...updatedMilestoneItems]);
 
             alert('problem with creating new milestone Item Types');
 
@@ -102,13 +102,13 @@ const ManageMilestoneTypes = (props) => {
     }
 
     const deleteItem = (item) => {
-        const index = milestoneTypes.findIndex(elem => elem.id === item.id)
+        const index = props.milestoneTypes.findIndex(elem => elem.id === item.id)
         let deletedMilestoneType = milestoneTypes[index];
 
-        let updatedMilestoneTypes = [...milestoneTypes];
+        let updatedMilestoneTypes = [...props.milestoneTypes];
         updatedMilestoneTypes.splice(index, 1);
 
-        set_milestoneTypes([...updatedMilestoneTypes]);
+        props.set_milestoneTypes([...updatedMilestoneTypes]);
 
         axios({
             method: 'delete',
@@ -125,9 +125,9 @@ const ManageMilestoneTypes = (props) => {
 
                 alert(error);
 
-                let updatedMilestoneTypes = [...milestoneTypes];
+                let updatedMilestoneTypes = [...props.milestoneTypes];
 
-                set_milestoneTypes([...updatedMilestoneTypes]);
+                props.set_milestoneTypes([...updatedMilestoneTypes]);
             })
     }
 
@@ -139,17 +139,17 @@ const ManageMilestoneTypes = (props) => {
         if (name === "" && short_name === "")
         return alert('missing input');
 
-        const index = milestoneTypes.findIndex(elem => elem.id === item.id)
-        let updatedMilestoneType = milestoneTypes[index];
+        const index = props.milestoneTypes.findIndex(elem => elem.id === item.id)
+        let updatedMilestoneType = props.milestoneTypes[index];
 
         updatedMilestoneType.id = item.id;
         updatedMilestoneType.name = name;
         updatedMilestoneType.short_name = short_name;
 
-        let updatedMilestoneTypes = [...milestoneTypes];
+        let updatedMilestoneTypes = [...props.milestoneTypes];
         updatedMilestoneTypes.splice(index, 1, updatedMilestoneType);
 
-        set_milestoneTypes([...updatedMilestoneTypes]);
+        props.set_milestoneTypes([...updatedMilestoneTypes]);
         set_showSpinner_CreateUpdateItem(true);
 
         axios({
@@ -188,7 +188,7 @@ const ManageMilestoneTypes = (props) => {
     }
 
     const showState = () => {
-        console.log('milestoneTypes: ', milestoneTypes)
+        console.log('milestoneTypes: ', props.milestoneTypes)
     }
 
     return (<div className='p02-c03-manage-milestone-types'>
@@ -246,7 +246,7 @@ const ManageMilestoneTypes = (props) => {
                     </thead>
                     <tbody>
                         {/* TODO:  */}
-                        {milestoneTypes.map((item) => {
+                        {props.milestoneTypes.map((item) => {
                             return <tr key={Math.random() * 100000}>
                                 <td>{item.id}</td>
                                 <td>{item.short_name}</td>

@@ -39,7 +39,10 @@ const PlanningDashboard = () => {
         }
     }
 
+    // data from backend
     const [projects, set_projects] = useState([]);
+    const [milestoneTypes, set_milestoneTypes] = useState([]);
+    // 
     const [dateOffset, set_dateOffset] = useState(0);    // offset from today...
     const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
@@ -77,27 +80,9 @@ const PlanningDashboard = () => {
     useEffect(() => {
         window.addEventListener('resize', handleResize.current);
 
-        axios({
-            method: 'get',
-            url: baseUrl + '/company/projects/',
-            headers: {
-                "Authorization": token
-            }
-        })
-            .then((response => {
-                let newProjects = [];
-                response.data.map((item) => {
-                    newProjects.push({...item, displayed: true})
-                })
+        fetchProjects();
 
-                // set_projects(response.data);
-                set_projects(newProjects);
-            }))
-            .catch((error) => {
-                console.log(error);
-
-                alert('problem with fetching projects')
-            })
+        fetchMilestoneTypes();
     }, []);
     // functions for managing projects
     const addNewProjectToState = (project) => {
@@ -176,35 +161,86 @@ const PlanningDashboard = () => {
         set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
     }
 
-    const updateExistingProjectInState = (project) => {
-        let index = projects.findIndex(element => element.id === project.id);
-        let newProjects = [...projects];
-        newProjects[index] = { ...project };
-        set_projects([...newProjects]);
-        set_createProject_toogle(!createProject_toogle);
-    }
-
-    const updateProject = (projectId) => {
+    const fetchProjects = () => {
         axios({
             method: 'get',
-            url: baseUrl + `/company/projects/${projectId}/`,
+            url: baseUrl + '/company/projects/',
             headers: {
                 "Authorization": token
             }
         })
-            .then((response => {
-                const index = projects.findIndex((elem) => elem.id === projectId);
-
-                let newArray = [...projects];
-                newArray[index] = { ...response.data };
-
-                set_projects([...newArray]);
-            }))
-            .catch((error) => {
-                console.log(error);
-
-                alert('problem with fetching projects')
+        .then((response => {
+            let newProjects = [];
+            response.data.map((item) => {
+                newProjects.push({...item, displayed: true})
             })
+
+            // set_projects(response.data);
+            set_projects(newProjects);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with fetching projects')
+        })
+    }
+
+    const fetchMilestoneTypes = () => {
+        // console.log('fetching project with id: ', projectId);
+
+        axios({
+            method: 'get',
+            url: baseUrl + '/company/milestone-item-types/',
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            let milestoneTypes = response.data;
+            milestoneTypes.sort((a, b) => a.id - b.id);
+
+            set_milestoneTypes([...milestoneTypes]);
+
+            // set_showSpinner_FetchingItems(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with fetching milestone item types')
+        })
+    }
+
+    const updateProjectInState = (project) => {
+        let index = projects.findIndex(element => element.id === project.id);
+        let newProjects = [...projects];
+        newProjects[index] = { ...project };
+        set_projects([...newProjects]);
+        // set_createProject_toogle(!createProject_toogle);
+    }
+
+    const updateProject = (project) => {
+        let displayed = project.displayed;
+
+        axios({
+            method: 'get',
+            url: baseUrl + `/company/projects/${project.id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            const index = projects.findIndex((elem) => elem.id === project.id);
+
+            let newArray = [...projects];
+            newArray[index] = { ...response.data, displayed: displayed };
+
+            set_projects([...newArray]);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with fetching projects')
+        })
     }
 
     const showState = () => {
@@ -218,7 +254,7 @@ const PlanningDashboard = () => {
                     <CreateEditProjectModal
                         project={activeProject}
                         addNewProject={addNewProjectToState}
-                        updateProject={updateExistingProjectInState}
+                        updateProject={updateProject}
                         toogleVisibility={() => set_createProject_toogle(!createProject_toogle)}
                     />
                     : ""}
@@ -301,6 +337,8 @@ const PlanningDashboard = () => {
                     : ""}
                     {manageMilestoneTypes_modalToogle ?
                     <ManageMilestoneTypes
+                        milestoneTypes={milestoneTypes}
+                        set_milestoneTypes={set_milestoneTypes}
                         toogleVisibility={set_manageMilestoneTypes_modalToogle}
                     />
                     :
@@ -314,6 +352,9 @@ const PlanningDashboard = () => {
                     {manageMilestones_modalToogle ?
                     <ManageMilestones
                         activeProject={activeProject}
+                        updateProject={updateProject}
+                        updateProjectInState={updateProjectInState}
+                        milestoneTypes={milestoneTypes}
                         toogleVisibility={set_manageMilestones_modalToogle}
                     />
                     :
