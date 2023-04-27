@@ -107,6 +107,8 @@ const ManageMilestones = (props) => {
 
             let newItem = { ...response.data, tasks: [] };
 
+            // let newItem = { ...response.data };
+
             newItem.milestone_item_type = {...props.milestoneTypes[index]};
 
             updatedItem.milestone_items = [...milestones, newItem];
@@ -137,13 +139,9 @@ const ManageMilestones = (props) => {
     const deleteItem = (item) => {
         // update in local state
 
-        console.log('deleting milestone...', item.id);
-
-        console.log('props.activeProject: ', props.activeProject);
+        console.log('deleting milestone...', item);
 
         const index = props.activeProject.milestone_items.findIndex(elem => elem.id === item.id)
-
-        console.log('index: ', index);
 
         let updatedItem = {...props.activeProject};
 
@@ -178,63 +176,110 @@ const ManageMilestones = (props) => {
         })
     }
 
-    const switchToUpdateMode = (item) => {
+    const switchToUpdateMode = (item, index) => {
+        console.log('function : switchToUpdateMode');
         console.log('updating item: ', item);
+        console.log('updating index: ', index);
+
+        document.getElementById('name').value = item.name;
+        document.getElementById('comment').value = item.comment;
+        document.getElementById('date').value = item.date;
+        // document.getElementById(`milestonetypes-container`).selectedIndex = index;
+        // let containerElem = document.getElementById(`milestonetypes-container`);
+        let firstElem = document.getElementById(`default-milestonetype`);
+
+        // containerElem.selectedIndex = 1;
+        // containerElem
+
+        firstElem.innerHTML = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
+        firstElem.value = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
+
+        // console.log('containerElem: ', containerElem);
+
+        // console.log('containerElem.selectedIndex: ', containerElem.selectedIndex);
 
         set_updateMode(true);
-        set_selectedItem(item);
 
-        // document.getElementById('name').value = item.name;
-        // document.getElementById('description').value = item.description;
+        set_selectedItem(item);
     }
 
     const updateItem = (item) => {
-        
+        // console.log('function : updateItem');
 
-        // let name = document.getElementById('name').value;
-        // let description = document.getElementById('description').value;
+        const name = document.getElementById('name').value;
+        const milestone_item_type = document.getElementById('milestone_item_type').value;
+        const date = document.getElementById('date').value;
+        const comment = document.getElementById('comment').value;
+        const tasks = item.tasks;
 
-        // if (name === "" && description === "")
-        // return alert('missing input');
+        // console.log('milestone_item_type: ', milestone_item_type);
 
-        // const index = taskTypes.findIndex(elem => elem.id === item.id)
-        // let updatedItem = taskTypes[index];
+        const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
+        const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === item.id)
 
-        // updatedItem.id = item.id;
-        // updatedItem.name = name;
-        // updatedItem.description = description;
+        // console.log('index: ', index);
 
-        // let updatedItems = [...taskTypes];
-        // updatedItems.splice(index, 1, updatedItem);
+        // console.log('creating new milestone...');
+        // console.log('name...', name);
+        // console.log('milestone_item_type...', props.milestoneTypes[index].id);
+        // console.log('date...', date);
+        // console.log('comment...', comment);
+        // console.log('tasks...', tasks);
+        // console.log('props.activeProject.id...', props.activeProject.id);
 
-        // set_taskTypes([...updatedItems]);
-        // set_showSpinner_CreateUpdateItem(true);
+        set_showSpinner_CreateUpdateItem(true);
 
-        // axios({
-        //     method: 'put',
-        //     url: baseUrl + `/company/task-types/${item.id}/`,
-        //     headers: {
-        //         "Authorization": token
-        //     },
-        //     data: {
-        //         id: updatedItem.id,
-        //         name: updatedItem.name,
-        //         description: updatedItem.description,
-        //     }
-        // })
-        //     .then((response => {
-        //         set_showSpinner_CreateUpdateItem(false);
+        if (name === "") return alert('missing input');
+        if (props.milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
+        if (date === "") return alert('missing input');
+        if (comment === "") return alert('missing input');
+        if (tasks === "") return alert('missing input');
+        if (props.activeProject.id === "") return alert('missing input');
 
-        //         document.getElementById('name').value = "";
+        // update in backend
 
-        //         document.getElementById('description').value = "";
+        axios({
+            method: 'put',
+            url: baseUrl + `/company/milestone-items/${item.id}/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                name: name,
+                milestone_item_type: props.milestoneTypes[milestoneTypeIndex].id,
+                date: date,
+                comment: comment,
+                project: props.activeProject.id,
+            }
+        })
+        .then((response => {
+            // console.log('milestone updated succesfully: ', response.data);
 
-        //         set_updateMode(false);
-        //     }))
-        //     .catch((error) => {
-        //         console.log(error);
-        //         alert('problem with updating Milestone Type.')
-        //     })
+            let updatedProject = {...props.activeProject};
+
+            let updatedItem = { ...response.data, tasks: tasks };
+
+            updatedItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
+
+            updatedProject.milestone_items.splice(milestoneIndex, 1, updatedItem);
+
+            updatedProject.milestone_items.sort((a, b) => {
+                return moment(a.date) - moment(b.date);
+            });
+
+            props.updateProjectInState(updatedProject);
+
+            set_milestones([...updatedProject.milestone_items]);
+
+            // console.log('milestone updated succesfully: ', updatedItem);
+
+            set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with updating Milestone Type.')
+        })
     }
 
     return ( <div className='p02-c06-manage-milestones'>
@@ -287,7 +332,7 @@ const ManageMilestones = (props) => {
                     </thead>
                     <tbody>
                         {/* TODO:  */}
-                        {milestones.map((item) => {
+                        {milestones.map((item, index) => {
                             return <tr key={Math.random() * 100000}>
                                 <td>{item.id}</td>
                                 <td>{item.milestone_item_type.short_name}</td>
@@ -299,7 +344,7 @@ const ManageMilestones = (props) => {
                                         className='p02-c06-icons' 
                                         src={pencil_edit} 
                                         alt='' 
-                                        onClick={() => switchToUpdateMode(item)} 
+                                        onClick={() => switchToUpdateMode(item, index)} 
                                     />
                                     <img 
                                         className='p02-c06-icons' 
@@ -360,10 +405,21 @@ const ManageMilestones = (props) => {
                     >type</label>
                     <div className='p02-c06-row1-col2'>
                         <div className='p02-c06-textbox-container'>
-                            <select id="milestone_item_type">
-                                <option value="">--Please choose an option--</option>
+                            <select 
+                                id="milestone_item_type" 
+                                // selectedIndex={selectedIndex}
+                                // onClick={() => console.log('option clicked')}
+                                // onChange={document.getElementById(`${item.short_name} : ${item.name}`).selected = true}
+                            >
+                                <option value="" id='default-milestonetype'>--Please choose an option--</option>
                                 {props.milestoneTypes.map((item) => {
-                                    return <option value={`${item.short_name} : ${item.name}`} key={Math.random() * 100000} >{`${item.short_name} : ${item.name}`}</option>
+                                    return <option 
+                                        key={Math.random() * 100000} 
+                                        id={`${item.short_name} : ${item.name}`} 
+                                        value={`${item.short_name} : ${item.name}`}
+                                        // onClick={() => console.log('option clicked.. ')}
+                                    >{`${item.short_name} : ${item.name}`}
+                                    </option>
                                 })}
                             </select>
                         </div>
