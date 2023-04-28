@@ -42,6 +42,7 @@ const PlanningDashboard = () => {
     // data from backend
     const [projects, set_projects] = useState([]);
     const [milestoneTypes, set_milestoneTypes] = useState([]);
+    const [taskTypes, set_taskTypes] = useState([]);
     // 
     const [dateOffset, set_dateOffset] = useState(0);    // offset from today...
     const [baseUrl, set_baseUrl] = useState(getBaseUrl());
@@ -83,6 +84,8 @@ const PlanningDashboard = () => {
         fetchProjects();
 
         fetchMilestoneTypes();
+
+        fetchTaskTypes();
     }, []);
     // functions for managing projects
     const addNewProjectToState = (project) => {
@@ -210,6 +213,34 @@ const PlanningDashboard = () => {
         })
     }
 
+    const fetchTaskTypes = () => {
+        // console.log('fetching project with id: ', projectId);
+
+        axios({
+            method: 'get',
+            url: baseUrl + '/company/task-types/',
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            console.log('fetch tasks types: ', response.data);
+
+            let tasksTypes = response.data;
+
+            tasksTypes.sort((a, b) => a.id - b.id);
+
+            set_taskTypes([...tasksTypes]);
+
+            // set_showSpinner_FetchingItems(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with fetching tasks types');
+        })
+    }
+
     const updateProjectInState = (project) => {
         let index = projects.findIndex(element => element.id === project.id);
         let newProjects = [...projects];
@@ -250,6 +281,7 @@ const PlanningDashboard = () => {
     return (
         <div className='p02-dashboard'>
             <div className='p02-modals-container'>
+                {/* OLD MODAL CONTAINER */}
                 {createProject_toogle ?
                     <CreateEditProjectModal
                         project={activeProject}
@@ -330,9 +362,9 @@ const PlanningDashboard = () => {
                     {/* MODAL COMPONENTS IN MAIN SECTION */}
                     {manageProjects_modalToogle ?
                     <ManageProjects 
-                        toogleVisibility={set_manageProjects_modalToogle} 
                         projects={projects}
                         set_projects={set_projects}
+                        toogleVisibility={set_manageProjects_modalToogle} 
                     />
                     : ""}
                     {manageMilestoneTypes_modalToogle ?
@@ -345,6 +377,8 @@ const PlanningDashboard = () => {
                     ""}
                     {manageTasksTypes_modalToogle ?
                     <ManageTasksTypes
+                        taskTypes={taskTypes}
+                        set_taskTypes={set_taskTypes}
                         toogleVisibility={set_manageTasksTypes_modalToogle}
                     />
                     :

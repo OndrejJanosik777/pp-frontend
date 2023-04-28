@@ -24,15 +24,15 @@ const ManageTasksTypes = (props) => {
 
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [taskTypes, set_taskTypes] = useState([]);
+    const [taskTypes, set_taskTypes] = useState([...props.taskTypes]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
-    const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(true);
+    const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(props.taskTypes.length === 0);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
 
     useEffect(() => {
-        fetchItems();
+        if (taskTypes.length === 0) fetchItems();
     }, []);
 
     const fetchItems = () => {
@@ -87,6 +87,7 @@ const ManageTasksTypes = (props) => {
             const newItem = response.data;
 
             set_taskTypes([...taskTypes, newItem]);
+            props.set_taskTypes([...taskTypes, newItem]);
 
             set_showSpinner_CreateUpdateItem(false);
         }))
@@ -153,6 +154,7 @@ const ManageTasksTypes = (props) => {
         updatedItems.splice(index, 1, updatedItem);
 
         set_taskTypes([...updatedItems]);
+        props.set_taskTypes([...updatedItems]);
         set_showSpinner_CreateUpdateItem(true);
 
         axios({

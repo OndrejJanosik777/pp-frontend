@@ -56,11 +56,11 @@ const ManageMilestones = (props) => {
         const comment = document.getElementById('comment').value;
         const tasks = [];
 
-        const index = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
+        const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
 
         console.log('creating new milestone...');
         console.log('name...', name);
-        console.log('milestone_item_type...', props.milestoneTypes[index].id);
+        console.log('milestone_item_type...', props.milestoneTypes[milestoneTypeIndex].id);
         console.log('date...', date);
         console.log('comment...', comment);
         console.log('tasks...', tasks);
@@ -69,7 +69,7 @@ const ManageMilestones = (props) => {
         set_showSpinner_CreateUpdateItem(true);
 
         if (name === "") return alert('missing input');
-        if (props.milestoneTypes[index].id === "") return alert('missing input');
+        if (props.milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
         if (date === "") return alert('missing input');
         if (comment === "") return alert('missing input');
         if (tasks === "") return alert('missing input');
@@ -77,7 +77,7 @@ const ManageMilestones = (props) => {
 
         let newMilestone = {
             name: name,
-            milestone_item_type: {...props.milestoneTypes[index]},
+            milestone_item_type: {...props.milestoneTypes[milestoneTypeIndex]},
             date: date,
             comment: comment,
             tasks: tasks,
@@ -94,7 +94,7 @@ const ManageMilestones = (props) => {
             },
             data: {
                 name: name,
-                milestone_item_type: props.milestoneTypes[index].id,
+                milestone_item_type: props.milestoneTypes[milestoneTypeIndex].id,
                 date: date,
                 comment: comment,
                 project: props.activeProject.id,
@@ -109,7 +109,7 @@ const ManageMilestones = (props) => {
 
             // let newItem = { ...response.data };
 
-            newItem.milestone_item_type = {...props.milestoneTypes[index]};
+            newItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
 
             updatedItem.milestone_items = [...milestones, newItem];
 
@@ -136,28 +136,26 @@ const ManageMilestones = (props) => {
         })
     }
 
-    const deleteItem = (item) => {
+    const deleteItem = (milestone) => {
         // update in local state
 
-        console.log('deleting milestone...', item);
+        const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestone.id)
 
-        const index = props.activeProject.milestone_items.findIndex(elem => elem.id === item.id)
+        let updatedProject = {...props.activeProject};
+        let updatedMilestones = [...milestones];
 
-        let updatedItem = {...props.activeProject};
+        updatedProject.milestone_items.splice(milestoneIndex, 1);
+        updatedMilestones.splice(milestoneIndex, 1);
 
-        updatedItem.milestone_items.splice(index, 1);
+        props.updateProjectInState(updatedProject);
 
-        console.log('updatedItem: ', updatedItem);
-
-        props.updateProjectInState(updatedItem);
-
-        set_milestones([...updatedItem.milestone_items]);
+        set_milestones([...updatedMilestones]);
 
         // update in backend
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/milestone-items/${item.id}/`,
+            url: baseUrl + `/company/milestone-items/${milestone.id}/`,
             headers: {
                 "Authorization": token
             }
@@ -169,10 +167,6 @@ const ManageMilestones = (props) => {
             console.log(error);
 
             alert('problem with deleting milestone from backend: ', error);
-
-            // let updatedItems = [...taskTypes];
-
-            // set_taskTypes([...updatedItems]);
         })
     }
 
@@ -203,19 +197,19 @@ const ManageMilestones = (props) => {
         set_selectedItem(item);
     }
 
-    const updateItem = (item) => {
+    const updateItem = (milestoneItem) => {
         // console.log('function : updateItem');
 
         const name = document.getElementById('name').value;
         const milestone_item_type = document.getElementById('milestone_item_type').value;
         const date = document.getElementById('date').value;
         const comment = document.getElementById('comment').value;
-        const tasks = item.tasks;
+        const tasks = milestoneItem.tasks;
 
         // console.log('milestone_item_type: ', milestone_item_type);
 
         const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
-        const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === item.id)
+        const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestoneItem.id)
 
         // console.log('index: ', index);
 
@@ -240,7 +234,7 @@ const ManageMilestones = (props) => {
 
         axios({
             method: 'put',
-            url: baseUrl + `/company/milestone-items/${item.id}/`,
+            url: baseUrl + `/company/milestone-items/${milestoneItem.id}/`,
             headers: {
                 "Authorization": token
             },
@@ -332,25 +326,25 @@ const ManageMilestones = (props) => {
                     </thead>
                     <tbody>
                         {/* TODO:  */}
-                        {milestones.map((item, index) => {
+                        {milestones.map((milestone, index) => {
                             return <tr key={Math.random() * 100000}>
-                                <td>{item.id}</td>
-                                <td>{item.milestone_item_type.short_name}</td>
-                                <td>{item.name}</td>
-                                <td>{item.date}</td>
-                                <td>{item.comment}</td>
+                                <td>{milestone.id}</td>
+                                <td>{milestone.milestone_item_type.short_name}</td>
+                                <td>{milestone.name}</td>
+                                <td>{milestone.date}</td>
+                                <td>{milestone.comment}</td>
                                 <td>
                                     <img 
                                         className='p02-c06-icons' 
                                         src={pencil_edit} 
                                         alt='' 
-                                        onClick={() => switchToUpdateMode(item, index)} 
+                                        onClick={() => switchToUpdateMode(milestone, index)} 
                                     />
                                     <img 
                                         className='p02-c06-icons' 
                                         src={delete_cross} 
                                         alt='' 
-                                        onClick={() => deleteItem(item)} 
+                                        onClick={() => deleteItem(milestone)} 
                                     />
                                 </td>
                             </tr>
