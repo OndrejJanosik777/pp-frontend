@@ -40,7 +40,6 @@ const ManageMilestones = (props) => {
         console.log('component ManageMilestones loaded: ... ');
         console.log('props.activeProject: ', props.activeProject);
     }, []);
-
     
     const showState = () => {
         console.log('props: ', props);

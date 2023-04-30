@@ -15,15 +15,15 @@ const MilestoneTag = (props) => {
 
     // const [loaded, setLoaded] = useState([]);
     const [leftOffset, set_LeftOffset] = useState(0);
-    const [originalLeftOffset, setOriginalLeftOffset] = useState(0);
+    const [originalLeftOffset, set_originalLeftOffset] = useState(0);
     const [isMoving, set_isMoving] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [contextMenuVisible, setContextMenuVisible] = useState(false);
+    const [milestoneTag_visibility, set_milestoneTag_visibility] = useState(false);
+    const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
     const [deltaTag, set_deltaTag] = useState(10);
     const [deltaStart, set_deltaStart] = useState(props.deltaStart);
 
     useEffect(() => {
-        console.log('props.deltaStart: ', props.deltaStart)
+        // console.log('props.deltaStart: ', props.deltaStart)
     }, [])
 
     useEffect(() => {
@@ -39,9 +39,9 @@ const MilestoneTag = (props) => {
 
         if (difference >= 0 && difference < props.displayLimit - 1) {
             // if (difference < props.displayLimit - 1) {
-            setVisible(true);
+            set_milestoneTag_visibility(true);
             set_LeftOffset(difference * 16);
-            setOriginalLeftOffset(difference * 16);
+            set_originalLeftOffset(difference * 16);
         }
     }, [props.dateOffset]);
 
@@ -53,11 +53,11 @@ const MilestoneTag = (props) => {
         // console.log("startingX: ", startingX);
         // console.log("leftOffset: ", leftOffset);
         // console.log("newLeftOffset: ", newLeftOffset);
-        console.log('event.clientX: ', event.clientX);
-        console.log('leftOffset: ', leftOffset);
-        console.log('deltaTag: ', deltaTag);
-        console.log('deltaStart: ', deltaStart);
-        console.log('newLeftOffset: ', newLeftOffset);
+        // console.log('event.clientX: ', event.clientX);
+        // console.log('leftOffset: ', leftOffset);
+        // console.log('deltaTag: ', deltaTag);
+        // console.log('deltaStart: ', deltaStart);
+        // console.log('newLeftOffset: ', newLeftOffset);
 
         set_LeftOffset(newLeftOffset);
         // setLeftOffset(16);
@@ -106,7 +106,7 @@ const MilestoneTag = (props) => {
 
         // setMouseX(event.clientX);
         // setMouseY(event.clientY);
-        setContextMenuVisible(!contextMenuVisible);
+        set_contextMenu_visibility(!contextMenu_visibility);
         // console.log(`context menu clicked: ${event.clientX} ${event.clientY}`);
     }
 
@@ -134,7 +134,7 @@ const MilestoneTag = (props) => {
     }
 
     return (<div className='milestone-tag' id='milestone-tag'>
-        {visible ?
+        {milestoneTag_visibility ?
             <div style={TagStyle}>
                 <button
                     type="button"
@@ -149,9 +149,9 @@ const MilestoneTag = (props) => {
             :
             <div style={{ height: '30px' }}></div>
         }
-        {contextMenuVisible ?
+        {contextMenu_visibility ?
             <div style={ContextMenuStyle}>
-                <ul className='context-container' onMouseLeave={() => setContextMenuVisible(!contextMenuVisible)}>
+                <ul className='context-container' onMouseLeave={() => set_contextMenu_visibility(!contextMenu_visibility)}>
                     <li className='context-item'>
                         <span
                             className="badge bg-warning"
@@ -171,9 +171,13 @@ const MilestoneTag = (props) => {
                     <li className='context-item'>
                         <span
                             className="badge bg-primary"
-                            onClick={() => props.display_modal_createNewTask(props.project, props.milestoneItem)}
+                            onClick={() => {
+                                props.set_activeProject(props.project)
+                                props.set_activeMilestoneItem(props.milestoneItem)
+                                props.set_manageTasks_modalToogle(true)
+                            }}
                         >
-                            Add Task
+                            Manage Tasks
                         </span>
                     </li>
                     <li className='context-item'>
@@ -188,7 +192,7 @@ const MilestoneTag = (props) => {
             </div>
             :
             <div></div>}
-        {visible ?
+        {milestoneTag_visibility ?
             <div style={TasksStyle}>
                 {props.milestoneItem.tasks.length}
             </div>

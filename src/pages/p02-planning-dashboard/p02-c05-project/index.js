@@ -65,6 +65,7 @@ const Project = (props) => {
         })
 
         set_certificationDocumentIds(certificationDocumentIds);
+        set_totalTasks(totalTasks);
 
     }, []);
 
@@ -168,7 +169,15 @@ const Project = (props) => {
             >
                 {`Milestones: ${achievedMilestones.length}/${props.project.milestone_items.length}`}
             </div>
-            <div className='p02-row-left'>
+            <div 
+                className='p02-row-left'
+                onClick={
+                    () => {
+                        props.set_activeProject(props.project);
+                        props.set_manageTasks_modalToogle(true);
+                    }
+                }
+            >
                 {`Tasks: ${completedTasks}/${totalTasks}`}
             </div>
             <div className='p02-row-left'>
@@ -197,6 +206,9 @@ const Project = (props) => {
                     // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
                     // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
                     deleteMilestoneItem={() => props.display_modal_warning_deleteMilestoneItem(props.project, milestoneItem)}
+                    set_manageTasks_modalToogle={props.set_manageTasks_modalToogle}
+                    set_activeMilestoneItem={props.set_activeMilestoneItem}
+                    set_activeProject={props.set_activeProject}
                 />
             })
             }

@@ -19,6 +19,7 @@ import ManageMilestoneTypes from './p02-c03-manage-milestone-types';
 import ManageMilestones from './p02-c06-manage-milestones';
 import ManageTasksTypes from './p02-c04-manage-tasks-types';
 import ManageMonuments from './manage-monuments';
+import ManageTasks from './p02-c07-manage-tasks';
 import ManageCertificationDocuments from './manage-certification-documents';
 import NavBar from '../../components/c01-nav-bar'
 import Project from './p02-c05-project';
@@ -62,6 +63,7 @@ const PlanningDashboard = () => {
     const [manageProjects_modalToogle, set_manageProjects_modalToogle] = useState(false);
     const [manageTasksTypes_modalToogle, set_manageTasksTypes_modalToogle] = useState(false);
     const [manageMilestones_modalToogle, set_manageMilestones_modalToogle] = useState(false);
+    const [manageTasks_modalToogle, set_manageTasks_modalToogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
@@ -79,6 +81,8 @@ const PlanningDashboard = () => {
     })
     // hook to run while loading component
     useEffect(() => {
+        console.log('dashboard Projects loaded...');
+
         window.addEventListener('resize', handleResize.current);
 
         fetchProjects();
@@ -174,9 +178,12 @@ const PlanningDashboard = () => {
         })
         .then((response => {
             let newProjects = [];
+
             response.data.map((item) => {
                 newProjects.push({...item, displayed: true})
             })
+
+            console.log('projects: ', newProjects);
 
             // set_projects(response.data);
             set_projects(newProjects);
@@ -393,6 +400,18 @@ const PlanningDashboard = () => {
                     />
                     :
                     ""}
+                    {manageTasks_modalToogle ?
+                    <ManageTasks
+                        activeProject={activeProject}
+                        activeMilestoneItem={activeMilestoneItem}
+                        // updateProject={updateProject}
+                        // updateProjectInState={updateProjectInState}
+                        // milestoneTypes={milestoneTypes}
+                        taskTypes={taskTypes}
+                        toogleVisibility={set_manageTasks_modalToogle}
+                    />
+                    :
+                    ""}
                     <img className='p02-img-home' src={home} alt='' />
                     <button className='button-container'>
                         <div className='button-name'>Quick Links</div>
@@ -450,7 +469,7 @@ const PlanningDashboard = () => {
 
                             project.monuments.map((monument) => {
                                 monument.certification_documents.map((document) => {
-                                    console.log('document: ', document);
+                                    // console.log('document: ', document);
                                     let index = certificationDocumentIds.findIndex((elem) => elem === document.id);
 
                                     if (index === -1) {
@@ -474,6 +493,7 @@ const PlanningDashboard = () => {
                             
                             if (project.displayed) {
                                 return <Project 
+                                    key={Math.random() * 100000}
                                     createTask_toogle={createTask_toogle}
                                     dateOffset={dateOffset}
                                     displayedDays={displayedDays}
@@ -487,6 +507,7 @@ const PlanningDashboard = () => {
                                     set_editMilestone_toogle={set_editMilestone_toogle}
                                     set_createTask_toogle={set_createTask_toogle}
                                     set_manageMilestones_modalToogle={set_manageMilestones_modalToogle}
+                                    set_manageTasks_modalToogle={set_manageTasks_modalToogle}
                                 />
                             }
                         })

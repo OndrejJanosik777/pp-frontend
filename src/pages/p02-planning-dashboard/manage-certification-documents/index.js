@@ -127,26 +127,26 @@ const ManageCertificationDocuments = (props) => {
                 monuments: [...relatedMonumentIds],
             }
         })
-            .then((response => {
-                const newCertificationDocument = response.data;
+        .then((response => {
+            const newCertificationDocument = response.data;
 
-                setCertificationDocuments([...certificationDocuments, newCertificationDocument]);
-                setCreatingNewMonument_spinner(false);
-                props.updateProject(props.project.id);
-            }))
-            .catch((error) => {
-                console.log(error);
+            setCertificationDocuments([...certificationDocuments, newCertificationDocument]);
+            setCreatingNewMonument_spinner(false);
+            props.updateProject(props.project.id);
+        }))
+        .catch((error) => {
+            console.log(error);
 
-                let updatedCertificationDocuments = [...certificationDocuments];
+            let updatedCertificationDocuments = [...certificationDocuments];
 
-                updatedCertificationDocuments.pop();
+            updatedCertificationDocuments.pop();
 
-                setCertificationDocuments([...updatedCertificationDocuments]);
+            setCertificationDocuments([...updatedCertificationDocuments]);
 
-                alert('problem with creating new certification document');
+            alert('problem with creating new certification document');
 
-                setCreatingNewMonument_spinner(false);
-            })
+            setCreatingNewMonument_spinner(false);
+        })
 
     }
 
