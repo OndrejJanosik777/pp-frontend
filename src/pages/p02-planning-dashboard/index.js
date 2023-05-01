@@ -404,7 +404,7 @@ const PlanningDashboard = () => {
                     <ManageTasks
                         activeProject={activeProject}
                         activeMilestoneItem={activeMilestoneItem}
-                        // updateProject={updateProject}
+                        updateProject={updateProject}
                         // updateProjectInState={updateProjectInState}
                         // milestoneTypes={milestoneTypes}
                         taskTypes={taskTypes}

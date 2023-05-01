@@ -52,32 +52,41 @@ const ManageTasks = (props) => {
     }
 
     const createNewItem = () => {
-        // // update in local state - no
-
-        // const name = document.getElementById('name').value;
-        // const milestone_item_type = document.getElementById('milestone_item_type').value;
-        // const date = document.getElementById('date').value;
-        // const comment = document.getElementById('comment').value;
-        // const tasks = [];
+        // update in local state - no
+        console.log('creating new task')
+        const task_type = props.taskTypes.find(
+            elem => elem.name === document.getElementById('task_type').value).id;
+        const estimated_hours = document.getElementById('estimated_hours').value;
+        const booked_hours = document.getElementById('booked_hours').value;
+        const comment = document.getElementById('comment').value;
+        const milestone_item = props.activeMilestoneItem.id;
+        const deadline = props.activeMilestoneItem.date;
+        const status = document.getElementById('status').value;
+        const users = [];
+        const certification_document = null;
 
         // const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
 
-        // console.log('creating new milestone...');
-        // console.log('name...', name);
-        // console.log('milestone_item_type...', props.milestoneTypes[milestoneTypeIndex].id);
-        // console.log('date...', date);
-        // console.log('comment...', comment);
-        // console.log('tasks...', tasks);
-        // console.log('props.activeProject.id...', props.activeProject.id);
+        console.log('task_type...', task_type);
+        console.log('estimated_hours...', estimated_hours);
+        console.log('booked_hours...', booked_hours);
+        console.log('comment...', comment);
+        console.log('milestone_item...', milestone_item);
+        console.log('status...', status);
+        console.log('users...', users);
+        console.log('certification_document...', certification_document);
 
-        // set_showSpinner_CreateUpdateItem(true);
+        set_showSpinner_CreateUpdateItem(true);
 
-        // if (name === "") return alert('missing input');
-        // if (props.milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
-        // if (date === "") return alert('missing input');
-        // if (comment === "") return alert('missing input');
-        // if (tasks === "") return alert('missing input');
-        // if (props.activeProject.id === "") return alert('missing input');
+        if (task_type === "") return alert('missing task_type');
+        if (estimated_hours === "") return alert('missing estimated_hours');
+        if (booked_hours === "") return alert('missing booked_hours');
+        if (comment === "") return alert('missing comment');
+        if (milestone_item === "") return alert('missing milestone_item');
+        if (status === "") return alert('missing status');
+        if (deadline === "") return alert('missing deadline');
+        // if (users === "") return alert('missing users');
+        if (certification_document === "") return alert('missing certification_document');
 
         // let newMilestone = {
         //     name: name,
@@ -88,56 +97,64 @@ const ManageTasks = (props) => {
         //     project: props.activeProject.id
         // }
 
-        // // update project in backend
+        // update project in backend
 
-        // axios({
-        //     method: 'post',
-        //     url: baseUrl + `/company/milestone-items/`,
-        //     headers: {
-        //         "Authorization": token
-        //     },
-        //     data: {
-        //         name: name,
-        //         milestone_item_type: props.milestoneTypes[milestoneTypeIndex].id,
-        //         date: date,
-        //         comment: comment,
-        //         project: props.activeProject.id,
-        //     }
-        // })
-        // .then((response => {
-        //     console.log('milestone created succesfully: ', response.data);
+        axios({
+            method: 'post',
+            url: baseUrl + `/company/tasks/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                task_type: task_type,
+                estimated_hours: estimated_hours,
+                booked_hours: booked_hours,
+                comment: comment,
+                milestone_item: milestone_item,
+                status: status,
+                users: users,
+                certification_document: certification_document,
+                deadline: deadline
+            }
+        })
+        .then((response => {
+            console.log('task created succesfully: ', response.data);
 
-        //     let updatedItem = {...props.activeProject};
+            // let updatedItem = {...props.activeProject};
 
-        //     let newItem = { ...response.data, tasks: [] };
+            // let newItem = { ...response.data, tasks: [] };
 
-        //     // let newItem = { ...response.data };
+            // // let newItem = { ...response.data };
 
-        //     newItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
+            // newItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
 
-        //     updatedItem.milestone_items = [...milestones, newItem];
+            // updatedItem.milestone_items = [...milestones, newItem];
 
-        //     updatedItem.milestone_items.sort((a, b) => {
-        //         return moment(a.date) - moment(b.date);
-        //     })
+            // updatedItem.milestone_items.sort((a, b) => {
+            //     return moment(a.date) - moment(b.date);
+            // })
 
-        //     props.updateProjectInState(updatedItem);
+            // props.updateProjectInState(updatedItem);
 
-        //     set_milestones([...updatedItem.milestone_items]);
+            set_tasks([...tasks, response.data]);
 
-        //     set_showSpinner_CreateUpdateItem(false);
+            props.updateProject(props.activeProject);
 
-        //     // props.toogleVisibility();
-        // }))
-        // .catch((error) => {
-        //     console.log(error);
+            set_showSpinner_CreateUpdateItem(false);
 
-        //     alert('problem with creating new milestone ')
+            // set_showSpinner_CreateUpdateItem(false);
 
-        //     // set_showSpinner_CreateUpdateItem(false);
+            // props.toogleVisibility();
+        }))
+        .catch((error) => {
+            console.log(error);
 
-        //     // props.toogleVisibility();
-        // })
+            alert('problem with creating new task, check console');
+
+            // set_showSpinner_CreateUpdateItem(false);
+
+            // props.toogleVisibility();
+        })
     }
 
     const deleteItem = (milestone) => {
@@ -375,7 +392,7 @@ const ManageTasks = (props) => {
                                 {props.taskTypes.map((item) => {
                                     return <option 
                                         key={Math.random() * 100000} 
-                                        id={`${item.name}`} 
+                                        id={`${item.id}`} 
                                         value={`${item.name}`}
                                         // onClick={() => console.log('option clicked.. ')}
                                     >{`${item.name}`}
