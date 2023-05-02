@@ -18,7 +18,7 @@ import ManageProjects from './p02-c02-manage-projects';
 import ManageMilestoneTypes from './p02-c03-manage-milestone-types';
 import ManageMilestones from './p02-c06-manage-milestones';
 import ManageTasksTypes from './p02-c04-manage-tasks-types';
-import ManageMonuments from './manage-monuments';
+import ManageMonuments from './p02-c08-manage-monuments';
 import ManageTasks from './p02-c07-manage-tasks';
 import ManageCertificationDocuments from './manage-certification-documents';
 import NavBar from '../../components/c01-nav-bar'
@@ -64,6 +64,7 @@ const PlanningDashboard = () => {
     const [manageTasksTypes_modalToogle, set_manageTasksTypes_modalToogle] = useState(false);
     const [manageMilestones_modalToogle, set_manageMilestones_modalToogle] = useState(false);
     const [manageTasks_modalToogle, set_manageTasks_modalToogle] = useState(false);
+    const [manageMonuments_modalToogle, set_manageMonuments_modalToogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
@@ -412,6 +413,18 @@ const PlanningDashboard = () => {
                     />
                     :
                     ""}
+                    {manageMonuments_modalToogle ?
+                    <ManageMonuments
+                        activeProject={activeProject}
+                        // activeMilestoneItem={activeMilestoneItem}
+                        updateProject={updateProject}
+                        // updateProjectInState={updateProjectInState}
+                        // milestoneTypes={milestoneTypes}
+                        // taskTypes={taskTypes}
+                        toogleVisibility={set_manageMonuments_modalToogle}
+                    />
+                    :
+                    ""}
                     <img className='p02-img-home' src={home} alt='' />
                     <button className='button-container'>
                         <div className='button-name'>Quick Links</div>
@@ -508,6 +521,7 @@ const PlanningDashboard = () => {
                                     set_createTask_toogle={set_createTask_toogle}
                                     set_manageMilestones_modalToogle={set_manageMilestones_modalToogle}
                                     set_manageTasks_modalToogle={set_manageTasks_modalToogle}
+                                    set_manageMonuments_modalToogle={set_manageMonuments_modalToogle}
                                 />
                             }
                         })

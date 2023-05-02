@@ -55,7 +55,7 @@ const Project = (props) => {
 
         props.project.monuments.map((monument) => {
             monument.certification_documents.map((document) => {
-                console.log('document: ', document);
+                // console.log('document: ', document);
                 let index = certificationDocumentIds.findIndex((elem) => elem === document.id);
 
                 if (index === -1) { 
@@ -180,7 +180,15 @@ const Project = (props) => {
             >
                 {`Tasks: ${completedTasks}/${totalTasks}`}
             </div>
-            <div className='p02-row-left'>
+            <div 
+                className='p02-row-left'
+                onClick={
+                    () => {
+                        props.set_activeProject(props.project);
+                        props.set_manageMonuments_modalToogle(true);
+                    }
+                }
+            >
                 {`Monuments: ${props.project.monuments.length}`}
             </div>
             <div className='p02-row-left'>
