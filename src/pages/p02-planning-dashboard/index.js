@@ -19,6 +19,7 @@ import ManageMilestoneTypes from './p02-c03-manage-milestone-types';
 import ManageMilestones from './p02-c06-manage-milestones';
 import ManageTasksTypes from './p02-c04-manage-tasks-types';
 import ManageMonuments from './p02-c08-manage-monuments';
+import ManageDocuments from './p02-c09-manage-documents';
 import ManageTasks from './p02-c07-manage-tasks';
 import ManageCertificationDocuments from './manage-certification-documents';
 import NavBar from '../../components/c01-nav-bar'
@@ -65,6 +66,7 @@ const PlanningDashboard = () => {
     const [manageMilestones_modalToogle, set_manageMilestones_modalToogle] = useState(false);
     const [manageTasks_modalToogle, set_manageTasks_modalToogle] = useState(false);
     const [manageMonuments_modalToogle, set_manageMonuments_modalToogle] = useState(false);
+    const [manageDocuments_modalToogle, set_manageDocuments_modalToogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
@@ -92,6 +94,12 @@ const PlanningDashboard = () => {
 
         fetchTaskTypes();
     }, []);
+
+    const showState = () => {
+        console.log('state of p02-planning-dashboard: ');
+        console.log('projects: ', projects);
+    }
+
     // functions for managing projects
     const addNewProjectToState = (project) => {
         set_projects([...projects, project]);
@@ -282,10 +290,6 @@ const PlanningDashboard = () => {
         })
     }
 
-    const showState = () => {
-        console.log('displayedProjects: ', projects);
-    }
-
     return (
         <div className='p02-dashboard'>
             <div className='p02-modals-container'>
@@ -425,6 +429,18 @@ const PlanningDashboard = () => {
                     />
                     :
                     ""}
+                    {manageDocuments_modalToogle ?
+                    <ManageDocuments
+                        activeProject={activeProject}
+                        // activeMilestoneItem={activeMilestoneItem}
+                        updateProject={updateProject}
+                        // updateProjectInState={updateProjectInState}
+                        // milestoneTypes={milestoneTypes}
+                        // taskTypes={taskTypes}
+                        toogleVisibility={set_manageDocuments_modalToogle}
+                    />
+                    :
+                    ""}
                     <img className='p02-img-home' src={home} alt='' />
                     <button className='button-container'>
                         <div className='button-name'>Quick Links</div>
@@ -450,6 +466,11 @@ const PlanningDashboard = () => {
                             className='p02-item'
                             onClick={() => set_dateOffset(0)}
                         >Today</div>
+                        <div className='p02-item'>|</div>
+                        <div 
+                            className='p02-item'
+                            onClick={showState}
+                        >Show state</div>
                     </div>
                     <main className='p02-main'>
                     {
@@ -522,6 +543,7 @@ const PlanningDashboard = () => {
                                     set_manageMilestones_modalToogle={set_manageMilestones_modalToogle}
                                     set_manageTasks_modalToogle={set_manageTasks_modalToogle}
                                     set_manageMonuments_modalToogle={set_manageMonuments_modalToogle}
+                                    set_manageDocuments_modalToogle={set_manageDocuments_modalToogle}
                                 />
                             }
                         })

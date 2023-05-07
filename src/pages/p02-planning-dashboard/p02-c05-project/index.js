@@ -191,7 +191,15 @@ const Project = (props) => {
             >
                 {`Monuments: ${props.project.monuments.length}`}
             </div>
-            <div className='p02-row-left'>
+            <div 
+                className='p02-row-left'
+                onClick={
+                    () => {
+                        props.set_activeProject(props.project);
+                        props.set_manageDocuments_modalToogle(true);
+                    }
+                }
+            >
                 {`Documents: ${certificationDocumentIds.length}`}
             </div>
         </div>

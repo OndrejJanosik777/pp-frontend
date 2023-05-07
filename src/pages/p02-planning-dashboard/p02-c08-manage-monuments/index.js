@@ -34,6 +34,7 @@ const ManageMonuments = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
+    const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
 
     useEffect(() => {
@@ -105,144 +106,99 @@ const ManageMonuments = (props) => {
         })
     }
 
-    const deleteItem = (milestone) => {
-        // // update in local state
+    const deleteItem = (monument, index) => {
+        // update in local state
 
-        // const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestone.id)
+        let updatedMonuments = [...monuments];
 
-        // let updatedProject = {...props.activeProject};
-        // let updatedMilestones = [...monuments];
+        updatedMonuments.splice(index, 1);
 
-        // updatedProject.milestone_items.splice(milestoneIndex, 1);
-        // updatedMilestones.splice(milestoneIndex, 1);
+        set_monuments([...updatedMonuments]);
 
-        // props.updateProjectInState(updatedProject);
+        axios({
+            method: 'delete',
+            url: baseUrl + `/company/monuments/${monument.id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            props.updateProject(props.activeProject);
+        }))
+        .catch((error) => {
+            console.log(error);
 
-        // set_monuments([...updatedMilestones]);
-
-        // // update in backend
-
-        // axios({
-        //     method: 'delete',
-        //     url: baseUrl + `/company/milestone-items/${milestone.id}/`,
-        //     headers: {
-        //         "Authorization": token
-        //     }
-        // })
-        // .then((response => {
-            
-        // }))
-        // .catch((error) => {
-        //     console.log(error);
-
-        //     alert('problem with deleting milestone from backend: ', error);
-        // })
+            alert('problem with deleting milestone from backend: ', error);
+        })
     }
 
     const switchToUpdateMode = (item, index) => {
-        // console.log('function : switchToUpdateMode');
-        // console.log('updating item: ', item);
-        // console.log('updating index: ', index);
+        document.getElementById('part_number').value = item.part_number;
+        document.getElementById('name').value = item.name;
+        document.getElementById('hours_D').value = item.hours_D;
+        document.getElementById('hours_K').value = item.hours_K;
+        document.getElementById('hours_S').value = item.hours_S;
+        document.getElementById('hours_Z').value = item.hours_Z;
 
-        // document.getElementById('name').value = item.name;
-        // document.getElementById('comment').value = item.comment;
-        // document.getElementById('date').value = item.date;
-        // // document.getElementById(`milestonetypes-container`).selectedIndex = index;
-        // // let containerElem = document.getElementById(`milestonetypes-container`);
-        // let firstElem = document.getElementById(`default-milestonetype`);
+        set_updateMode(true);
 
-        // // containerElem.selectedIndex = 1;
-        // // containerElem
+        set_selectedItem(item);
 
-        // firstElem.innerHTML = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
-        // firstElem.value = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
-
-        // // console.log('containerElem: ', containerElem);
-
-        // // console.log('containerElem.selectedIndex: ', containerElem.selectedIndex);
-
-        // set_updateMode(true);
-
-        // set_selectedItem(item);
+        set_selectedItemIndex(index);
     }
 
-    const updateItem = (milestoneItem) => {
-        // // console.log('function : updateItem');
+    const updateItem = (item, index) => {
+        const part_number = document.getElementById('part_number').value;
+        const name = document.getElementById('name').value;
+        const hours_D = document.getElementById('hours_D').value;
+        const hours_K = document.getElementById('hours_K').value;
+        const hours_S = document.getElementById('hours_S').value;
+        const hours_Z = document.getElementById('hours_Z').value;
 
-        // const name = document.getElementById('name').value;
-        // const milestone_item_type = document.getElementById('milestone_item_type').value;
-        // const date = document.getElementById('date').value;
-        // const comment = document.getElementById('comment').value;
-        // const tasks = milestoneItem.tasks;
+        set_showSpinner_CreateUpdateItem(true);
 
-        // // console.log('milestone_item_type: ', milestone_item_type);
+        if (part_number === "") return alert('missing input');
+        if (name === "") return alert('missing input');
+        if (hours_D === "") return alert('missing input');
+        if (hours_K === "") return alert('missing input');
+        if (hours_S === "") return alert('missing input');
+        if (hours_Z === "") return alert('missing input');
 
-        // const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
-        // const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestoneItem.id)
+        axios({
+            method: 'put',
+            url: baseUrl + `/company/monuments/${item.id}/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                part_number: part_number,
+                name: name,
+                hours_D: hours_D,
+                hours_K: hours_K,
+                hours_S: hours_S,
+                hours_Z: hours_Z,
+                certification_documents: item.certification_documents,
+                project: item.project,
+            }
+        })
+        .then((response => {
+            // console.log('milestone updated succesfully: ', response.data);
 
-        // // console.log('index: ', index);
+            let updatedMonuments = [...monuments];
 
-        // // console.log('creating new milestone...');
-        // // console.log('name...', name);
-        // // console.log('milestone_item_type...', props.milestoneTypes[index].id);
-        // // console.log('date...', date);
-        // // console.log('comment...', comment);
-        // // console.log('tasks...', tasks);
-        // // console.log('props.activeProject.id...', props.activeProject.id);
+            updatedMonuments.splice(index, 1, response.data);
 
-        // set_showSpinner_CreateUpdateItem(true);
+            set_monuments([...updatedMonuments]);
 
-        // if (name === "") return alert('missing input');
-        // if (props.milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
-        // if (date === "") return alert('missing input');
-        // if (comment === "") return alert('missing input');
-        // if (tasks === "") return alert('missing input');
-        // if (props.activeProject.id === "") return alert('missing input');
+            props.updateProject(props.activeProject);
 
-        // // update in backend
+            set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log(error);
 
-        // axios({
-        //     method: 'put',
-        //     url: baseUrl + `/company/milestone-items/${milestoneItem.id}/`,
-        //     headers: {
-        //         "Authorization": token
-        //     },
-        //     data: {
-        //         name: name,
-        //         milestone_item_type: props.milestoneTypes[milestoneTypeIndex].id,
-        //         date: date,
-        //         comment: comment,
-        //         project: props.activeProject.id,
-        //     }
-        // })
-        // .then((response => {
-        //     // console.log('milestone updated succesfully: ', response.data);
-
-        //     let updatedProject = {...props.activeProject};
-
-        //     let updatedItem = { ...response.data, tasks: tasks };
-
-        //     updatedItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
-
-        //     updatedProject.milestone_items.splice(milestoneIndex, 1, updatedItem);
-
-        //     updatedProject.milestone_items.sort((a, b) => {
-        //         return moment(a.date) - moment(b.date);
-        //     });
-
-        //     props.updateProjectInState(updatedProject);
-
-        //     set_monuments([...updatedProject.milestone_items]);
-
-        //     // console.log('milestone updated succesfully: ', updatedItem);
-
-        //     set_showSpinner_CreateUpdateItem(false);
-        // }))
-        // .catch((error) => {
-        //     console.log(error);
-
-        //     alert('problem with updating Milestone Type.')
-        // })
+            alert('problem with updating Milestone Type.')
+        })
     }
 
     return ( <div className='p02-c08-manage-monuments'>
@@ -317,7 +273,7 @@ const ManageMonuments = (props) => {
                                         className='p02-c08-icons' 
                                         src={delete_cross} 
                                         alt='' 
-                                        onClick={() => deleteItem(monument)} 
+                                        onClick={() => deleteItem(monument, index)} 
                                     />
                                 </td>
                             </tr>
@@ -415,7 +371,7 @@ const ManageMonuments = (props) => {
                             type='button' 
                             className='p02-c08-button' 
                             value={updateMode ? 'Update' : 'Create'} 
-                            onClick={updateMode ? () => updateItem(selectedItem) : createNewItem} 
+                            onClick={updateMode ? () => updateItem(selectedItem, selectedItemIndex) : createNewItem} 
                         />
                         }
                     </div>
