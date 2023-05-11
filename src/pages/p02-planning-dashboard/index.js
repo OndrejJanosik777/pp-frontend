@@ -21,7 +21,7 @@ import ManageTasksTypes from './p02-c04-manage-tasks-types';
 import ManageMonuments from './p02-c08-manage-monuments';
 import ManageDocuments from './p02-c09-manage-documents';
 import ManageTasks from './p02-c07-manage-tasks';
-import ManageCertificationDocuments from './manage-certification-documents';
+// import ManageCertificationDocuments from './manage-certification-documents';
 import NavBar from '../../components/c01-nav-bar'
 import Project from './p02-c05-project';
 import SideBar from '../../components/c02-side-bar';
@@ -358,7 +358,7 @@ const PlanningDashboard = () => {
                     :
                     ""}
                 {manageCertificationDocuments_toogle ?
-                    <ManageCertificationDocuments
+                    <ManageDocuments
                         project={activeProject}
                         updateProject={updateProject}
                         createNewMilestone={addNewProjectToState}
