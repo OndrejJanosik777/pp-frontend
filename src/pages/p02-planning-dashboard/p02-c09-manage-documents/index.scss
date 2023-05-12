@@ -36,7 +36,21 @@
             border-bottom: 2px solid #D0D0D0;
 
             .p02-c09-nav-bar-left {
-                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .p02-c09-fetching-displayed {
+
+                    .p02-c09-spinner {
+                        height: 15px;
+                        width: 15px;
+                    }
+                }
+
+                .p02-c09-fetching-hidden {
+                    display: none;
+                }
             }
             .p02-c09-nav-bar-right {
                 display: flex;
@@ -254,7 +268,8 @@
                     padding: 1px 4px;
                     margin: 0px 2px;
                     border: 1px solid black;
-                    background-color: white;
+                    background-color: #44759D;
+                    color: white;
                     border-radius: 4px;
 
                     &:hover {

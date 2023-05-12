@@ -163,28 +163,6 @@ const Project = (props) => {
                 onClick={
                     () => {
                         props.set_activeProject(props.project);
-                        props.set_manageMilestones_modalToogle(true);
-                    }
-                }
-            >
-                {`Milestones: ${achievedMilestones.length}/${props.project.milestone_items.length}`}
-            </div>
-            <div 
-                className='p02-row-left'
-                onClick={
-                    () => {
-                        props.set_activeProject(props.project);
-                        props.set_manageTasks_modalToogle(true);
-                    }
-                }
-            >
-                {`Tasks: ${completedTasks}/${totalTasks}`}
-            </div>
-            <div 
-                className='p02-row-left'
-                onClick={
-                    () => {
-                        props.set_activeProject(props.project);
                         props.set_manageMonuments_modalToogle(true);
                     }
                 }
@@ -201,6 +179,28 @@ const Project = (props) => {
                 }
             >
                 {`Documents: ${certificationDocumentIds.length}`}
+            </div>
+            <div 
+                className='p02-row-left'
+                onClick={
+                    () => {
+                        props.set_activeProject(props.project);
+                        props.set_manageMilestones_modalToogle(true);
+                    }
+                }
+            >
+                {`Milestones: ${achievedMilestones.length}/${props.project.milestone_items.length}`}
+            </div>
+            <div 
+                className='p02-row-left'
+                onClick={
+                    () => {
+                        props.set_activeProject(props.project);
+                        props.set_manageTasks_modalToogle(true);
+                    }
+                }
+            >
+                {`Tasks: ${completedTasks}/${totalTasks}`}
             </div>
         </div>
         <div style={middleStyle}>

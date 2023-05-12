@@ -37,6 +37,7 @@ const ManageDocuments = (props) => {
     const [selectedItem, set_selectedItem] = useState(undefined);
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
+    const [showSpinner_FetchingDocuments, set_showSpinner_FetchingDocuments] = useState(true);
 
     useEffect(() => {
         console.log('(modal) component ManageMonuments loaded: ... ');
@@ -62,6 +63,23 @@ const ManageDocuments = (props) => {
         console.log('monuments: ', monuments);
     }
 
+    const clearForm = () => {
+        document.getElementById('name').value = '...';
+        document.getElementById('number').value = '...';
+        document.getElementById('revision').value = '...';
+        document.getElementById('date').value = '';
+        document.getElementById('acceptance_status').value = '';
+        document.getElementById('comment').value = '...';
+
+        let updatedMonuments = [...monuments];
+
+        updatedMonuments.map((monument) => {
+            monument.isSelected = false;
+        })
+
+        set_monuments([...updatedMonuments]);
+    }
+
     const createNewItem = () => {
         // console.log('createNewItem function');
 
@@ -78,14 +96,6 @@ const ManageDocuments = (props) => {
                 selectedMonuments.push(monument.id);
             }
         })
-
-        // console.log('name: ', name);
-        // console.log('number: ', number);
-        // console.log('revision: ', revision);
-        // console.log('date: ', date);
-        // console.log('acceptance_status: ', acceptance_status);
-        // console.log('comment: ', comment);
-        // console.log('selectedMonuments: ', selectedMonuments);
 
         if (name === "") return alert('missing input');
         if (number === "") return alert('missing input');
@@ -131,30 +141,30 @@ const ManageDocuments = (props) => {
         })
     }
 
-    const deleteItem = (monument, index) => {
-        // // update in local state
+    const deleteItem = (item, index) => {
+        // update in local state
 
-        // let updatedMonuments = [...monuments];
+        let updatedItems = [...documents];
 
-        // updatedMonuments.splice(index, 1);
+        updatedItems.splice(index, 1);
 
-        // set_monuments([...updatedMonuments]);
+        set_documents([...updatedItems]);
 
-        // axios({
-        //     method: 'delete',
-        //     url: baseUrl + `/company/monuments/${monument.id}/`,
-        //     headers: {
-        //         "Authorization": token
-        //     }
-        // })
-        // .then((response => {
-        //     props.updateProject(props.activeProject);
-        // }))
-        // .catch((error) => {
-        //     console.log(error);
+        axios({
+            method: 'delete',
+            url: baseUrl + `/company/certification-documents/${item.id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            props.updateProject(props.activeProject);
+        }))
+        .catch((error) => {
+            console.log(error);
 
-        //     alert('problem with deleting milestone from backend: ', error);
-        // })
+            alert('problem with deleting milestone from backend: ', error);
+        })
     }
 
     const fetchDocuments = () => {
@@ -176,13 +186,17 @@ const ManageDocuments = (props) => {
 
             set_documents(response.data);
 
+            set_showSpinner_FetchingDocuments(false);
+
             // set_projects(response.data);
             // set_projects(newProjects);
         }))
         .catch((error) => {
             console.log(error);
 
-            alert('problem with fetching projects')
+            alert('problem with fetching projects');
+
+            set_showSpinner_FetchingDocuments(false);
         })
     }
 
@@ -191,74 +205,95 @@ const ManageDocuments = (props) => {
         console.log('item: ', item);
         console.log('index: ', index);
 
-        // document.getElementById('part_number').value = item.part_number;
-        // document.getElementById('name').value = item.name;
-        // document.getElementById('hours_D').value = item.hours_D;
-        // document.getElementById('hours_K').value = item.hours_K;
-        // document.getElementById('hours_S').value = item.hours_S;
-        // document.getElementById('hours_Z').value = item.hours_Z;
+        document.getElementById('name').value = item.name;
+        document.getElementById('number').value = item.number;
+        document.getElementById('revision').value = item.revision;
+        document.getElementById('date').value = item.date;
+        document.getElementById('acceptance_status').value = item.acceptance_status;
+        document.getElementById('comment').value = item.comment;
 
-        // set_updateMode(true);
+        let updatedMonuments = [...monuments];
 
-        // set_selectedItem(item);
+        item.monuments.map((monumentId) => {
+            let monument = updatedMonuments.find(elem => elem.id === monumentId);
 
-        // set_selectedItemIndex(index);
+            if (monument !== undefined) {
+                monument.isSelected = true;
+            }
+
+            console.log('updatedMonuments: ', updatedMonuments);
+        })
+
+        set_monuments([...updatedMonuments]);
+
+        set_updateMode(true);
+
+        set_selectedItem(item);
+
+        set_selectedItemIndex(index);
     }
 
     const updateItem = (item, index) => {
         console.log('updateItem function');
 
-        // const part_number = document.getElementById('part_number').value;
-        // const name = document.getElementById('name').value;
-        // const hours_D = document.getElementById('hours_D').value;
-        // const hours_K = document.getElementById('hours_K').value;
-        // const hours_S = document.getElementById('hours_S').value;
-        // const hours_Z = document.getElementById('hours_Z').value;
+        const name = document.getElementById('name').value;
+        const number = document.getElementById('number').value;
+        const revision = document.getElementById('revision').value;
+        const date = document.getElementById('date').value;
+        const acceptance_status = document.getElementById('acceptance_status').value;
+        const comment = document.getElementById('comment').value;
+        const selectedMonuments = [];
 
-        // set_showSpinner_CreateUpdateItem(true);
+        monuments.map((monument) => {
+            if (monument.isSelected) {
+                selectedMonuments.push(monument.id);
+            }
+        })
 
-        // if (part_number === "") return alert('missing input');
-        // if (name === "") return alert('missing input');
-        // if (hours_D === "") return alert('missing input');
-        // if (hours_K === "") return alert('missing input');
-        // if (hours_S === "") return alert('missing input');
-        // if (hours_Z === "") return alert('missing input');
+        if (name === "") return alert('missing input');
+        if (number === "") return alert('missing input');
+        if (revision === "") return alert('missing input');
+        if (date === "") return alert('missing input');
+        if (acceptance_status === "") return alert('missing input');
+        if (comment === "") return alert('missing input');
+        if (selectedMonuments.length === 0) return alert('missing input');
 
-        // axios({
-        //     method: 'put',
-        //     url: baseUrl + `/company/monuments/${item.id}/`,
-        //     headers: {
-        //         "Authorization": token
-        //     },
-        //     data: {
-        //         part_number: part_number,
-        //         name: name,
-        //         hours_D: hours_D,
-        //         hours_K: hours_K,
-        //         hours_S: hours_S,
-        //         hours_Z: hours_Z,
-        //         certification_documents: item.certification_documents,
-        //         project: item.project,
-        //     }
-        // })
-        // .then((response => {
-        //     // console.log('milestone updated succesfully: ', response.data);
+        set_showSpinner_CreateUpdateItem(true);
 
-        //     let updatedMonuments = [...monuments];
+        axios({
+            method: 'put',
+            url: baseUrl + `/company/certification-documents/${item.id}/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                name: name,
+                number: number,
+                revision: revision,
+                date: date,
+                acceptance_status: acceptance_status,
+                comment: comment,
+                monuments: selectedMonuments,
+            }
+        })
+        .then((response => {
+            // console.log('document updated succesfully: ', response.data);
 
-        //     updatedMonuments.splice(index, 1, response.data);
+            // props.updateProject(props.activeProject);
 
-        //     set_monuments([...updatedMonuments]);
+            let updatedDocuments = [...documents];
 
-        //     props.updateProject(props.activeProject);
+            updatedDocuments.splice(index, 1, response.data)
 
-        //     set_showSpinner_CreateUpdateItem(false);
-        // }))
-        // .catch((error) => {
-        //     console.log(error);
+            set_documents([...updatedDocuments]);
 
-        //     alert('problem with updating Milestone Type.')
-        // })
+            set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with updating Milestone Type.')
+        })
     }
 
     return ( <div className='p02-c09-manage-documents'>
@@ -277,6 +312,16 @@ const ManageDocuments = (props) => {
                         src={create_new} alt='' 
                         onClick={() => set_createMode(!createMode)} 
                     />
+                    <div className={
+                        showSpinner_FetchingDocuments ?
+                        'p02-c09-fetching-displayed' :
+                        'p02-c09-fetching-hidden'
+                        }>
+                        loading documents from database ...
+                        <div className="spinner-border p02-c09-spinner" role="status">
+                            <span className="sr-only"></span>
+                        </div>
+                    </div>
                 </div>
                 <div className='p02-c09-nav-bar-right'>
                     <div className='p02-c09-textbox-container'>
@@ -327,7 +372,11 @@ const ManageDocuments = (props) => {
                                         className='p02-c09-icons' 
                                         src={pencil_edit} 
                                         alt='' 
-                                        onClick={() => switchToUpdateMode(document, index)} 
+                                        onClick={() => {
+                                            clearForm();
+
+                                            switchToUpdateMode(document, index);
+                                        }} 
                                     />
                                     <img 
                                         className='p02-c09-icons' 
@@ -462,7 +511,11 @@ const ManageDocuments = (props) => {
                             type='button' 
                             className='p02-c09-button' 
                             value={updateMode ? 'Cancel' : 'Close'} 
-                            onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
+                            onClick={updateMode ? () => {
+                                // clearForm();
+                                set_updateMode(false);
+                                set_createMode(true);
+                            } : () => set_createMode(false)} 
                         />
                     </div>
                 </div>
