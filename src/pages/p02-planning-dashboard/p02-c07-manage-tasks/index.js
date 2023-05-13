@@ -74,14 +74,14 @@ const ManageTasks = (props) => {
 
         // const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
 
-        console.log('task_type...', task_type);
-        console.log('estimated_hours...', estimated_hours);
-        console.log('booked_hours...', booked_hours);
-        console.log('comment...', comment);
-        console.log('milestone_item...', milestone_item);
-        console.log('status...', status);
-        console.log('users...', users);
-        console.log('certification_document...', certification_document);
+        // console.log('task_type...', task_type);
+        // console.log('estimated_hours...', estimated_hours);
+        // console.log('booked_hours...', booked_hours);
+        // console.log('comment...', comment);
+        // console.log('milestone_item...', milestone_item);
+        // console.log('status...', status);
+        // console.log('users...', users);
+        // console.log('certification_document...', certification_document);
 
         set_showSpinner_CreateUpdateItem(true);
 
@@ -124,17 +124,7 @@ const ManageTasks = (props) => {
             set_showSpinner_CreateUpdateItem(false);
 
             // 
-            if (certification_document !== null) {
-
-                let updated_certificationDocumentsNoTask = [...certificationDocumentsNoTask];
-    
-                let index = updated_certificationDocumentsNoTask.findIndex((elem) => elem.id === certification_document)
-    
-                updated_certificationDocumentsNoTask.splice(index, 1);
-    
-                set_certificationDocumentsNoTask([...updated_certificationDocumentsNoTask]);
-
-            }
+            fetchProjectDocuments();
         }))
         .catch((error) => {
             console.log(error);
@@ -143,38 +133,36 @@ const ManageTasks = (props) => {
         })
     }
 
-    const deleteItem = (milestone) => {
-        // // update in local state
+    const deleteItem = (task) => {
+        console.log('deleting task: ', task);
 
-        // const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestone.id)
+        // update in backend
 
-        // let updatedProject = {...props.activeProject};
-        // let updatedMilestones = [...milestones];
+        axios({
+            method: 'delete',
+            url: baseUrl + `/company/tasks/${task.id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            fetchProjectDocuments();
 
-        // updatedProject.milestone_items.splice(milestoneIndex, 1);
-        // updatedMilestones.splice(milestoneIndex, 1);
+            let updatedTasks = [...tasks];
 
-        // props.updateProjectInState(updatedProject);
+            let index =  updatedTasks.findIndex(elem => elem.id === task.id);
 
-        // set_milestones([...updatedMilestones]);
+            updatedTasks.splice(index, 1);
 
-        // // update in backend
+            set_tasks([...updatedTasks]);
 
-        // axios({
-        //     method: 'delete',
-        //     url: baseUrl + `/company/milestone-items/${milestone.id}/`,
-        //     headers: {
-        //         "Authorization": token
-        //     }
-        // })
-        // .then((response => {
-            
-        // }))
-        // .catch((error) => {
-        //     console.log(error);
+            props.updateProject(props.activeProject);
+        }))
+        .catch((error) => {
+            console.log(error);
 
-        //     alert('problem with deleting milestone from backend: ', error);
-        // })
+            alert('problem with deleting task from backend: ', error);
+        })
     }
 
     const fetchProjectDocuments = () => {
@@ -214,29 +202,31 @@ const ManageTasks = (props) => {
 
     const switchToUpdateMode = (item, index) => {
         // console.log('function : switchToUpdateMode');
-        // console.log('updating item: ', item);
-        // console.log('updating index: ', index);
+        console.log('updating item: ', item);
+        console.log('updating index: ', index);
 
-        // document.getElementById('name').value = item.name;
-        // document.getElementById('comment').value = item.comment;
-        // document.getElementById('date').value = item.date;
-        // // document.getElementById(`milestonetypes-container`).selectedIndex = index;
-        // // let containerElem = document.getElementById(`milestonetypes-container`);
+        document.getElementById('status').value = item.status;
+        document.getElementById('estimated_hours').value = item.estimated_hours;
+        document.getElementById('booked_hours').value = item.booked_hours;
+        document.getElementById('comment').value = item.comment;
+        document.getElementById('task_type').value = taskTypes.find(elem => elem.id === item.task_type).name;
+        // document.getElementById(`milestonetypes-container`).selectedIndex = index;
+        // let containerElem = document.getElementById(`milestonetypes-container`);
         // let firstElem = document.getElementById(`default-milestonetype`);
 
-        // // containerElem.selectedIndex = 1;
-        // // containerElem
+        // containerElem.selectedIndex = 1;
+        // containerElem
 
         // firstElem.innerHTML = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
         // firstElem.value = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
 
-        // // console.log('containerElem: ', containerElem);
+        // console.log('containerElem: ', containerElem);
 
-        // // console.log('containerElem.selectedIndex: ', containerElem.selectedIndex);
+        // console.log('containerElem.selectedIndex: ', containerElem.selectedIndex);
 
-        // set_updateMode(true);
+        set_updateMode(true);
 
-        // set_selectedItem(item);
+        set_selectedItem(item);
     }
 
     const updateItem = (milestoneItem) => {
@@ -443,7 +433,7 @@ const ManageTasks = (props) => {
                                         id={`${item.id}`} 
                                         value={`${item.id}`}
                                         // onClick={() => console.log('option clicked.. ')}
-                                    >{`${item.number} : ${item.revision}`}
+                                    >{`${item.number}, ${item.revision}, ${item.name}`}
                                     </option>
                                 })}
                             </select>
