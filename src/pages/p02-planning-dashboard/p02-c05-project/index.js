@@ -196,7 +196,7 @@ const Project = (props) => {
                 onClick={
                     () => {
                         props.set_activeProject(props.project);
-                        props.set_manageTasks_modalToogle(true);
+                        // props.set_manageTasks_modalToogle(true);
                     }
                 }
             >

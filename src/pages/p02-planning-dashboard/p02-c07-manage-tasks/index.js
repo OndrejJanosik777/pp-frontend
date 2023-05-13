@@ -30,6 +30,9 @@ const ManageTasks = (props) => {
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     //
     const [tasks, set_tasks] = useState([...props.activeMilestoneItem.tasks]);
+    const [taskTypes, set_taskTypes] = useState([...props.taskTypes]);
+    const [certificationDocuments, set_certificationDocuments] = useState([]);
+    const [certificationDocumentsNoTask, set_certificationDocumentsNoTask] = useState([]);
     // 
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
@@ -39,16 +42,20 @@ const ManageTasks = (props) => {
     useEffect(() => {
         console.log('component ManageTasks loaded: ... ');
         // console.log('props.activeProject: ', props.activeProject);
+
+        fetchProjectDocuments();
     }, []);
 
     const showState = () => {
         console.log('...local state of component p02-c07-manage-tasks...');
         console.log('props: ', props);
-        console.log('props.activeProject: ', props.activeProject);
-        console.log('props.taskTypes: ', props.taskTypes);
-        console.log('props.activeMilestoneItem: ', props.activeMilestoneItem);
-        console.log('props.activeMilestoneItem.tasks: ', props.activeMilestoneItem.tasks);
-        console.log('createMode: ', createMode);
+        // console.log('props.activeProject: ', props.activeProject);
+        // console.log('props.taskTypes: ', props.taskTypes);
+        // console.log('props.activeMilestoneItem: ', props.activeMilestoneItem);
+        // console.log('props.activeMilestoneItem.tasks: ', props.activeMilestoneItem.tasks);
+        // console.log('createMode: ', createMode);
+        console.log('certificationDocuments: ', certificationDocuments);
+        console.log('certificationDocumentsNoTask: ', certificationDocumentsNoTask);
     }
 
     const createNewItem = () => {
@@ -63,7 +70,7 @@ const ManageTasks = (props) => {
         const deadline = props.activeMilestoneItem.date;
         const status = document.getElementById('status').value;
         const users = [];
-        const certification_document = null;
+        let certification_document = document.getElementById('certification-document').value;
 
         // const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
 
@@ -87,17 +94,7 @@ const ManageTasks = (props) => {
         if (deadline === "") return alert('missing deadline');
         // if (users === "") return alert('missing users');
         if (certification_document === "") return alert('missing certification_document');
-
-        // let newMilestone = {
-        //     name: name,
-        //     milestone_item_type: {...props.milestoneTypes[milestoneTypeIndex]},
-        //     date: date,
-        //     comment: comment,
-        //     tasks: tasks,
-        //     project: props.activeProject.id
-        // }
-
-        // update project in backend
+        if (certification_document === "-1") certification_document = null;
 
         axios({
             method: 'post',
@@ -120,40 +117,29 @@ const ManageTasks = (props) => {
         .then((response => {
             console.log('task created succesfully: ', response.data);
 
-            // let updatedItem = {...props.activeProject};
-
-            // let newItem = { ...response.data, tasks: [] };
-
-            // // let newItem = { ...response.data };
-
-            // newItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
-
-            // updatedItem.milestone_items = [...milestones, newItem];
-
-            // updatedItem.milestone_items.sort((a, b) => {
-            //     return moment(a.date) - moment(b.date);
-            // })
-
-            // props.updateProjectInState(updatedItem);
-
             set_tasks([...tasks, response.data]);
 
             props.updateProject(props.activeProject);
 
             set_showSpinner_CreateUpdateItem(false);
 
-            // set_showSpinner_CreateUpdateItem(false);
+            // 
+            if (certification_document !== null) {
 
-            // props.toogleVisibility();
+                let updated_certificationDocumentsNoTask = [...certificationDocumentsNoTask];
+    
+                let index = updated_certificationDocumentsNoTask.findIndex((elem) => elem.id === certification_document)
+    
+                updated_certificationDocumentsNoTask.splice(index, 1);
+    
+                set_certificationDocumentsNoTask([...updated_certificationDocumentsNoTask]);
+
+            }
         }))
         .catch((error) => {
             console.log(error);
 
             alert('problem with creating new task, check console');
-
-            // set_showSpinner_CreateUpdateItem(false);
-
-            // props.toogleVisibility();
         })
     }
 
@@ -189,6 +175,41 @@ const ManageTasks = (props) => {
 
         //     alert('problem with deleting milestone from backend: ', error);
         // })
+    }
+
+    const fetchProjectDocuments = () => {
+        axios({
+            method: 'get',
+            url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            console.log('project documents fetched succesfully: ', response.data);
+
+            let certDocumentsNoTask = [];
+
+            response.data.map((document) => {
+                if (document.task === null) {
+                    certDocumentsNoTask.push(document);
+                }
+
+
+            })
+
+            set_certificationDocumentsNoTask([...certDocumentsNoTask]);
+            set_certificationDocuments([...response.data]);
+
+            // props.updateProject(props.activeProject);
+
+            // set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with creating new task, check console');
+        })
     }
 
     const switchToUpdateMode = (item, index) => {
@@ -338,11 +359,12 @@ const ManageTasks = (props) => {
                     <thead>
                         <tr>
                             <th>id</th>
-                            <th>type</th>
+                            <th>task type</th>
                             <th>status (%)</th>
                             <th>milestone item</th>
                             <th>estimated hours</th>
                             <th>booked hours</th>
+                            <th>document</th>
                             <th>comment</th>
                             <th>action</th>
                         </tr>
@@ -352,11 +374,15 @@ const ManageTasks = (props) => {
                         {tasks.map((task, index) => {
                             return <tr key={Math.random() * 100000}>
                                 <td>{task.id}</td>
-                                <td>{task.task_type}</td>
+                                <td>{taskTypes.find(elem => elem.id === task.task_type).name}</td>
                                 <td>{task.status}</td>
-                                <td>{task.milestone_item}</td>
+                                <td>{props.activeMilestoneItem.milestone_item_type.short_name}</td>
                                 <td>{task.estimated_hours}</td>
                                 <td>{task.booked_hours}</td>
+                                <td>{task.certification_document === null ?
+                                    "no" :
+                                    "yes"
+                                }</td>
                                 <td>{task.comment}</td>
                                 <td>
                                     <img 
@@ -389,7 +415,7 @@ const ManageTasks = (props) => {
                                 id="task_type" 
                             >
                                 <option value="" id='default-milestonetype'>--Please choose an option--</option>
-                                {props.taskTypes.map((item) => {
+                                {taskTypes.map((item) => {
                                     return <option 
                                         key={Math.random() * 100000} 
                                         id={`${item.id}`} 
@@ -401,9 +427,31 @@ const ManageTasks = (props) => {
                             </select>
                         </div>
                     </div>
+                    <label 
+                        htmlFor='milestone_item_type' 
+                        className='p02-c07-row1-col1-w2'
+                    >certification document</label>
+                    <div className='p02-c07-row1-col2'>
+                        <div className='p02-c07-textbox-container'>
+                            <select 
+                                id="certification-document" 
+                            >
+                                <option value="-1" id='empty-documents'>--no document--</option>
+                                {certificationDocumentsNoTask.map((item) => {
+                                    return <option 
+                                        key={Math.random() * 100000} 
+                                        id={`${item.id}`} 
+                                        value={`${item.id}`}
+                                        // onClick={() => console.log('option clicked.. ')}
+                                    >{`${item.number} : ${item.revision}`}
+                                    </option>
+                                })}
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div className='p02-c07-footer-row1'>
-                    <div className='p02-c07-row1-col1'>status</div>
+                    <div className='p02-c07-row1-col1'>status (%)</div>
                     <div className='p02-c07-row1-col2'>
                         <div className='p02-c07-textbox-container'>
                             <input 

@@ -65,6 +65,7 @@
             .p02-nav-bar {
                 display: flex;
                 justify-content: start;
+                align-items: center;
                 color: rgb(64, 99, 122);
                 font-weight: bold;
                 // font-size: 1.0rem;
@@ -78,6 +79,19 @@
                     &:hover {
                         cursor: pointer;
                     }
+                }
+
+                .p02-fetching-displayed {
+                    padding-left: 150px;
+
+                    .p02-spinner {
+                        height: 15px;
+                        width: 15px;
+                    }
+                }
+
+                .p02-fetching-hidden {
+                    display: none;
                 }
             }
 

@@ -71,6 +71,7 @@ const PlanningDashboard = () => {
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
     const [warningText, set_warningText] = useState('');
+    const [showSpinner_FetchingProjects, set_showSpinner_FetchingProjects] = useState(true);
 
     const handleResize = useRef((event) => {
         console.log('event.target.innerWidth', event.target.innerWidth);
@@ -193,6 +194,8 @@ const PlanningDashboard = () => {
             })
 
             console.log('projects: ', newProjects);
+
+            set_showSpinner_FetchingProjects(false);
 
             // set_projects(response.data);
             set_projects(newProjects);
@@ -471,6 +474,16 @@ const PlanningDashboard = () => {
                             className='p02-item'
                             onClick={showState}
                         >Show state</div>
+                        <div className={
+                            showSpinner_FetchingProjects ?
+                            'p02-fetching-displayed' :
+                            'p02-fetching-hidden'
+                            }>
+                            loading projects from database ...
+                            <div className="spinner-border p02-spinner" role="status">
+                                <span className="sr-only"></span>
+                            </div>
+                        </div>
                     </div>
                     <main className='p02-main'>
                     {
