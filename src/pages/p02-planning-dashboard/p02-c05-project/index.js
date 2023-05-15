@@ -6,7 +6,7 @@ import planeSVG from './assets/airplane.svg';
 import MilestoneTag from '../milestone-tag';
 import './index.scss';
 
-const Project = (props) => {
+const P02_C05_PROJECT = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -232,4 +232,4 @@ const Project = (props) => {
     </div> );
 }
  
-export default Project;
+export default P02_C05_PROJECT;

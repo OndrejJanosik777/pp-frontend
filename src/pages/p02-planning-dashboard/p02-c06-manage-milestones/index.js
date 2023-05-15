@@ -14,7 +14,7 @@ import magnifier from './assets/magnifier.png';
 // styles
 import './index.scss';
 
-const ManageMilestones = (props) => {
+const P02_C06_MANAGE_MILESTONES = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -447,4 +447,4 @@ const ManageMilestones = (props) => {
     </div> );
 }
  
-export default ManageMilestones;
+export default P02_C06_MANAGE_MILESTONES;

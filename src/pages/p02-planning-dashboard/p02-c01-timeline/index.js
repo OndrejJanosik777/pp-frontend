@@ -8,7 +8,7 @@ import DaysTimeLine from './days-timeline';
 import './index.scss';
 
 //dateOffset, displayLimit
-const Timeline = (props) => {
+const P02_C01_TIMELINE = (props) => {
 
 
     useEffect(() => {
@@ -36,4 +36,4 @@ const Timeline = (props) => {
     </div>);
 }
 
-export default Timeline;
+export default P02_C01_TIMELINE;

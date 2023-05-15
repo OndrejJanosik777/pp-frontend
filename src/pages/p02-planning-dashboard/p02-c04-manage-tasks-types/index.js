@@ -11,7 +11,7 @@ import magnifier from './assets/magnifier.png';
 import axios from 'axios';
 import './index.scss';
 
-const ManageTasksTypes = (props) => {
+const P02_C04_MANAGE_TASK_TYPES = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -328,4 +328,4 @@ const ManageTasksTypes = (props) => {
     </div>);
 }
 
-export default ManageTasksTypes;
+export default P02_C04_MANAGE_TASK_TYPES;

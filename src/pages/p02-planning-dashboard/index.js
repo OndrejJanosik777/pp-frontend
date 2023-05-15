@@ -8,29 +8,24 @@ import home from './assets/home.png';
 import small_arrow_down from './assets/small_arrow_down.png';
 import arrow_left from './assets/arrow_left.png';
 import magnifier_dark from './assets/magnifier_dark.png';
+// pages
+import C01_NAVBAR from '../../components/c01-nav-bar'
+import C02_SIDEBAR from '../../components/c02-side-bar';
 // components
-import CreateEditProjectModal from './create-edit-project-modal';
-import CreateMilestoneItemModal from './create-milestone-modal';
-import CreateTaskModal from './create-task-modal';
-import DeleteWarning from './delete-warning-modal';
-import EditMilestoneItemModal from './edit-milestoneItem-modal';
-import ManageProjects from './p02-c02-manage-projects';
-import ManageMilestoneTypes from './p02-c03-manage-milestone-types';
-import ManageMilestones from './p02-c06-manage-milestones';
-import ManageTasksTypes from './p02-c04-manage-tasks-types';
-import ManageMonuments from './p02-c08-manage-monuments';
-import ManageDocuments from './p02-c09-manage-documents';
-import ManageTasks from './p02-c07-manage-tasks';
-// import ManageCertificationDocuments from './manage-certification-documents';
-import NavBar from '../../components/c01-nav-bar'
-import Project from './p02-c05-project';
-import SideBar from '../../components/c02-side-bar';
-import Timeline from './p02-c01-timeline';
+import P02_C01_TIMELINE from './p02-c01-timeline';
+import P02_C02_MANAGE_PROJECTS from './p02-c02-manage-projects';
+import P02_C03_MANAGE_MILESTONE_TYPES from './p02-c03-manage-milestone-types';
+import P02_C04_MANAGE_TASK_TYPES from './p02-c04-manage-tasks-types';
+import P02_C05_PROJECT from './p02-c05-project';
+import P02_C06_MANAGE_MILESTONES from './p02-c06-manage-milestones';
+import P02_C07_MANAGE_TASKS from './p02-c07-manage-tasks';
+import P02_C08_MANAGE_MONUMENTS from './p02-c08-manage-monuments';
+import P02_C09_MANAGE_DOCUMENTS from './p02-c09-manage-documents';
 // components
 
 import './index.scss';
 
-const PlanningDashboard = () => {
+const P02_PLANNING_DASHBOARD = () => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -72,6 +67,7 @@ const PlanningDashboard = () => {
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
     const [warningText, set_warningText] = useState('');
     const [showSpinner_FetchingProjects, set_showSpinner_FetchingProjects] = useState(true);
+    const [extendedSideBar, set_extendedSideBar] = useState(false);
 
     const handleResize = useRef((event) => {
         console.log('event.target.innerWidth', event.target.innerWidth);
@@ -295,95 +291,26 @@ const PlanningDashboard = () => {
 
     return (
         <div className='p02-dashboard'>
-            <div className='p02-modals-container'>
-                {/* OLD MODAL CONTAINER */}
-                {createProject_toogle ?
-                    <CreateEditProjectModal
-                        project={activeProject}
-                        addNewProject={addNewProjectToState}
-                        updateProject={updateProject}
-                        toogleVisibility={() => set_createProject_toogle(!createProject_toogle)}
-                    />
-                    : ""}
-                {deleteProjectWarning_toogle ?
-                    <DeleteWarning
-                        // project={activeProject}
-                        text={warningText}
-                        action={() => deleteProject(activeProject)}
-                        toogleVisibility={() => set_deleteProjectWarning_toogle(!deleteProjectWarning_toogle)}
-                    />
-                    : ""}
-                {editMilestone_toogle ?
-                    <EditMilestoneItemModal
-                        project={activeProject}
-                        milestoneItem={activeMilestoneItem}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_editMilestone_toogle(!editMilestone_toogle)}
-                    />
-                    :
-                    ""}
-                {createMilestone_toogle ?
-                    <CreateMilestoneItemModal
-                        project={activeProject}
-                        // milestoneItem={activeMilestoneItem}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_createMilestone_toogle(!createMilestone_toogle)}
-                    />
-                    :
-                    ""}
-                {createTask_toogle ?
-                    <CreateTaskModal
-                        project={activeProject}
-                        milestoneItem={activeMilestoneItem}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_createTask_toogle(!createTask_toogle)}
-                    />
-                    :
-                    ""}
-                {deleteMilestoneWarning_toogle ?
-                    <DeleteWarning
-                        // project={activeProject}
-                        text={warningText}
-                        action={() => deleteMilestoneItem(activeProject, activeMilestoneItem)}
-                        toogleVisibility={() => set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle)}
-                    />
-                    : ""}
-                {manageMonuments_toogle ?
-                    <ManageMonuments
-                        project={activeProject}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_manageMonuments_toogle(!manageMonuments_toogle)}
-                    />
-                    :
-                    ""}
-                {manageCertificationDocuments_toogle ?
-                    <ManageDocuments
-                        project={activeProject}
-                        updateProject={updateProject}
-                        createNewMilestone={addNewProjectToState}
-                        toogleVisibility={() => set_manageCertificationDocuments_toogle(!manageCertificationDocuments_toogle)}
-                    />
-                    :
-                    ""}
-            </div>
-            <NavBar />
-            <SideBar />
+            <C01_NAVBAR />
+            <C02_SIDEBAR extendedSideBar={extendedSideBar} set_extendedSideBar={set_extendedSideBar} /> 
             <div className='p02-center-section'>
+                <img className='p02-img-home' src={home} alt='' />
+                <button className='button-container'>
+                    <div className='button-name'>Quick Links</div>
+                    <img className='img' src={small_arrow_down} alt='' />
+                </button>
+
                 <div className='p02-main-section' id='main-section' name='main-section'>
                     {/* MODAL COMPONENTS IN MAIN SECTION */}
                     {manageProjects_modalToogle ?
-                    <ManageProjects 
+                    <P02_C02_MANAGE_PROJECTS 
                         projects={projects}
                         set_projects={set_projects}
                         toogleVisibility={set_manageProjects_modalToogle} 
                     />
                     : ""}
                     {manageMilestoneTypes_modalToogle ?
-                    <ManageMilestoneTypes
+                    <P02_C03_MANAGE_MILESTONE_TYPES
                         milestoneTypes={milestoneTypes}
                         set_milestoneTypes={set_milestoneTypes}
                         toogleVisibility={set_manageMilestoneTypes_modalToogle}
@@ -391,7 +318,7 @@ const PlanningDashboard = () => {
                     :
                     ""}
                     {manageTasksTypes_modalToogle ?
-                    <ManageTasksTypes
+                    <P02_C04_MANAGE_TASK_TYPES
                         taskTypes={taskTypes}
                         set_taskTypes={set_taskTypes}
                         toogleVisibility={set_manageTasksTypes_modalToogle}
@@ -399,7 +326,7 @@ const PlanningDashboard = () => {
                     :
                     ""}
                     {manageMilestones_modalToogle ?
-                    <ManageMilestones
+                    <P02_C06_MANAGE_MILESTONES
                         activeProject={activeProject}
                         updateProject={updateProject}
                         updateProjectInState={updateProjectInState}
@@ -409,7 +336,7 @@ const PlanningDashboard = () => {
                     :
                     ""}
                     {manageTasks_modalToogle ?
-                    <ManageTasks
+                    <P02_C07_MANAGE_TASKS
                         activeProject={activeProject}
                         activeMilestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
@@ -421,7 +348,7 @@ const PlanningDashboard = () => {
                     :
                     ""}
                     {manageMonuments_modalToogle ?
-                    <ManageMonuments
+                    <P02_C08_MANAGE_MONUMENTS
                         activeProject={activeProject}
                         // activeMilestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
@@ -433,7 +360,7 @@ const PlanningDashboard = () => {
                     :
                     ""}
                     {manageDocuments_modalToogle ?
-                    <ManageDocuments
+                    <P02_C09_MANAGE_DOCUMENTS
                         activeProject={activeProject}
                         // activeMilestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
@@ -444,11 +371,7 @@ const PlanningDashboard = () => {
                     />
                     :
                     ""}
-                    <img className='p02-img-home' src={home} alt='' />
-                    <button className='button-container'>
-                        <div className='button-name'>Quick Links</div>
-                        <img className='img' src={small_arrow_down} alt='' />
-                    </button>
+                    
                     <div className='p02-nav-bar'>
                         <div 
                             className='p02-item' 
@@ -539,7 +462,7 @@ const PlanningDashboard = () => {
                             }
                             
                             if (project.displayed) {
-                                return <Project 
+                                return <P02_C05_PROJECT 
                                     key={Math.random() * 100000}
                                     createTask_toogle={createTask_toogle}
                                     dateOffset={dateOffset}
@@ -577,7 +500,7 @@ const PlanningDashboard = () => {
                                 onClick={() => set_dateOffset(dateOffset - 30)}
                             >- 30 DAYS</div>
                         </div>
-                        <Timeline
+                        <P02_C01_TIMELINE
                             dateOffset={dateOffset}
                             displayLimit={displayedDays}
                             // displayLimit={100}
@@ -603,4 +526,4 @@ const PlanningDashboard = () => {
     );
 }
 
-export default PlanningDashboard;
+export default P02_PLANNING_DASHBOARD;

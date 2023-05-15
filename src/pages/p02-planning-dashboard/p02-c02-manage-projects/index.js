@@ -9,7 +9,7 @@ import magnifier from './assets/magnifier.png';
 import './index.scss';
 import axios from 'axios';
 
-const ManageProjects = (props) => {
+const P02_C02_MANAGE_PROJECTS = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -282,4 +282,4 @@ const ManageProjects = (props) => {
     </div> );
 }
  
-export default ManageProjects;
+export default P02_C02_MANAGE_PROJECTS;

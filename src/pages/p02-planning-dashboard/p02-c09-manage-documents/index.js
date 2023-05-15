@@ -14,7 +14,7 @@ import magnifier from './assets/magnifier.png';
 // styles
 import './index.scss';
 
-const ManageDocuments = (props) => {
+const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -201,7 +201,7 @@ const ManageDocuments = (props) => {
     }
 
     const switchToUpdateMode = (item, index) => {
-        console.log('switchToUpdateMode function');
+        console.log('Manage Documents - switchToUpdateMode function');
         console.log('item: ', item);
         console.log('index: ', index);
 
@@ -525,4 +525,4 @@ const ManageDocuments = (props) => {
     </div> );
 }
  
-export default ManageDocuments;
+export default P02_C09_MANAGE_DOCUMENTS;

@@ -5,12 +5,9 @@
     font-family: helvetica;
     font-size: 11px;
     color: grey;
-    // padding-left: 20px;
     display: flex;
     flex-direction: column;
-    // justify-content: space-between;
     position: relative;
-    // overflow: hidden;
 
     .p02-modals-container {
         // position: absolute;
@@ -23,6 +20,45 @@
         max-height: 95%;
         position: relative;
         margin-top: 50px;
+
+        .p02-img-home {
+            height: 16px;
+            width: 16px;
+            position: absolute;
+            top: 8px;
+            left: 50px;
+            z-index: 5;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .button-container {
+            display: flex;
+            align-items: end;
+            border: 1px solid grey;
+            border-radius: 3px;
+            height: 18px;
+            position: absolute;
+            top: 5px;
+            right: 0;
+    
+            .button-name {
+                text-decoration: underline;
+                color: rgb(78, 78, 78);
+            }
+    
+            .img {
+                padding-bottom: 2px;
+                padding-left: 1px;
+            }
+    
+            &:hover {
+                cursor: pointer;
+                background-color: orange;
+            }
+        }
 
         .p02-main-section {
             margin-left: 50px;
@@ -40,6 +76,7 @@
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
+            // overflow: visible;
     
             .p02-modal {
                 visibility: visible;
@@ -49,18 +86,7 @@
                 visibility: collapse;
             }
 
-            .p02-img-home {
-                height: 16px;
-                width: 16px;
-                position: absolute;
-                top: -25px;
-                left: 0;
-                z-index: 15;
-    
-                &:hover {
-                    cursor: pointer;
-                }
-            }
+
 
             .p02-nav-bar {
                 display: flex;

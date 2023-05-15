@@ -6,6 +6,8 @@ import './index.css';
 import LandingPage from './pages/p01-landing-page';
 import Dashboard from './pages/p02-planning-dashboard';
 import Playground from './pages/p00-playground';
+import P03_DOCUMENTS from './pages/p03-documents';
+import P04_EMPLOYEES from './pages/p04-employees';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,6 +16,8 @@ root.render(
     <Routes>
       <Route path="/" element={<LandingPage />} ></Route>
       <Route path="/Dashboard/" element={<Dashboard />} ></Route>
+      <Route path="/documents/" element={<P03_DOCUMENTS />} ></Route>
+      <Route path="/employees/" element={<P04_EMPLOYEES />} ></Route>
       <Route path="/playground/" element={<Playground />} ></Route>
     </Routes>
   </BrowserRouter>

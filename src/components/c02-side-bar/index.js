@@ -1,15 +1,45 @@
 import React, { Component } from 'react'
 import arrow_left from './assets/arrow_left.png';
 import magnifier_dark from './assets/magnifier_dark.png';
+import { useNavigate } from 'react-router-dom';
 import './index.scss';
 
-const SideBar = () => {
-    return ( <div className='side-bar'>
-        <div  className='left-section'>
-            <img className='img' src={arrow_left} alt='' />
-            <img className='img' src={magnifier_dark} alt='' />
+const C02_SIDEBAR = (props) => {
+    const navigate = useNavigate();
+
+    return ( <div className={props.extendedSideBar ? 
+    'c02-side-bar-extended' : 
+    'c02-side-bar-collapsed'
+    }>
+        <div className='co2-left-section'>
+            <button 
+                className='co2-button-container'
+                onClick={() => navigate('/dashboard/')}
+            >
+                <div className='co2-button-name'>Planning Dashboard</div>
+            </button>
+            <button 
+                className='co2-button-container'
+                onClick={() => navigate('/documents/')}
+            >
+                <div className='co2-button-name'>Documents overview</div>
+            </button>
+            <button 
+                className='co2-button-container'
+                onClick={() => navigate('/employees/')}
+            >
+                <div className='co2-button-name'>Employees</div>
+            </button>
+        </div>
+        <div  className='c02-right-section'>
+            <img 
+                className='c02-img' 
+                src={arrow_left} alt='' 
+                onClick={() => props.set_extendedSideBar(!props.extendedSideBar)}
+            />
+            <img className='c02-img-magnifier' src={magnifier_dark} alt='' />
         </div>
     </div> );
 }
  
-export default SideBar;
+export default C02_SIDEBAR;

@@ -14,7 +14,7 @@ import magnifier from './assets/magnifier.png';
 // styles
 import './index.scss';
 
-const ManageTasks = (props) => {
+const P02_C07_MANAGE_TASKS = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -201,15 +201,14 @@ const ManageTasks = (props) => {
     }
 
     const switchToUpdateMode = (item, index) => {
-        // console.log('function : switchToUpdateMode');
+        console.log('Manage Tasks - switchToUpdateMode function');
         console.log('updating item: ', item);
         console.log('updating index: ', index);
 
-        document.getElementById('status').value = item.status;
-        document.getElementById('estimated_hours').value = item.estimated_hours;
-        document.getElementById('booked_hours').value = item.booked_hours;
-        document.getElementById('comment').value = item.comment;
-        document.getElementById('task_type').value = taskTypes.find(elem => elem.id === item.task_type).name;
+        // console.log('item.tasktype: ', item.task_type);
+
+        // document.getElementById('task_type').value = newLabel.name;
+
         // document.getElementById(`milestonetypes-container`).selectedIndex = index;
         // let containerElem = document.getElementById(`milestonetypes-container`);
         // let firstElem = document.getElementById(`default-milestonetype`);
@@ -408,7 +407,7 @@ const ManageTasks = (props) => {
                                 {taskTypes.map((item) => {
                                     return <option 
                                         key={Math.random() * 100000} 
-                                        id={`${item.id}`} 
+                                        id={`task_type_${item.id}`} 
                                         value={`${item.name}`}
                                         // onClick={() => console.log('option clicked.. ')}
                                     >{`${item.name}`}
@@ -535,4 +534,4 @@ const ManageTasks = (props) => {
     </div> );
 }
  
-export default ManageTasks;
+export default P02_C07_MANAGE_TASKS;

@@ -11,7 +11,7 @@ import magnifier from './assets/magnifier.png';
 import axios from 'axios';
 import './index.scss';
 
-const ManageMilestoneTypes = (props) => {
+const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -327,4 +327,4 @@ const ManageMilestoneTypes = (props) => {
     </div>);
 }
 
-export default ManageMilestoneTypes;
+export default P02_C03_MANAGE_MILESTONE_TYPES;

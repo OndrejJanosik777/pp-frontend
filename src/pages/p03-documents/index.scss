@@ -1,0 +1,116 @@
+.p03-documents {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(200, 201, 199);
+    font-family: helvetica;
+    font-size: 11px;
+    color: grey;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    
+    .p03-center-section {
+        display: flex;
+        height: 100%;
+        max-height: 95%;
+        position: relative;
+        margin-top: 50px;
+
+        .p03-main-section {
+            margin-left: 50px;
+            margin-right: 10px;
+            margin-top: 35px;
+            margin-bottom: 5px;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-height: 95%;
+            background-color: white;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .p03-content {
+            background-color: #FFFFFF;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+
+            .p03-table-01 {
+                width: 100%;
+
+                thead {
+                    width: 100%;
+                    tr {
+                        width: 100%;
+                        display: grid;
+                        grid-template-columns: 250px 160px 1fr;
+
+                        th {
+                            border-bottom: 2px solid #B3B3B3;
+                            border-right: 2px solid #D0D0D0;
+                            border-left: 2px solid #F6F6F6;
+                            padding: 1px 1px;
+                            width: 100%;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            .p03-table-02 {
+                width: 100%;
+
+                thead, tbody {
+                    width: 100%;
+                    tr {
+                        width: 100%;
+                        display: grid;
+                        grid-template-columns: 80px 170px 80px 80px 100px 140px 50px 80px 80px 80px 80px 1fr;
+
+                        th {
+                            border-bottom: 2px solid #B3B3B3;
+                            border-right: 2px solid #D0D0D0;
+                            border-left: 2px solid #F6F6F6;
+                            padding: 1px 1px;
+                            width: 100%;
+                            text-align: center;
+                        }
+                    }
+                }
+                
+                tbody {
+                    tr:nth-child(even) {
+                        background-color: #F7F7F7;
+
+                    }
+                    
+                    tr {
+                        border-bottom: 1px solid #F6F6F6;
+                        align-items: flex-start;
+
+
+                        td:first-child {
+                            border-right: 1px solid #D0D0D0;
+                            height: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: flex-start;
+                        }
+
+                        td:last-child {
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,83 @@
-.side-bar {
+.c02-side-bar-extended {
+    background-color: rgb(61, 70, 71);
+    width: 232px;
+    height: calc(100% - 50px);
+    position: absolute;
+    bottom: 0;
+    border-right: 2px solid rgb(91, 183, 59);
+    display: flex;
+    flex-direction: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 15;
+
+    .co2-left-section {
+        background-color: rgb(241, 241, 241);
+        width: 100%;
+        height: 100%;
+        // display: none;
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+
+        .co2-button-container {
+            display: flex;
+            align-items: end;
+            border: 1px solid grey;
+            border-radius: 3px;
+            height: 18px;
+            margin: 5px 10px;
+
+    
+            .co2-button-name {
+                // text-decoration: underline;
+                text-align: center;
+                color: rgb(78, 78, 78);
+            }
+    
+            &:hover {
+                cursor: pointer;
+                background-color: orange;
+            }
+        }
+    }
+
+    .c02-right-section {
+        // background-color: rgb(58, 58, 160);
+        width: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        // justify-content: center;
+        height: 100%;
+
+        .c02-img {
+            margin-top: 15px;
+            width: 15px;
+            height: 15px;
+            transform: rotate(180deg);
+            // height: 20px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .c02-img-magnifier {
+            margin-top: 15px;
+            width: 18px;
+            height: 18px;
+            transform: rotate(0deg);
+            // height: 20px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.c02-side-bar-collapsed {
     background-color: rgb(61, 70, 71);
     width: 32px;
     height: calc(100% - 50px);
@@ -6,12 +85,49 @@
     bottom: 0;
     border-right: 2px solid rgb(91, 183, 59);
     display: flex;
-    flex-direction: column;
-    // justify-content: center;
-    align-items: center;
-    z-index: 5;
+    flex-direction: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 15;
 
-    .img {
-        padding-top: 15px;
+    .co2-left-section {
+        background-color: rgb(172, 78, 78);
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+
+    .c02-right-section {
+        // background-color: rgb(58, 58, 160);
+        width: 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        // justify-content: center;
+        height: 100%;
+
+        .c02-img {
+            margin-top: 15px;
+            width: 15px;
+            height: 15px;
+            transform: rotate(0deg);
+            // height: 20px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .c02-img-magnifier {
+            margin-top: 15px;
+            width: 18px;
+            height: 18px;;
+            transform: rotate(0deg);
+            // height: 20px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
     }
 }
