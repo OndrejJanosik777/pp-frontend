@@ -18,9 +18,10 @@ import P02_C03_MANAGE_MILESTONE_TYPES from './p02-c03-manage-milestone-types';
 import P02_C04_MANAGE_TASK_TYPES from './p02-c04-manage-tasks-types';
 import P02_C05_PROJECT from './p02-c05-project';
 import P02_C06_MANAGE_MILESTONES from './p02-c06-manage-milestones';
-import P02_C07_MANAGE_TASKS from './p02-c07-manage-tasks';
+import P02_C07_MANAGE_MILESTONE_TASKS from './p02-c07-manage-milestone-tasks';
 import P02_C08_MANAGE_MONUMENTS from './p02-c08-manage-monuments';
 import P02_C09_MANAGE_DOCUMENTS from './p02-c09-manage-documents';
+import P02_C10_MANAGE_PROJECT_TASKS from './p02-c10-manage-project-tasks';
 // components
 
 import './index.scss';
@@ -59,9 +60,10 @@ const P02_PLANNING_DASHBOARD = () => {
     const [manageProjects_modalToogle, set_manageProjects_modalToogle] = useState(false);
     const [manageTasksTypes_modalToogle, set_manageTasksTypes_modalToogle] = useState(false);
     const [manageMilestones_modalToogle, set_manageMilestones_modalToogle] = useState(false);
-    const [manageTasks_modalToogle, set_manageTasks_modalToogle] = useState(false);
+    const [manageMilestoneTasks_modalToogle, set_manageMilestoneTasks_modalToogle] = useState(false);
     const [manageMonuments_modalToogle, set_manageMonuments_modalToogle] = useState(false);
     const [manageDocuments_modalToogle, set_manageDocuments_modalToogle] = useState(false);
+    const [manageProjectTasks_modalToogle, set_manageProjectTasks_modalToogle] = useState(false);
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
@@ -295,11 +297,10 @@ const P02_PLANNING_DASHBOARD = () => {
             <C02_SIDEBAR extendedSideBar={extendedSideBar} set_extendedSideBar={set_extendedSideBar} /> 
             <div className='p02-center-section'>
                 <img className='p02-img-home' src={home} alt='' />
-                <button className='button-container'>
-                    <div className='button-name'>Quick Links</div>
-                    <img className='img' src={small_arrow_down} alt='' />
+                <button className='p02-button-container'>
+                    <div className='p02-button-name'>Quick Links</div>
+                    <img className='p02-img' src={small_arrow_down} alt='' />
                 </button>
-
                 <div className='p02-main-section' id='main-section' name='main-section'>
                     {/* MODAL COMPONENTS IN MAIN SECTION */}
                     {manageProjects_modalToogle ?
@@ -335,15 +336,15 @@ const P02_PLANNING_DASHBOARD = () => {
                     />
                     :
                     ""}
-                    {manageTasks_modalToogle ?
-                    <P02_C07_MANAGE_TASKS
+                    {manageMilestoneTasks_modalToogle ?
+                    <P02_C07_MANAGE_MILESTONE_TASKS
                         activeProject={activeProject}
                         activeMilestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
                         // updateProjectInState={updateProjectInState}
                         // milestoneTypes={milestoneTypes}
                         taskTypes={taskTypes}
-                        toogleVisibility={set_manageTasks_modalToogle}
+                        toogleVisibility={set_manageMilestoneTasks_modalToogle}
                     />
                     :
                     ""}
@@ -371,7 +372,18 @@ const P02_PLANNING_DASHBOARD = () => {
                     />
                     :
                     ""}
-                    
+                    {manageProjectTasks_modalToogle ?
+                    <P02_C10_MANAGE_PROJECT_TASKS
+                        activeProject={activeProject}
+                        // activeMilestoneItem={activeMilestoneItem}
+                        updateProject={updateProject}
+                        // updateProjectInState={updateProjectInState}
+                        // milestoneTypes={milestoneTypes}
+                        // taskTypes={taskTypes}
+                        toogleVisibility={set_manageProjectTasks_modalToogle}
+                    />
+                    :
+                    ""}
                     <div className='p02-nav-bar'>
                         <div 
                             className='p02-item' 
@@ -477,9 +489,10 @@ const P02_PLANNING_DASHBOARD = () => {
                                     set_editMilestone_toogle={set_editMilestone_toogle}
                                     set_createTask_toogle={set_createTask_toogle}
                                     set_manageMilestones_modalToogle={set_manageMilestones_modalToogle}
-                                    set_manageTasks_modalToogle={set_manageTasks_modalToogle}
+                                    set_manageMilestoneTasks_modalToogle={set_manageMilestoneTasks_modalToogle}
                                     set_manageMonuments_modalToogle={set_manageMonuments_modalToogle}
                                     set_manageDocuments_modalToogle={set_manageDocuments_modalToogle}
+                                    set_manageProjectTasks_modalToogle={set_manageProjectTasks_modalToogle}
                                 />
                             }
                         })

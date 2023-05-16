@@ -112,13 +112,13 @@
         .p02-c09-content {
             background-color: #FFFFFF;
             width: 100%;
-            // height: 35rem;
+            height: 100%;
             overflow-y: scroll;
             overflow-x: hidden;
 
             table {
                 width: 100%;
-                height: 100%;
+                // height: 100%;
 
                 thead, tbody {
                     width: 100%;
@@ -185,12 +185,12 @@
         .p02-c09-win-footer {
             background-color: #F1F1F1;
             width: 100%;
-            height: fit-content;
+            // height: fit-content;
             border-top: 2px solid #D0D0D0;
             // position: absolute;
             width: 100%;
             // bottom: -145px;
-            top: 20rem;
+            // top: 20rem;
             // border: lightgrey solid 2px;
             // height: 125px;
 

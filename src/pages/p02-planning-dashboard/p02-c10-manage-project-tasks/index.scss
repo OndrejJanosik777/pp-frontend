@@ -1,4 +1,4 @@
-.p02-c08-manage-monuments {
+.p02-c10-manage-project-tasks {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -7,7 +7,7 @@
     justify-content: center;
     align-items: center;
 
-    .p02-c08-background {
+    .p02-c10-background {
         background-color: #464646;
         opacity: 0.8;
         width: 100%;
@@ -15,21 +15,21 @@
         position: absolute;
     }
 
-    .p02-c08-window {
+    .p02-c10-window {
         // margin-top: 5rem;
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
-        height: 35rem;
-        width: 45rem;
+        height: 40rem;
+        width: 75rem;
         opacity: 1;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         position: relative;
 
-        .p02-c08-nav-bar {
+        .p02-c10-nav-bar {
             background-color: #F1F1F1;
             width: 100%;
             display: flex;
@@ -37,15 +37,15 @@
             align-items: center;
             border-bottom: 2px solid #D0D0D0;
 
-            .p02-c08-nav-bar-left {
+            .p02-c10-nav-bar-left {
                 
             }
-            .p02-c08-nav-bar-right {
+            .p02-c10-nav-bar-right {
                 display: flex;
                 justify-content: center;
                 align-items: center;
 
-                .p02-c08-textbox-container {
+                .p02-c10-textbox-container {
                     height: 20px;
                     display: flex;
                     justify-content: center;
@@ -56,17 +56,17 @@
                         cursor: pointer;
                     }
             
-                    .p02-c08-textbox {
+                    .p02-c10-textbox {
                         width: 160px;
                         height: 20px;
                     }
             
-                    .p02-c08-img {
+                    .p02-c10-img {
                         // height: 25px;
                     }
                 }
 
-                .p02-c08-button {
+                .p02-c10-button {
                     font-weight: bold;
                     padding: 1px 5px;
                     background-color: #44759D;
@@ -82,7 +82,7 @@
                 }
             }
 
-            .p02-c08-icons {
+            .p02-c10-icons {
                 padding: 3px 5px;
 
                 &:hover {
@@ -91,7 +91,7 @@
             }
         }
 
-        .p02-c08-content {
+        .p02-c10-content {
             background-color: #FFFFFF;
             width: 100%;
             height: 100%;
@@ -100,13 +100,12 @@
 
             table {
                 width: 100%;
-                
                 thead, tbody {
                     width: 100%;
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 5% 10% 35% 10% 10% 10% 10% 10%;
+                        grid-template-columns: 3% 13% 4% 10% 10% 10% 10% 35% 5%;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
@@ -150,7 +149,7 @@
                             display: flex;
                             align-items: center;
 
-                            .p02-c08-icons {
+                            .p02-c10-icons {
                                 padding: 3px 5px;
                 
                                 &:hover {
@@ -163,30 +162,28 @@
             }
         }
 
-        .p02-c08-win-footer {
+        .p02-c10-win-footer {
             background-color: #F1F1F1;
             width: 100%;
-            border: 2px solid #D0D0D0;
-            // position: absolute;
-            // top: 20rem;
-            width: 100%;
+            border-top: 2px solid #D0D0D0;
             // height: 125px;
 
-            .p02-c08-button-container {
+
+            .p02-c10-button-container {
                 display: flex;
                 align-items: end;
-                border: 1px solid grey;
+                border-top: 1px solid grey;
                 border-radius: 3px;
                 height: 18px;
                 margin: 0 10px;
                 z-index: 25;
         
-                .p02-c08-button-name {
+                .p02-c10-button-name {
                     text-decoration: underline;
                     color: rgb(78, 78, 78);
                 }
         
-                .p02-c08-img {
+                .p02-c10-img {
                     padding-bottom: 2px;
                     padding-left: 1px;
                 }
@@ -197,24 +194,30 @@
                 }
             }
 
-            .p02-c08-footer-row1 {
+            .p02-c10-footer-row1 {
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
                 // grid-template-columns: 1fr 5fr;
                 // padding: 2px;
 
-                .p02-c08-row1-col1 {
+                .p02-c10-row1-col1 {
                     text-align: left;
                     padding: 2px 10px;
                     width: 80px;
                 }
 
-                .p02-c08-row1-col2 {
+                .p02-c10-row1-col1-w2 {
+                    text-align: right;
+                    padding: 2px 10px;
+                    width: 170px;
+                }
+
+                .p02-c10-row1-col2 {
                     // text-align: right;
                     padding: 2px 10px;
 
-                    .p02-c08-textbox-container {
+                    .p02-c10-textbox-container {
                         height: 20px;
                         display: flex;
                         justify-content: center;
@@ -225,12 +228,12 @@
                             cursor: pointer;
                         }
                 
-                        .p02-c08-textbox {
+                        .p02-c10-textbox {
                             width: 500px;
                             height: 20px;
                         }
                 
-                        .p02-c08-date {
+                        .p02-c10-date {
                             width: 500px;
                             height: 20px;
                         }
@@ -242,19 +245,19 @@
                 }
             }
 
-            .p02-c08-footer-row2 {
+            .p02-c10-footer-row2 {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 // grid-template-columns: 1fr 5fr;
                 // padding: 2px;
 
-                .p02-c08-row2-col1 {
+                .p02-c10-row2-col1 {
                     text-align: right;
                     padding: 2px 10px;
                     // width: 65px;
 
-                    .p02-c08-button {
+                    .p02-c10-button {
                         &:hover {
                             background-color: rgb(226, 156, 27);
                             // border: none;
@@ -262,17 +265,17 @@
                         }
                     }
 
-                    .p02-c08-spinner {
+                    .p02-c10-spinner {
                         height: 15px;
                         width: 15px;
                     }
                 }
 
-                .p02-c08-row2-col2 {
+                .p02-c10-row2-col2 {
                     // text-align: right;
                     padding: 2px 10px;
 
-                    .p02-c08-textbox-container {
+                    .p02-c10-textbox-container {
                         height: 20px;
                         display: flex;
                         justify-content: center;
@@ -283,17 +286,17 @@
                             cursor: pointer;
                         }
                 
-                        .p02-c08-textbox {
+                        .p02-c10-textbox {
                             width: 260px;
                             height: 20px;
                         }
                 
-                        .p02-c08-img {
+                        .p02-c10-img {
                             // height: 25px;
                         }
                     }
 
-                    .p02-c08-button {
+                    .p02-c10-button {
                         &:hover {
                             background-color: rgb(226, 156, 27);
                             // border: none;
@@ -305,7 +308,7 @@
             }
         }
 
-        .p02-c08-win-footer-hidden {
+        .p02-c10-win-footer-hidden {
             // visibility: collapse;
             display: none;
         }

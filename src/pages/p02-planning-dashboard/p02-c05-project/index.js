@@ -196,7 +196,7 @@ const P02_C05_PROJECT = (props) => {
                 onClick={
                     () => {
                         props.set_activeProject(props.project);
-                        // props.set_manageTasks_modalToogle(true);
+                        props.set_manageProjectTasks_modalToogle(true);
                     }
                 }
             >
@@ -222,7 +222,7 @@ const P02_C05_PROJECT = (props) => {
                     // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
                     // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
                     deleteMilestoneItem={() => props.display_modal_warning_deleteMilestoneItem(props.project, milestoneItem)}
-                    set_manageTasks_modalToogle={props.set_manageTasks_modalToogle}
+                    set_manageMilestoneTasks_modalToogle={props.set_manageMilestoneTasks_modalToogle}
                     set_activeMilestoneItem={props.set_activeMilestoneItem}
                     set_activeProject={props.set_activeProject}
                 />

@@ -14,7 +14,7 @@ import magnifier from './assets/magnifier.png';
 // styles
 import './index.scss';
 
-const P02_C07_MANAGE_TASKS = (props) => {
+const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -307,7 +307,7 @@ const P02_C07_MANAGE_TASKS = (props) => {
         // })
     }
 
-    return (<div className='p02-c07-manage-tasks'>
+    return (<div className='p02-c07-manage-milestone-tasks'>
         <div className='p02-c07-background'></div>
         <div className='p02-c07-window'>
             <div className='p02-c07-nav-bar'>
@@ -534,4 +534,4 @@ const P02_C07_MANAGE_TASKS = (props) => {
     </div> );
 }
  
-export default P02_C07_MANAGE_TASKS;
+export default P02_C07_MANAGE_MILESTONE_TASKS;

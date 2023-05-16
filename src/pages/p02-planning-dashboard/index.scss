@@ -34,7 +34,7 @@
             }
         }
 
-        .button-container {
+        .p02-button-container {
             display: flex;
             align-items: end;
             border: 1px solid grey;
@@ -42,14 +42,14 @@
             height: 18px;
             position: absolute;
             top: 5px;
-            right: 0;
+            right: 10px;
     
-            .button-name {
+            .p02-button-name {
                 text-decoration: underline;
                 color: rgb(78, 78, 78);
             }
     
-            .img {
+            .p02-img {
                 padding-bottom: 2px;
                 padding-left: 1px;
             }

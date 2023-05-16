@@ -174,7 +174,7 @@ const MilestoneTag = (props) => {
                             onClick={() => {
                                 props.set_activeProject(props.project)
                                 props.set_activeMilestoneItem(props.milestoneItem)
-                                props.set_manageTasks_modalToogle(true)
+                                props.set_manageMilestoneTasks_modalToogle(true)
                             }}
                         >
                             Manage Tasks
