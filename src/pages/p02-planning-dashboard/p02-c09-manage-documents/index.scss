@@ -6,6 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    // box-sizing: content-box;
 
     .p02-c09-background {
         background-color: #464646;
@@ -16,20 +17,25 @@
     }
 
     .p02-c09-window {
+        // margin-top: 5rem;
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
-        height: 30rem;
+        height: 35rem;
         width: 55rem;
         opacity: 1;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        // justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        position: relative;
 
         .p02-c09-nav-bar {
+            // border: 2px solid #A8A8A8;
             background-color: #F1F1F1;
             width: 100%;
+            // height: 15rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -106,12 +112,14 @@
         .p02-c09-content {
             background-color: #FFFFFF;
             width: 100%;
-            height: 100%;
+            // height: 35rem;
             overflow-y: scroll;
             overflow-x: hidden;
 
             table {
                 width: 100%;
+                height: 100%;
+
                 thead, tbody {
                     width: 100%;
                     tr {
@@ -177,7 +185,13 @@
         .p02-c09-win-footer {
             background-color: #F1F1F1;
             width: 100%;
+            height: fit-content;
             border-top: 2px solid #D0D0D0;
+            // position: absolute;
+            width: 100%;
+            // bottom: -145px;
+            top: 20rem;
+            // border: lightgrey solid 2px;
             // height: 125px;
 
             .p02-c09-button-container {
@@ -294,6 +308,10 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                // position: absolute;
+                bottom: 0;
+                // width: 100%;
+
                 // grid-template-columns: 1fr 5fr;
                 // padding: 2px;
 
@@ -354,7 +372,9 @@
         }
 
         .p02-c09-win-footer-hidden {
-            visibility: collapse;
+            // visibility: collapse;
+            // height: 45%;
+            display: none;
         }
     }
 }

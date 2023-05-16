@@ -16,16 +16,18 @@
     }
 
     .p02-c06-window {
+        // margin-top: 5rem;
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
-        height: 30rem;
+        height: 35rem;
         width: 75rem;
         opacity: 1;
         z-index: 20;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        position: relative;
 
         .p02-c06-nav-bar {
             background-color: #F1F1F1;
@@ -165,6 +167,8 @@
             width: 100%;
             border-top: 2px solid #D0D0D0;
             // height: 125px;
+            // position: absolute;
+            top: 20rem;
 
             .p02-c06-button-container {
                 display: flex;
@@ -300,7 +304,8 @@
         }
 
         .p02-c06-win-footer-hidden {
-            visibility: collapse;
+            // visibility: collapse;
+            display: none;
         }
     }
 }
