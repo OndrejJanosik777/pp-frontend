@@ -98,14 +98,38 @@
             overflow-y: scroll;
             overflow-x: hidden;
 
-            table {
+            .p02-c10-table-01 {
+                width: 100%;
+
+                thead {
+                    width: 100%;
+                    tr {
+                        width: 100%;
+                        display: grid;
+                        // grid-template-columns: 3% 13% 4% 10% 10% 10% 10% 35% 5%;
+                        grid-template-columns: 310px 140px 140px 1fr;
+
+                        th {
+                            text-align: center;
+                            border-bottom: 2px solid #B3B3B3;
+                            border-right: 2px solid #D0D0D0;
+                            border-left: 2px solid #F6F6F6;
+                            padding: 1px 1px;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+
+            .p02-c10-table-02 {
                 width: 100%;
                 thead, tbody {
                     width: 100%;
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 3% 13% 4% 10% 10% 10% 10% 35% 5%;
+                        // grid-template-columns: 3% 13% 4% 10% 10% 10% 10% 35% 5%;
+                        grid-template-columns: 40px 130px 70px 70px 70px 70px 70px 70px 1fr;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;

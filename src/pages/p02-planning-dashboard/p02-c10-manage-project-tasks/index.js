@@ -166,38 +166,38 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     }
 
     const fetchProjectDocuments = () => {
-        axios({
-            method: 'get',
-            url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
-            headers: {
-                "Authorization": token
-            }
-        })
-        .then((response => {
-            console.log('project documents fetched succesfully: ', response.data);
+        // axios({
+        //     method: 'get',
+        //     url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
+        //     headers: {
+        //         "Authorization": token
+        //     }
+        // })
+        // .then((response => {
+        //     console.log('project documents fetched succesfully: ', response.data);
 
-            let certDocumentsNoTask = [];
+        //     let certDocumentsNoTask = [];
 
-            response.data.map((document) => {
-                if (document.task === null) {
-                    certDocumentsNoTask.push(document);
-                }
+        //     response.data.map((document) => {
+        //         if (document.task === null) {
+        //             certDocumentsNoTask.push(document);
+        //         }
 
 
-            })
+        //     })
 
-            set_certificationDocumentsNoTask([...certDocumentsNoTask]);
-            set_certificationDocuments([...response.data]);
+        //     set_certificationDocumentsNoTask([...certDocumentsNoTask]);
+        //     set_certificationDocuments([...response.data]);
 
-            // props.updateProject(props.activeProject);
+        //     // props.updateProject(props.activeProject);
 
-            // set_showSpinner_CreateUpdateItem(false);
-        }))
-        .catch((error) => {
-            console.log(error);
+        //     // set_showSpinner_CreateUpdateItem(false);
+        // }))
+        // .catch((error) => {
+        //     console.log(error);
 
-            alert('problem with creating new task, check console');
-        })
+        //     alert('problem with creating new task, check console');
+        // })
     }
 
     const switchToUpdateMode = (item, index) => {
@@ -321,7 +321,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                     <img 
                         className='p02-c10-icons' 
                         src={create_new} alt='' 
-                        onClick={() => set_createMode(!createMode)} 
+                        // onClick={() => set_createMode(!createMode)} 
                     />
                 </div>
                 <div className='p02-c10-nav-bar-right'>
@@ -344,18 +344,29 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                 </div>
             </div>
             <div className='p02-c10-content'>
-                <table>
+                <table className='p02-c10-table-01'>
+                    <thead>
+                        <tr>
+                            <th>task</th>
+                            <th>milestone</th>
+                            <th>hours</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+                <table className='p02-c10-table-02'>
                     <thead>
                         <tr>
                             <th>id</th>
-                            <th>task type</th>
+                            <th>type</th>
+                            <th>deadline</th>
                             <th>status (%)</th>
-                            <th>milestone item</th>
-                            <th>estimated hours</th>
-                            <th>booked hours</th>
-                            <th>document</th>
+                            <th>item</th>
+                            <th>deadline</th>
+                            <th>estimated</th>
+                            <th>booked</th>
                             <th>comment</th>
-                            <th>action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
