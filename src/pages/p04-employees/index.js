@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 // assets
 import editSVG from './assets/pencil-square.svg';
 import deleteSVG from './assets/trash3.svg';
@@ -9,6 +10,9 @@ import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
+import checkbox_checked from './assets/checkbox-checked.svg';
+import checkbox from './assets/checkbox.svg';
+// import magnifier from './assets/magnifier.png';
 import './index.scss';
 //
 import C01_NAVBAR from '../../components/c01-nav-bar';
@@ -17,15 +21,53 @@ import C02_SIDEBAR from '../../components/c02-side-bar';
 const tempEmployees = require('./data');
 
 const P04_EMPLOYEES = (props) => {
+    const getBaseUrl = () => {
+        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+            // dev code
+            return 'http://127.0.0.1:8000';
+        } else {
+            // production code
+            return 'https://pp--backend.herokuapp.com';
+        }
+    }
+
+    const [baseUrl, set_baseUrl] = useState(getBaseUrl());
+    const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [extendedSideBar, set_extendedSideBar] = useState(false);
     const [employees, set_employees] = useState([]);
     const [taskTypes, set_taskTypes] = useState([]);
 
-    const switchToUpdateMode = () => {
+    useEffect(() => {
+        console.log('*** P04_EMPLOYEES page loaded ***');
+
+        fetchUsers();
+    }, []);
+
+    const deleteItem = () => {
 
     }
 
-    const deleteItem = () => {
+    const fetchUsers = () => {
+        axios({
+            method: 'get',
+            url: baseUrl + '/company/employees/',
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            // console.log('users fetched: ', response.data)
+
+            set_employees(response.data);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with fetching user data..');
+        })
+    }
+
+    const switchToUpdateMode = () => {
 
     }
 
@@ -185,14 +227,37 @@ const P04_EMPLOYEES = (props) => {
                         <tbody>
                             {/* TODO:  */}
                             {employees.map((employee, index) => {
+                                let groupsNames = [];
+
+                                employee.user.groups.map((group) => {
+                                    groupsNames.push(group.name);
+                                })
+
                                 return <tr key={Math.random() * 100000}>
                                     <td>{employee.id}</td>
-                                    <td>{employee.name}</td>
-                                    <td>{employee.first_name}</td>
-                                    <td>{employee.last_name}</td>
-                                    <td>{employee.email}</td>
+                                    <td>{employee.user.username}</td>
+                                    <td>{employee.user.first_name}</td>
+                                    <td>{employee.user.last_name}</td>
+                                    <td>{employee.user.email}</td>
                                     <td>{employee.department}</td>
                                     <td>{employee.pensum}</td>
+                                    <td className='p02-c10-checkboxes'>
+                                        <img 
+                                            className='p02-c10-checkbox' 
+                                            src={groupsNames.find(elem => elem === 'create_project') ? checkbox_checked : checkbox} 
+                                            alt='' 
+                                        />
+                                        <img 
+                                            className='p02-c10-checkbox' 
+                                            src={groupsNames.find(elem => elem === 'edit_project') ? checkbox_checked : checkbox}
+                                            alt='' 
+                                        />
+                                        <img 
+                                            className='p02-c10-checkbox' 
+                                            src={groupsNames.find(elem => elem === 'delete_project') ? checkbox_checked : checkbox} 
+                                            alt='' 
+                                        />
+                                    </td>
                                     <td>{employee.comment}</td>
                                     <td>
                                         <img 

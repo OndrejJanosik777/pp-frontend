@@ -27,6 +27,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState({});
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions])
 
     useEffect(() => {
         console.log('props.projects: ', props.projects);
@@ -188,8 +189,12 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         <div className='p02-c02-window'>
             <div className='p02-c02-nav-bar'>
                 <div className='p02-c02-nav-bar-left'>
-                    <img className='p02-c02-icons' src={delete_cross} alt='' />
+                    {/* <img className='p02-c02-icons' src={delete_cross} alt='' /> */}
+                    {userPermissions.findIndex(elem => elem === "create_project") !== -1 ?
                     <img className='p02-c02-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
+                    :
+                    <div></div>
+                    }
                 </div>
                 <div className='p02-c02-nav-bar-right'>
                     <div className='p02-c02-textbox-container'>
@@ -220,8 +225,16 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                 <td>{project.number}</td>
                                 <td>{project.short_name}</td>
                                 <td>
-                                    <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
-                                    <img className='p02-c02-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
+                                    {userPermissions.find(elem => elem === "edit_project") ?
+                                        <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
+                                        :
+                                        <div></div>
+                                    }
+                                    {userPermissions.find(elem => elem === "delete_project") ? 
+                                        <img className='p02-c02-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
+                                        :
+                                        <div></div>
+                                    }
                                 </td>
                             </tr>
                         })}
