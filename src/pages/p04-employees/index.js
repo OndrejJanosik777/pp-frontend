@@ -57,7 +57,6 @@ const P04_EMPLOYEES = (props) => {
     // controlling of showing/hiding of modal components
     const [manageEmployees_modalToogle, set_manageEmployees_modalToogle] = useState(false);
     const [selectedEmployee, set_selectedEmployee] = useState(undefined);
-    const [updateMode, set_updateMode] = useState(false);
 
     useEffect(() => {
         console.log('*** P04_EMPLOYEES page loaded ***');
@@ -125,6 +124,30 @@ const P04_EMPLOYEES = (props) => {
         })
     }
 
+    const fetchEmployee = (employee) => {
+        axios({
+            method: 'get',
+            url: baseUrl + `/company/employees/${employee.id}/`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            let index = employees.findIndex(elem => elem.id === response.data.id);
+
+            let updatedEmployees = [...employees];
+
+            updatedEmployees.splice(index, 1, response.data);
+
+            set_employees([...updatedEmployees]);
+        }))
+        .catch((error) => {
+            console.log(error);
+
+            alert('problem with fetching user data..');
+        })
+    }
+
     const fetchGroups = () => {
         axios({
             method: 'get',
@@ -173,14 +196,6 @@ const P04_EMPLOYEES = (props) => {
         })
     }
 
-    const switchToUpdateMode = (employee) => {
-        set_selectedEmployee(employee);
-
-        set_updateMode(true);
-
-        set_manageEmployees_modalToogle(true);
-    }
-
     return ( <div className='p04-employees'>
         <C01_NAVBAR />
         <C02_SIDEBAR extendedSideBar={extendedSideBar} set_extendedSideBar={set_extendedSideBar} />
@@ -188,14 +203,13 @@ const P04_EMPLOYEES = (props) => {
             <div className='p04-main-section' id='main-section' name='main-section'>
                 {manageEmployees_modalToogle ?
                     <P04_C01_MANAGE_EMPLOYEES
-                        // activeProject={activeProject}
+                        selectedEmployee={selectedEmployee}
                         // activeMilestoneItem={activeMilestoneItem}
-                        // updateProject={updateProject}
-                        // updateProjectInState={updateProjectInState}
-                        // milestoneTypes={milestoneTypes}
-                        // taskTypes={taskTypes}
+                        fetchEmployees={fetchEmployees}
+                        fetchEmployee={fetchEmployee}
                         employees={employees}
                         set_employees={set_employees}
+                        // activeProject={activeProject}
                         userGroups={userGroups}
                         toogleVisibility={set_manageEmployees_modalToogle}
                     />
@@ -213,7 +227,10 @@ const P04_EMPLOYEES = (props) => {
                         <img 
                             className='p04-icons' 
                             src={create_new} alt='' 
-                            onClick={() => set_manageEmployees_modalToogle(true)} 
+                            onClick={() => {
+                                set_selectedEmployee(undefined);
+                                set_manageEmployees_modalToogle(true);
+                            }} 
                         /> :
                         <div></div>
                         }
@@ -473,7 +490,10 @@ const P04_EMPLOYEES = (props) => {
                                             className='p04-icons' 
                                             src={pencil_edit} 
                                             alt='' 
-                                            onClick={() => switchToUpdateMode(employee)} 
+                                            onClick={() => {
+                                                set_selectedEmployee(employee);
+                                                set_manageEmployees_modalToogle(true);
+                                            }} 
                                         /> :
                                         <div></div>
                                         }

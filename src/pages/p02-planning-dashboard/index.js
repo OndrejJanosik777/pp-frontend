@@ -9,6 +9,7 @@ import home from './assets/home.png';
 import small_arrow_down from './assets/small_arrow_down.png';
 import arrow_left from './assets/arrow_left.png';
 import magnifier_dark from './assets/magnifier_dark.png';
+import questionmark_blue from './assets/questionmark_blue.png';
 // general components
 import C01_NAVBAR from '../../components/c01-nav-bar'
 import C02_SIDEBAR from '../../components/c02-side-bar';
@@ -84,7 +85,7 @@ const P02_PLANNING_DASHBOARD = () => {
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
     const [warningText, set_warningText] = useState('');
-    const [showSpinner_FetchingProjects, set_showSpinner_FetchingProjects] = useState(true);
+    const [showSpinner_FetchingProjects, set_showSpinner_FetchingProjects] = useState(false);
     const [extendedSideBar, set_extendedSideBar] = useState(false);
 
     const handleResize = useRef((event) => {
@@ -197,6 +198,8 @@ const P02_PLANNING_DASHBOARD = () => {
     }
 
     const fetchProjects = () => {
+        set_showSpinner_FetchingProjects(true);
+
         axios({
             method: 'get',
             url: baseUrl + '/company/projects/',
@@ -226,6 +229,7 @@ const P02_PLANNING_DASHBOARD = () => {
     }
 
     const fetchUserData = () => {
+
         axios({
             method: 'get',
             url: baseUrl + '/company/my-profile/',
@@ -434,39 +438,49 @@ const P02_PLANNING_DASHBOARD = () => {
                     :
                     ""}
                     <div className='p02-nav-bar'>
-                        <div 
-                            className='p02-item' 
-                            onClick={() => set_manageProjects_modalToogle(!manageProjects_modalToogle)}
-                        >Projects</div>
-                        <div className='p02-item'>|</div>
-                        <div 
-                            className='p02-item' 
-                            onClick={() => set_manageMilestoneTypes_modalToogle(!manageMilestoneTypes_modalToogle)} 
-                        >Milestone Types</div>
-                        <div className='p02-item'>|</div>
-                        <div 
-                            className='p02-item'
-                            onClick={() => set_manageTasksTypes_modalToogle(true)}
-                        >Task types</div>
-                        <div className='p02-item'>|</div>
-                        <div 
-                            className='p02-item'
-                            onClick={() => set_dateOffset(0)}
-                        >Today</div>
-                        <div className='p02-item'>|</div>
-                        <div 
-                            className='p02-item'
-                            onClick={showState}
-                        >Show state</div>
-                        <div className={
-                            showSpinner_FetchingProjects ?
-                            'p02-fetching-displayed' :
-                            'p02-fetching-hidden'
-                            }>
-                            loading projects from database ...
-                            <div className="spinner-border p02-spinner" role="status">
-                                <span className="sr-only"></span>
+                        <div className='p02-nav-bar-left'>
+                            <div 
+                                className='p02-item' 
+                                onClick={() => set_manageProjects_modalToogle(!manageProjects_modalToogle)}
+                            >Projects</div>
+                            <div className='p02-item'>|</div>
+                            <div 
+                                className='p02-item' 
+                                onClick={() => set_manageMilestoneTypes_modalToogle(!manageMilestoneTypes_modalToogle)} 
+                            >Milestone Types</div>
+                            <div className='p02-item'>|</div>
+                            <div 
+                                className='p02-item'
+                                onClick={() => set_manageTasksTypes_modalToogle(true)}
+                            >Task types</div>
+                            <div className='p02-item'>|</div>
+                            <div 
+                                className='p02-item'
+                                onClick={() => set_dateOffset(0)}
+                            >Today</div>
+                            <div className='p02-item'>|</div>
+                            <div 
+                                className='p02-item'
+                                onClick={() => fetchProjects()}
+                            >Refresh Projects</div>
+                            <div className={
+                                showSpinner_FetchingProjects ?
+                                'p02-fetching-displayed' :
+                                'p02-fetching-hidden'
+                                }>
+                                loading projects from database ...
+                                <div className="spinner-border p02-spinner" role="status">
+                                    <span className="sr-only"></span>
+                                </div>
                             </div>
+                        </div>
+                        <div className='p02-nav-bar-right'>
+                            <img 
+                                className='p02-icons' 
+                                onClick={showState}
+                                src={questionmark_blue} 
+                                alt='' 
+                            />
                         </div>
                     </div>
                     <main className='p02-main'>

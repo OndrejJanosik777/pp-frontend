@@ -27,9 +27,11 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
     const [showSpinner_CreateUpdateProject, set_showSpinner_CreateUpdateProject] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
-    const [selectedItem, set_selectedItem] = useState({});
+    // const [selectedItem, set_selectedItem] = useState({});
     const [userPermissions, set_userPermissions] = useState([]);
     const [userGroups, set_userGroups] = useState([]);
+    const [changingUsername, set_changingUsername] = useState(false);
+    const [changingPassword, set_changingPassword] = useState(false);
     
     useEffect(() => {
         console.log('props.projects: ', props.projects);
@@ -41,10 +43,35 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
         if (props.userGroups !== undefined) {
             set_userGroups([...props.userGroups]);
         }
+
+        if (props.selectedEmployee !== undefined) {
+            document.getElementById('department').value = props.selectedEmployee.department;
+            document.getElementById('username').value = props.selectedEmployee.user.username;
+            // document.getElementById('password').value = props.selectedEmployee.user.password;
+            document.getElementById('firstName').value = props.selectedEmployee.user.first_name;
+            document.getElementById('lastName').value = props.selectedEmployee.user.last_name;
+            document.getElementById('email').value = props.selectedEmployee.user.email;
+            document.getElementById('pensum').value = props.selectedEmployee.pensum;
+
+            let newUserPermissions = [];
+
+            props.selectedEmployee.user.groups.map((group) => {
+                newUserPermissions.push(group.name);
+            });
+
+            set_userPermissions([...newUserPermissions]);
+
+            set_updateMode(true);
+        }
+        else {
+            set_updateMode(false);
+        }
     }, []);
 
     const showState = () => {
         console.log('userPermissions: ', userPermissions);
+        console.log('props.updateMode: ', props.updateMode);
+        console.log('props.selectedEmployee: ', props.selectedEmployee);
         console.log('userGroups: ', userGroups);
     }
 
@@ -128,62 +155,85 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
         })
     }
 
-    const switchToUpdateMode = (project) => {
-        set_updateMode(true);
-        set_selectedItem(project);
-
-        document.getElementById('name').value = project.name;
-        document.getElementById('number').value = project.number;
-        document.getElementById('short_name').value = project.short_name;
-
-    }
-
     const updateEmployee = (employee) => {
-        let updateProject = {...selectedItem};
+        console.log('updating employee...');
 
-        updateProject.name = document.getElementById('name').value;
-        updateProject.number = document.getElementById('number').value;
-        updateProject.short_name = document.getElementById('short_name').value;
+        let id = props.selectedEmployee.user.id;
+        let username = "";
+        let password = "";
 
-        if (updateProject.name == "" || updateProject.number == "" || updateProject.short_name == "")  {
-            return alert('Missing input: name, number or short name')
+        if (changingUsername) {
+            username = document.getElementById('username').value;
         }
+        else {
+            username = props.selectedEmployee.user.username;
+        }
+
+        let first_name = document.getElementById('firstName').value;
+        let last_name = document.getElementById('lastName').value;
+        let email = document.getElementById('email').value;
+        let department = document.getElementById('department').value;
+        let pensum = document.getElementById('pensum').value;
+        let groups = [];
+
+        userPermissions.map((groupName) => {
+            let index = userGroups.findIndex(elem => elem.name === groupName);
+
+            groups.push(userGroups[index].id);
+        })
+
+        let data = {
+            id: id,
+            username: username,
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            department: department,
+            pensum: pensum,
+            groups: [...groups],
+        };
+
+        if (changingPassword) {
+            password = document.getElementById('password').value;
+
+            data = { ...data, password: password };
+        }
+
+        console.log(data);
 
         set_showSpinner_CreateUpdateProject(true);
 
         axios({
             method: 'put',
-            url: baseUrl + `/company/projects/${updateProject.id}/`,
+            url: baseUrl + `/company/update-employee/`,
             headers: {
                 "Authorization": token
             },
-            data: {
-                name: updateProject.name,
-                number: updateProject.number,
-                short_name: updateProject.short_name,
-                // milestone_items: [],
-                // monuments: []
-            }
+            data: {...data}
         })
         .then((response => {
-            console.log("projects updated sucessfully");
+            console.log("employee updated sucessfully");
 
-            let index = projects.findIndex(elem => elem.id === response.data.id);
+            let index = props.employees.findIndex(elem => elem.id === response.data.id);
 
-            let updatedProjects = [...projects];
+            let updatedEmployees = [...props.employees];
 
-            updatedProjects[index] = {...response.data, displayed: updateProject.displayed};
+            updatedEmployees.splice(index, 1, response.data);
 
-            set_projects(updatedProjects);
+            // props.set_employees([...updatedEmployees]);
 
-            props.set_projects(updatedProjects);
+            // props.fetchEmployees();
+
+            props.fetchEmployee(response.data);
 
             set_showSpinner_CreateUpdateProject(false);
         }))
         .catch((error) => {
             console.log(error);
 
-            alert('problem with creating project')
+            alert('problem with updating employee');
+
+            set_showSpinner_CreateUpdateProject(false);
         })
     }
 
@@ -219,7 +269,9 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                     <div className='p04-c01-row-left-col'>Username</div>
                     <div className='p04-c01-row-right-col'>
                         <div className='p04-c01-input-container'>
-                            <input id='username' className='p04-c01-textbox' type='text' placeholder='...' />
+                            <input id='username' className='p04-c01-textbox' type='text' placeholder='...' disabled={!changingUsername} />
+                            <input className='p04-c01-cbx' type='checkbox' checked={changingUsername} onChange={() => set_changingUsername(!changingUsername)} />
+                            <div className='p04-c01-textbox'>Change username</div>
                         </div>
                     </div>
                 </div>
@@ -227,7 +279,9 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                     <div className='p04-c01-row-left-col'>Password</div>
                     <div className='p04-c01-row-right-col'>
                         <div className='p04-c01-input-container'>
-                            <input id='password' className='p04-c01-textbox' type='password' placeholder='...' />
+                            <input id='password' className='p04-c01-textbox' type='password' placeholder='...' disabled={!changingPassword} />
+                            <input className='p04-c01-cbx' type='checkbox' checked={changingPassword} onChange={() => set_changingPassword(!changingPassword)} />
+                            <div className='p04-c01-textbox'>Change password</div>
                         </div>
                     </div>
                 </div>
@@ -261,10 +315,6 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                         <div className='p04-c01-input-container'>
                             <select 
                                 id="department" 
-                                // className='p02-c09-textbox-short'
-                                // selectedIndex={selectedIndex}
-                                // onClick={() => console.log('option clicked')}
-                                // onChange={document.getElementById(`${item.short_name} : ${item.name}`).selected = true}
                             >
                                 <option id='default-department' value="">--Please choose an option--</option>
                                 <option id='certification' value='certification'>certification</option>
@@ -424,26 +474,6 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                                 <input id="all_permissions" type='checkbox' checked={userPermissions.find(elem => elem === "all_permissions")} onChange={(e) => checkbox_changed(e.target)} />
                             </td>
                         </tr>
-                        {/* {projects.map((project) => {
-                            return <tr key={Math.random() * 100000}>
-                                <td><input type='checkbox' checked={project.displayed} onChange={() => checkboxChanged(project)} /></td>
-                                <td>{project.name}</td>
-                                <td>{project.number}</td>
-                                <td>{project.short_name}</td>
-                                <td>
-                                    {userPermissions.find(elem => elem === "edit_project") ?
-                                        <img className='p04-c01-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
-                                        :
-                                        <div></div>
-                                    }
-                                    {userPermissions.find(elem => elem === "delete_project") ? 
-                                        <img className='p04-c01-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
-                                        :
-                                        <div></div>
-                                    }
-                                </td>
-                            </tr>
-                        })} */}
                     </tbody>
                 </table>
             </div>
@@ -467,8 +497,8 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                             <input 
                                 type='button' 
                                 className='button' 
-                                value={updateMode ? 'Cancel' : 'Close'} 
-                                onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
+                                value={'Close'} 
+                                onClick={() => props.toogleVisibility(false)}
                             />
                         </div>
                     </div>
