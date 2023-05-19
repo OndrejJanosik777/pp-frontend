@@ -95,23 +95,24 @@
                 }
             }
 
-            .p02-c10-content {
+            .p04-content {
                 background-color: #FFFFFF;
                 width: 100%;
                 height: 100%;
                 overflow-y: scroll;
                 overflow-x: hidden;
     
-                .p02-c10-table-01 {
+                .p04-table-01 {
                     width: 100%;
     
                     thead {
                         width: 100%;
+
                         tr {
                             width: 100%;
                             display: grid;
                             // grid-template-columns: 3% 13% 4% 10% 10% 10% 10% 35% 5%;
-                            grid-template-columns: 700px 75px 75px 75px 75px 75px 1fr 75px;
+                            grid-template-columns: 700px 75px 75px 75px 75px 75px 75px 1fr 75px;
     
                             th {
                                 text-align: center;
@@ -125,7 +126,7 @@
                     }
                 }
     
-                .p02-c10-table-02 {
+                .p04-table-02 {
                     width: 100%;
                     thead, tbody {
                         width: 100%;
@@ -143,13 +144,13 @@
                                 width: 100%;
                             }
 
-                            .p02-c10-access-icons {
+                            .p04-access-icons {
                                 // background-color: #b62222;
                                 display: flex;
                                 justify-content: space-around;
                                 align-items: center;
 
-                                .p02-c10-access-icon {
+                                .p04-access-icon {
                                     height: 15px;
                                 }
                             }
@@ -189,7 +190,7 @@
                                 display: flex;
                                 align-items: center;
     
-                                .p02-c10-icons {
+                                .p04-icons {
                                     padding: 3px 5px;
                     
                                     &:hover {
@@ -197,13 +198,13 @@
                                     }
                                 }
 
-                                .p02-c10-checkbox {
+                                .p04-checkbox {
                                     width: 15px;
                                     height: 15px;
                                 }
                             }
 
-                            .p02-c10-checkboxes {
+                            .p04-checkboxes {
                                 display: flex;
                                 justify-content: space-around;
                                 align-items: center;

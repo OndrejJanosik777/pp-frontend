@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import moment from 'moment';
+// icons, pictures
 import planeSVG from './assets/airplane.svg';
 import MilestoneTag from './milestone-tag';
 import home from './assets/home.png';
 import small_arrow_down from './assets/small_arrow_down.png';
 import arrow_left from './assets/arrow_left.png';
 import magnifier_dark from './assets/magnifier_dark.png';
-// pages
+// general components
 import C01_NAVBAR from '../../components/c01-nav-bar'
 import C02_SIDEBAR from '../../components/c02-side-bar';
-// components
+// page specific components
 import P02_C01_TIMELINE from './p02-c01-timeline';
 import P02_C02_MANAGE_PROJECTS from './p02-c02-manage-projects';
 import P02_C03_MANAGE_MILESTONE_TYPES from './p02-c03-manage-milestone-types';
@@ -22,8 +23,7 @@ import P02_C07_MANAGE_MILESTONE_TASKS from './p02-c07-manage-milestone-tasks';
 import P02_C08_MANAGE_MONUMENTS from './p02-c08-manage-monuments';
 import P02_C09_MANAGE_DOCUMENTS from './p02-c09-manage-documents';
 import P02_C10_MANAGE_PROJECT_TASKS from './p02-c10-manage-project-tasks';
-// components
-
+// styles
 import './index.scss';
 
 const P02_PLANNING_DASHBOARD = () => {
