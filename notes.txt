@@ -9,3 +9,14 @@
     - register new users
     - create, edit delete milestone types, task types
     - delete project, 
+
+- on delete:                cascading:
+  task_type                 nothing
+  task                      nothing
+  milestone_item_type       nothing
+  milestone_item            related tasks
+  monument                  related documents, tasks
+  document                  related task
+  employee                  related user
+  project                   related monuments, documents, tasks, milestone_items
+  

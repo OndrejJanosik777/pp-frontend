@@ -72,8 +72,6 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         const users = [];
         let certification_document = document.getElementById('certification_document').value;
 
-        set_showSpinner_CreateUpdateItem(true);
-
         if (task_type === "") return alert('missing task_type');
         if (estimated_hours === "") return alert('missing estimated_hours');
         if (booked_hours === "") return alert('missing booked_hours');
@@ -84,6 +82,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         // if (users === "") return alert('missing users');
         if (certification_document === "") return alert('missing certification_document');
         if (certification_document === "-1") certification_document = null;
+
+        set_showSpinner_CreateUpdateItem(true);
 
         axios({
             method: 'post',

@@ -130,6 +130,8 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
 
             let message = error.message + "\n" + error.response.data;
 
+            alert("Problem with creating new milestone item");
+
             alert(message);
 
             set_showSpinner_CreateUpdateItem(false);
