@@ -23,6 +23,7 @@ const P02_C05_PROJECT = (props) => {
     const [completedTasks, set_completedTasks] = useState(0);
     const [totalTasks, set_totalTasks] = useState(0);
     const [certificationDocumentIds, set_certificationDocumentIds] = useState([]);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
         props.project.milestone_items.sort((a, b) => {
@@ -225,6 +226,7 @@ const P02_C05_PROJECT = (props) => {
                     set_manageMilestoneTasks_modalToogle={props.set_manageMilestoneTasks_modalToogle}
                     set_activeMilestoneItem={props.set_activeMilestoneItem}
                     set_activeProject={props.set_activeProject}
+                    userPermissions={userPermissions}
                 />
             })
             }

@@ -30,6 +30,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
         if (taskTypes.length === 0) fetchItems();
@@ -197,16 +198,19 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
         <div className='p02-c04-window'>
             <div className='p02-c04-nav-bar'>
                 <div className='p02-c04-nav-bar-left'>
-                    <img 
+                    {/* <img 
                         className='p02-c04-icons' 
                         src={delete_cross} 
                         alt=''
-                    />
-                    <img 
-                        className='p02-c04-icons' 
-                        src={create_new} alt='' 
-                        onClick={() => set_createMode(!createMode)} 
-                    />
+                    /> */}
+                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ?
+                        <img 
+                            className='p02-c04-icons' 
+                            src={create_new} alt='' 
+                            onClick={() => set_createMode(!createMode)} 
+                        /> :
+                        <div></div>
+                    }
                 </div>
                 <div className='p02-c04-nav-bar-right'>
                     <div className='p02-c04-textbox-container'>
@@ -253,18 +257,24 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                                 <td>{item.name}</td>
                                 <td>{item.description}</td>
                                 <td>
-                                    <img 
-                                        className='p02-c04-icons' 
-                                        src={pencil_edit} 
-                                        alt='' 
-                                        onClick={() => switchToUpdateMode(item)} 
-                                    />
-                                    <img 
-                                        className='p02-c04-icons' 
-                                        src={delete_cross} 
-                                        alt='' 
-                                        onClick={() => deleteItem(item)} 
-                                    />
+                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ? 
+                                        <img 
+                                            className='p02-c04-icons' 
+                                            src={pencil_edit} 
+                                            alt='' 
+                                            onClick={() => switchToUpdateMode(item)} 
+                                        /> :
+                                        <div></div>
+                                    }
+                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ? 
+                                        <img 
+                                            className='p02-c04-icons' 
+                                            src={delete_cross} 
+                                            alt='' 
+                                            onClick={() => deleteItem(item)} 
+                                        /> :
+                                        <div></div>
+                                    }
                                 </td>
                             </tr>
                         })}

@@ -26,7 +26,6 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
     const [projects, set_projects] = useState([]);
     const [showSpinner_CreateUpdateProject, set_showSpinner_CreateUpdateProject] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
-    const [createMode, set_createMode] = useState(false);
     // const [selectedItem, set_selectedItem] = useState({});
     const [userPermissions, set_userPermissions] = useState([]);
     const [userGroups, set_userGroups] = useState([]);
@@ -269,9 +268,17 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                     <div className='p04-c01-row-left-col'>Username</div>
                     <div className='p04-c01-row-right-col'>
                         <div className='p04-c01-input-container'>
-                            <input id='username' className='p04-c01-textbox' type='text' placeholder='...' disabled={!changingUsername} />
-                            <input className='p04-c01-cbx' type='checkbox' checked={changingUsername} onChange={() => set_changingUsername(!changingUsername)} />
-                            <div className='p04-c01-textbox'>Change username</div>
+                            <input id='username' className='p04-c01-textbox' type='text' placeholder='...' disabled={!changingUsername && updateMode} />
+                            { updateMode ?
+                                <input className='p04-c01-cbx' type='checkbox' checked={changingUsername} onChange={() => set_changingUsername(!changingUsername)} />
+                                :
+                                <div></div>
+                            }
+                            { updateMode ?
+                                <div className='p04-c01-textbox'>Change username</div>
+                                :
+                                <div></div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -279,9 +286,17 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                     <div className='p04-c01-row-left-col'>Password</div>
                     <div className='p04-c01-row-right-col'>
                         <div className='p04-c01-input-container'>
-                            <input id='password' className='p04-c01-textbox' type='password' placeholder='...' disabled={!changingPassword} />
-                            <input className='p04-c01-cbx' type='checkbox' checked={changingPassword} onChange={() => set_changingPassword(!changingPassword)} />
-                            <div className='p04-c01-textbox'>Change password</div>
+                            <input id='password' className='p04-c01-textbox' type='password' placeholder='...' disabled={!changingPassword && updateMode} />
+                            { updateMode ?
+                                <input className='p04-c01-cbx' type='checkbox' checked={changingPassword} onChange={() => set_changingPassword(!changingPassword)} />
+                                :
+                                <div></div>
+                            }
+                            { updateMode ?
+                                <div className='p04-c01-textbox'>Change password</div>
+                                :
+                                <div></div>
+                            }
                         </div>
                     </div>
                 </div>

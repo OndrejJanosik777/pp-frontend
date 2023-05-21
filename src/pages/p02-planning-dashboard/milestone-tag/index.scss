@@ -5,8 +5,17 @@
         // border-radius: 8px;
 
         &:hover {
-            background-color: brown;
-            color: white;
+            background-color: rgb(42, 165, 42);
+            color: rgb(255, 255, 255);
+        }
+    }
+    
+    .not-dragable {
+        // border-radius: 8px;
+
+        &:hover {
+            // background-color: rgb(136, 83, 83);
+            color: black;
         }
     }
 
@@ -29,7 +38,7 @@
         border: 1px solid white;
 
         li {
-            padding: 0.4rem 0.25rem;
+            padding: 3px 5px;
         }
 
         .badge {

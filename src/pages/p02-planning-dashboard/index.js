@@ -367,6 +367,7 @@ const P02_PLANNING_DASHBOARD = () => {
                     <P02_C03_MANAGE_MILESTONE_TYPES
                         milestoneTypes={milestoneTypes}
                         set_milestoneTypes={set_milestoneTypes}
+                        userPermissions={userPermissions}
                         toogleVisibility={set_manageMilestoneTypes_modalToogle}
                     />
                     :
@@ -375,6 +376,7 @@ const P02_PLANNING_DASHBOARD = () => {
                     <P02_C04_MANAGE_TASK_TYPES
                         taskTypes={taskTypes}
                         set_taskTypes={set_taskTypes}
+                        userPermissions={userPermissions}
                         toogleVisibility={set_manageTasksTypes_modalToogle}
                     />
                     :
@@ -385,6 +387,7 @@ const P02_PLANNING_DASHBOARD = () => {
                         updateProject={updateProject}
                         updateProjectInState={updateProjectInState}
                         milestoneTypes={milestoneTypes}
+                        userPermissions={userPermissions}
                         toogleVisibility={set_manageMilestones_modalToogle}
                     />
                     :
@@ -397,6 +400,7 @@ const P02_PLANNING_DASHBOARD = () => {
                         // updateProjectInState={updateProjectInState}
                         // milestoneTypes={milestoneTypes}
                         taskTypes={taskTypes}
+                        userPermissions={userPermissions}
                         toogleVisibility={set_manageMilestoneTasks_modalToogle}
                     />
                     :
@@ -409,6 +413,7 @@ const P02_PLANNING_DASHBOARD = () => {
                         // updateProjectInState={updateProjectInState}
                         // milestoneTypes={milestoneTypes}
                         // taskTypes={taskTypes}
+                        userPermissions={userPermissions}
                         toogleVisibility={set_manageMonuments_modalToogle}
                     />
                     :
@@ -421,6 +426,7 @@ const P02_PLANNING_DASHBOARD = () => {
                         // updateProjectInState={updateProjectInState}
                         // milestoneTypes={milestoneTypes}
                         // taskTypes={taskTypes}
+                        userPermissions={userPermissions}
                         toogleVisibility={set_manageDocuments_modalToogle}
                     />
                     :
@@ -556,6 +562,7 @@ const P02_PLANNING_DASHBOARD = () => {
                                     set_manageMonuments_modalToogle={set_manageMonuments_modalToogle}
                                     set_manageDocuments_modalToogle={set_manageDocuments_modalToogle}
                                     set_manageProjectTasks_modalToogle={set_manageProjectTasks_modalToogle}
+                                    userPermissions={userPermissions}
                                 />
                             }
                         })

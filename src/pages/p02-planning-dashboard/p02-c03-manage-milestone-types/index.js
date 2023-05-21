@@ -30,6 +30,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
         // fetchItems();
@@ -196,16 +197,19 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         <div className='p02-c03-window'>
             <div className='p02-c03-nav-bar'>
                 <div className='p02-c03-nav-bar-left'>
-                    <img 
+                    {/* <img 
                         className='p02-c03-icons' 
                         src={delete_cross} 
                         alt=''
-                    />
-                    <img 
-                        className='p02-c03-icons' 
-                        src={create_new} alt='' 
-                        onClick={() => set_createMode(!createMode)} 
-                    />
+                    /> */}
+                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ?
+                        <img 
+                            className='p02-c03-icons' 
+                            src={create_new} alt='' 
+                            onClick={() => set_createMode(!createMode)} 
+                        /> :
+                        <div></div>
+                    }
                 </div>
                 <div className='p02-c03-nav-bar-right'>
                     <div className='p02-c03-textbox-container'>
@@ -252,18 +256,24 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 <td>{item.short_name}</td>
                                 <td>{item.name}</td>
                                 <td>
-                                    <img 
-                                        className='p02-c03-icons' 
-                                        src={pencil_edit} 
-                                        alt='' 
-                                        onClick={() => switchToUpdateMode(item)} 
-                                    />
-                                    <img 
-                                        className='p02-c03-icons' 
-                                        src={delete_cross} 
-                                        alt='' 
-                                        onClick={() => deleteItem(item)} 
-                                    />
+                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ?
+                                        <img 
+                                            className='p02-c03-icons' 
+                                            src={pencil_edit} 
+                                            alt='' 
+                                            onClick={() => switchToUpdateMode(item)} 
+                                        /> :
+                                        <div></div>
+                                    }
+                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ? 
+                                        <img 
+                                            className='p02-c03-icons' 
+                                            src={delete_cross} 
+                                            alt='' 
+                                            onClick={() => deleteItem(item)} 
+                                        /> :
+                                        <div></div>
+                                    }
                                 </td>
                             </tr>
                         })}

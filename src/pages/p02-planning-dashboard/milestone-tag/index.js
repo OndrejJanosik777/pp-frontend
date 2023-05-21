@@ -21,6 +21,7 @@ const MilestoneTag = (props) => {
     const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
     const [deltaTag, set_deltaTag] = useState(10);
     const [deltaStart, set_deltaStart] = useState(props.deltaStart);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
         // console.log('props.deltaStart: ', props.deltaStart)
@@ -113,7 +114,7 @@ const MilestoneTag = (props) => {
     const ContextMenuStyle = {
         position: 'absolute',
         marginLeft: `${leftOffset}px`,
-        marginTop: `${0}px`,
+        marginTop: `${-25}px`,
         zIndex: `25`,
     }
 
@@ -138,10 +139,15 @@ const MilestoneTag = (props) => {
             <div style={TagStyle}>
                 <button
                     type="button"
-                    className="dragable"
+                    className={ userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ?
+                        "dragable" :
+                        "not-dragable"
+                    }
                     title={props.milestoneItem.milestone_item_type.name + '\n' + props.milestoneItem.date}
                     onContextMenu={(e) => contextMenuClicked(e)}
-                    onClick={(e) => mouseClicked(e)}
+                    onClick={ userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ? 
+                    (e) => mouseClicked(e) :
+                    () => console.log('no permission to edit milestone') }
                 >
                     {props.milestoneItem.milestone_item_type.short_name}
                 </button>
@@ -152,25 +158,31 @@ const MilestoneTag = (props) => {
         {contextMenu_visibility ?
             <div style={ContextMenuStyle}>
                 <ul className='context-container' onMouseLeave={() => set_contextMenu_visibility(!contextMenu_visibility)}>
+                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_document" ) !== -1 ?
+                        <li className='context-item'>
+                            <span
+                                className="badge bg-dark"
+                                onClick={() => props.updateMilestoneItem(props.project, props.milestoneItem)}
+                            >
+                                Edit Milestone
+                            </span>
+                        </li> :
+                        <div></div>
+                    }
+                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_document" ) !== -1 ?
+                        <li className='context-item'>
+                            <span
+                                className="badge bg-danger"
+                                onClick={() => props.deleteMilestoneItem(props.project, props.milestoneItem)}
+                            >
+                                Delete Milestone
+                            </span>
+                        </li> :
+                        <div></div>
+                    }
                     <li className='context-item'>
                         <span
-                            className="badge bg-warning"
-                            onClick={() => props.updateMilestoneItem(props.project, props.milestoneItem)}
-                        >
-                            Edit Milestone
-                        </span>
-                    </li>
-                    <li className='context-item'>
-                        <span
-                            className="badge bg-danger"
-                            onClick={() => props.deleteMilestoneItem(props.project, props.milestoneItem)}
-                        >
-                            Delete Milestone
-                        </span>
-                    </li>
-                    <li className='context-item'>
-                        <span
-                            className="badge bg-primary"
+                            className="badge bg-dark"
                             onClick={() => {
                                 props.set_activeProject(props.project)
                                 props.set_activeMilestoneItem(props.milestoneItem)
@@ -182,7 +194,7 @@ const MilestoneTag = (props) => {
                     </li>
                     <li className='context-item'>
                         <span
-                            className="badge bg-secondary"
+                            className="badge bg-dark"
                         // onClick={() => displayNewMilestone(project)}
                         >
                             Display Tasks

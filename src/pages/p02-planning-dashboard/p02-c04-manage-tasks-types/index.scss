@@ -144,6 +144,10 @@
                         }
 
                         td {
+                            display: flex;
+                            justify-content: flex-start;
+                            align-items: center;
+
                             .p02-c04-icons {
                                 padding: 3px 5px;
                 

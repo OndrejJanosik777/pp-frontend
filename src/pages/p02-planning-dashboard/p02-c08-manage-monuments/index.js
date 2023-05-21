@@ -36,6 +36,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     const [selectedItem, set_selectedItem] = useState(undefined);
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
         console.log('(modal) component ManageMonuments loaded: ... ');
@@ -206,17 +207,20 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
         <div className='p02-c08-window'>
             <div className='p02-c08-nav-bar'>
                 <div className='p02-c08-nav-bar-left'>
-                    <img 
+                    {/* <img 
                         className='p02-c08-icons' 
                         src={delete_cross} 
                         alt=''
                         onClick={showState}
-                    />
-                    <img 
-                        className='p02-c08-icons' 
-                        src={create_new} alt='' 
-                        onClick={() => set_createMode(!createMode)} 
-                    />
+                    /> */}
+                    {userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_monument" ) !== -1 ? 
+                        <img 
+                            className='p02-c08-icons' 
+                            src={create_new} alt='' 
+                            onClick={() => set_createMode(!createMode)} 
+                        /> :
+                        <div></div>
+                    }
                 </div>
                 <div className='p02-c08-nav-bar-right'>
                     <div className='p02-c08-textbox-container'>
@@ -263,18 +267,24 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                                 <td>{monument.hours_S}</td>
                                 <td>{monument.hours_Z}</td>
                                 <td>
-                                    <img 
-                                        className='p02-c08-icons' 
-                                        src={pencil_edit} 
-                                        alt='' 
-                                        onClick={() => switchToUpdateMode(monument, index)} 
-                                    />
-                                    <img 
-                                        className='p02-c08-icons' 
-                                        src={delete_cross} 
-                                        alt='' 
-                                        onClick={() => deleteItem(monument, index)} 
-                                    />
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_monument" ) !== -1 ? 
+                                        <img 
+                                            className='p02-c08-icons' 
+                                            src={pencil_edit} 
+                                            alt='' 
+                                            onClick={() => switchToUpdateMode(monument, index)} 
+                                        /> :
+                                        <div></div>
+                                    }
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_monument" ) !== -1 ?
+                                        <img 
+                                            className='p02-c08-icons' 
+                                            src={delete_cross} 
+                                            alt='' 
+                                            onClick={() => deleteItem(monument, index)} 
+                                        /> :
+                                        <div></div>
+                                    }
                                 </td>
                             </tr>
                         })}

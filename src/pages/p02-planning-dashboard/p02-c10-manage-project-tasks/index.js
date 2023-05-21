@@ -312,7 +312,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
         <div className='p02-c10-window'>
             <div className='p02-c10-nav-bar'>
                 <div className='p02-c10-nav-bar-left'>
-                    <img 
+                    {/* <img 
                         className='p02-c10-icons' 
                         src={delete_cross} 
                         alt=''
@@ -322,7 +322,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                         className='p02-c10-icons' 
                         src={create_new} alt='' 
                         // onClick={() => set_createMode(!createMode)} 
-                    />
+                    /> */}
                 </div>
                 <div className='p02-c10-nav-bar-right'>
                     <div className='p02-c10-textbox-container'>

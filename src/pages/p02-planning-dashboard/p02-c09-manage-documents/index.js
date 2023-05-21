@@ -38,6 +38,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
     const [showSpinner_FetchingDocuments, set_showSpinner_FetchingDocuments] = useState(true);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
         console.log('(modal) component ManageMonuments loaded: ... ');
@@ -301,17 +302,20 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         <div className='p02-c09-window'>
             <div className='p02-c09-nav-bar'>
                 <div className='p02-c09-nav-bar-left'>
-                    <img 
+                    {/* <img 
                         className='p02-c09-icons' 
                         src={delete_cross} 
                         alt=''
                         onClick={showState}
-                    />
-                    <img 
-                        className='p02-c09-icons' 
-                        src={create_new} alt='' 
-                        onClick={() => set_createMode(!createMode)} 
-                    />
+                    /> */}
+                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_document" ) !== -1 ?
+                        <img 
+                            className='p02-c09-icons' 
+                            src={create_new} alt='' 
+                            onClick={() => set_createMode(!createMode)} 
+                        /> :
+                        <div></div>
+                    }
                     <div className={
                         showSpinner_FetchingDocuments ?
                         'p02-c09-fetching-displayed' :
@@ -368,22 +372,28 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 <td>{document.acceptance_status}</td>
                                 <td>{document.comment}</td>
                                 <td>
-                                    <img 
-                                        className='p02-c09-icons' 
-                                        src={pencil_edit} 
-                                        alt='' 
-                                        onClick={() => {
-                                            clearForm();
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_document" ) !== -1 ? 
+                                        <img 
+                                            className='p02-c09-icons' 
+                                            src={pencil_edit} 
+                                            alt='' 
+                                            onClick={() => {
+                                                clearForm();
 
-                                            switchToUpdateMode(document, index);
-                                        }} 
-                                    />
-                                    <img 
-                                        className='p02-c09-icons' 
-                                        src={delete_cross} 
-                                        alt='' 
-                                        onClick={() => deleteItem(document, index)} 
-                                    />
+                                                switchToUpdateMode(document, index);
+                                            }} 
+                                        /> : 
+                                        <div></div>
+                                    }
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_document" ) !== -1 ? 
+                                        <img 
+                                            className='p02-c09-icons' 
+                                            src={delete_cross} 
+                                            alt='' 
+                                            onClick={() => deleteItem(document, index)} 
+                                        /> : 
+                                        <div></div>
+                                    }
                                 </td>
                             </tr>
                         })}

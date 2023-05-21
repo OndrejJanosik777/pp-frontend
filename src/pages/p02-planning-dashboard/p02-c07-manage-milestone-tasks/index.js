@@ -37,6 +37,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
 
     useEffect(() => {
@@ -47,15 +48,14 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     }, []);
 
     const showState = () => {
-        console.log('...local state of component p02-c07-manage-tasks...');
-        console.log('props: ', props);
+        // console.log('props: ', props);
         // console.log('props.activeProject: ', props.activeProject);
         // console.log('props.taskTypes: ', props.taskTypes);
         // console.log('props.activeMilestoneItem: ', props.activeMilestoneItem);
         // console.log('props.activeMilestoneItem.tasks: ', props.activeMilestoneItem.tasks);
         // console.log('createMode: ', createMode);
-        console.log('certificationDocuments: ', certificationDocuments);
-        console.log('certificationDocumentsNoTask: ', certificationDocumentsNoTask);
+        // console.log('certificationDocuments: ', certificationDocuments);
+        console.log('tasks: ', tasks);
     }
 
     const createNewItem = () => {
@@ -70,18 +70,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         const deadline = props.activeMilestoneItem.date;
         const status = document.getElementById('status').value;
         const users = [];
-        let certification_document = document.getElementById('certification-document').value;
-
-        // const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
-
-        // console.log('task_type...', task_type);
-        // console.log('estimated_hours...', estimated_hours);
-        // console.log('booked_hours...', booked_hours);
-        // console.log('comment...', comment);
-        // console.log('milestone_item...', milestone_item);
-        // console.log('status...', status);
-        // console.log('users...', users);
-        // console.log('certification_document...', certification_document);
+        let certification_document = document.getElementById('certification_document').value;
 
         set_showSpinner_CreateUpdateItem(true);
 
@@ -201,110 +190,80 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     }
 
     const switchToUpdateMode = (item, index) => {
-        console.log('Manage Tasks - switchToUpdateMode function');
-        console.log('updating item: ', item);
-        console.log('updating index: ', index);
-
-        // console.log('item.tasktype: ', item.task_type);
-
-        // document.getElementById('task_type').value = newLabel.name;
-
-        // document.getElementById(`milestonetypes-container`).selectedIndex = index;
-        // let containerElem = document.getElementById(`milestonetypes-container`);
-        // let firstElem = document.getElementById(`default-milestonetype`);
-
-        // containerElem.selectedIndex = 1;
-        // containerElem
-
-        // firstElem.innerHTML = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
-        // firstElem.value = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
-
-        // console.log('containerElem: ', containerElem);
-
-        // console.log('containerElem.selectedIndex: ', containerElem.selectedIndex);
+        document.getElementById('status').value = item.status;
+        document.getElementById('estimated_hours').value = item.estimated_hours;
+        document.getElementById('booked_hours').value = item.booked_hours;
+        document.getElementById('comment').value = item.comment;
 
         set_updateMode(true);
 
         set_selectedItem(item);
     }
 
-    const updateItem = (milestoneItem) => {
-        // // console.log('function : updateItem');
+    const updateItem = (item) => {
+        console.log('updateItem: ', item);
 
-        // const name = document.getElementById('name').value;
-        // const milestone_item_type = document.getElementById('milestone_item_type').value;
-        // const date = document.getElementById('date').value;
-        // const comment = document.getElementById('comment').value;
-        // const tasks = milestoneItem.tasks;
+        const booked_hours = document.getElementById('booked_hours').value;
+        const certification_document = item.certification_document;
+        const comment = document.getElementById('comment').value;
+        const deadline = item.deadline;
+        const estimated_hours = document.getElementById('estimated_hours').value;
+        const id = item.id;
+        const milestone_item = item.milestone_item;
+        const status = document.getElementById('status').value;
+        const task_type = item.task_type;
+        const users = [...item.users];
 
-        // // console.log('milestone_item_type: ', milestone_item_type);
+        set_showSpinner_CreateUpdateItem(true);
 
-        // const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
-        // const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestoneItem.id)
+        if (estimated_hours === "") return alert('missing estimated_hours');
+        if (booked_hours === "") return alert('missing booked_hours');
+        if (comment === "") return alert('missing comment');
+        if (status === "") return alert('missing status');
 
-        // // console.log('index: ', index);
+        axios({
+            method: 'put',
+            url: baseUrl + `/company/tasks/${id}/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                id: id,
+                task_type: task_type,
+                estimated_hours: estimated_hours,
+                booked_hours: booked_hours,
+                comment: comment,
+                milestone_item: milestone_item,
+                status: status,
+                users: users,
+                certification_document: certification_document,
+                deadline: deadline
+            }
+        })
+        .then((response => {
+            console.log('task updated succesfully: ', response.data);
 
-        // // console.log('creating new milestone...');
-        // // console.log('name...', name);
-        // // console.log('milestone_item_type...', props.milestoneTypes[index].id);
-        // // console.log('date...', date);
-        // // console.log('comment...', comment);
-        // // console.log('tasks...', tasks);
-        // // console.log('props.activeProject.id...', props.activeProject.id);
+            let index = tasks.findIndex(elem => elem.id === response.data.id);
 
-        // set_showSpinner_CreateUpdateItem(true);
+            let updatedTasks = [...tasks];
 
-        // if (name === "") return alert('missing input');
-        // if (props.milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
-        // if (date === "") return alert('missing input');
-        // if (comment === "") return alert('missing input');
-        // if (tasks === "") return alert('missing input');
-        // if (props.activeProject.id === "") return alert('missing input');
+            updatedTasks.splice(index, 1, response.data);
 
-        // // update in backend
+            set_tasks([...updatedTasks]);
 
-        // axios({
-        //     method: 'put',
-        //     url: baseUrl + `/company/milestone-items/${milestoneItem.id}/`,
-        //     headers: {
-        //         "Authorization": token
-        //     },
-        //     data: {
-        //         name: name,
-        //         milestone_item_type: props.milestoneTypes[milestoneTypeIndex].id,
-        //         date: date,
-        //         comment: comment,
-        //         project: props.activeProject.id,
-        //     }
-        // })
-        // .then((response => {
-        //     // console.log('milestone updated succesfully: ', response.data);
+            // props.updateProject(props.activeProject);
 
-        //     let updatedProject = {...props.activeProject};
+            set_showSpinner_CreateUpdateItem(false);
 
-        //     let updatedItem = { ...response.data, tasks: tasks };
+            // 
+            // fetchProjectDocuments();
+        }))
+        .catch((error) => {
+            console.log(error);
 
-        //     updatedItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
+            alert('problem with updating task: ', error.message);
+        })
 
-        //     updatedProject.milestone_items.splice(milestoneIndex, 1, updatedItem);
-
-        //     updatedProject.milestone_items.sort((a, b) => {
-        //         return moment(a.date) - moment(b.date);
-        //     });
-
-        //     props.updateProjectInState(updatedProject);
-
-        //     set_milestones([...updatedProject.milestone_items]);
-
-        //     // console.log('milestone updated succesfully: ', updatedItem);
-
-        //     set_showSpinner_CreateUpdateItem(false);
-        // }))
-        // .catch((error) => {
-        //     console.log(error);
-
-        //     alert('problem with updating Milestone Type.')
-        // })
     }
 
     return (<div className='p02-c07-manage-milestone-tasks'>
@@ -312,17 +271,20 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         <div className='p02-c07-window'>
             <div className='p02-c07-nav-bar'>
                 <div className='p02-c07-nav-bar-left'>
-                    <img 
+                    {/* <img 
                         className='p02-c07-icons' 
                         src={delete_cross} 
                         alt=''
                         onClick={showState}
-                    />
-                    <img 
-                        className='p02-c07-icons' 
-                        src={create_new} alt='' 
-                        onClick={() => set_createMode(!createMode)} 
-                    />
+                    /> */}
+                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_task" ) !== -1 ?
+                        <img 
+                            className='p02-c07-icons' 
+                            src={create_new} alt='' 
+                            onClick={() => set_createMode(!createMode)} 
+                        /> : 
+                        <div></div>
+                    }
                 </div>
                 <div className='p02-c07-nav-bar-right'>
                     <div className='p02-c07-textbox-container'>
@@ -331,10 +293,19 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                             type='text' 
                             placeholder='Search ...' 
                         />
-                        <img className='p02-c07-img' src={magnifier} alt='' />
+                        <img 
+                            className='p02-c07-img' 
+                            src={magnifier} 
+                            alt='' 
+                        />
                     </div>
                     <img className='p02-c07-icons' src={edit_panels} alt='' />
-                    <img className='p02-c07-icons' src={questionmark_blue} alt='' />
+                    <img 
+                        className='p02-c07-icons' 
+                        src={questionmark_blue} 
+                        alt='' 
+                        onClick={() => showState()}
+                    />
                     <input 
                         type='button' 
                         className='p02-c07-button' 
@@ -361,6 +332,16 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                     <tbody>
                         {/* TODO:  */}
                         {tasks.map((task, index) => {
+                            let certificationDocument = undefined;
+
+                            if (task.certification_document !== null) {
+                                // certificationDocument = certificationDocuments.find(elem => elem.id === task.certification_document).number;
+                            }
+
+                            console.log("certificationDocuments: ", certificationDocuments.length);
+                            // console.log("certificationDocuments: ", task.certification_document);
+                            // console.log("certificationDocuments: ", certificationDocuments.find((elem) => elem.id === task.certification_document).number);
+
                             return <tr key={Math.random() * 100000}>
                                 <td>{task.id}</td>
                                 <td>{taskTypes.find(elem => elem.id === task.task_type).name}</td>
@@ -368,24 +349,27 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 <td>{props.activeMilestoneItem.milestone_item_type.short_name}</td>
                                 <td>{task.estimated_hours}</td>
                                 <td>{task.booked_hours}</td>
-                                <td>{task.certification_document === null ?
-                                    "no" :
-                                    "yes"
-                                }</td>
+                                <td>{certificationDocument}</td>
                                 <td>{task.comment}</td>
                                 <td>
-                                    <img 
-                                        className='p02-c07-icons' 
-                                        src={pencil_edit} 
-                                        alt='' 
-                                        onClick={() => switchToUpdateMode(task, index)} 
-                                    />
-                                    <img 
-                                        className='p02-c07-icons' 
-                                        src={delete_cross} 
-                                        alt='' 
-                                        onClick={() => deleteItem(task)} 
-                                    />
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_task" ) !== -1 ?
+                                        <img 
+                                            className='p02-c07-icons' 
+                                            src={pencil_edit} 
+                                            alt='' 
+                                            onClick={() => switchToUpdateMode(task, index)} 
+                                        /> :
+                                        <div></div>
+                                    } 
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_task" ) !== -1 ?
+                                        <img 
+                                            className='p02-c07-icons' 
+                                            src={delete_cross} 
+                                            alt='' 
+                                            onClick={() => deleteItem(task)} 
+                                        /> :
+                                        <div></div>
+                                    }
                                 </td>
                             </tr>
                         })}
@@ -394,50 +378,63 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             </div>
             <div className={createMode || updateMode ? 'p02-c07-win-footer' : 'p02-c07-win-footer-hidden'}>
                 <div className='p02-c07-footer-row1'>
-                    <label 
-                        htmlFor='milestone_item_type' 
-                        className='p02-c07-row1-col1'
-                    >task type</label>
-                    <div className='p02-c07-row1-col2'>
-                        <div className='p02-c07-textbox-container'>
-                            <select 
-                                id="task_type" 
-                            >
-                                <option value="" id='default-milestonetype'>--Please choose an option--</option>
-                                {taskTypes.map((item) => {
-                                    return <option 
-                                        key={Math.random() * 100000} 
-                                        id={`task_type_${item.id}`} 
-                                        value={`${item.name}`}
-                                        // onClick={() => console.log('option clicked.. ')}
-                                    >{`${item.name}`}
-                                    </option>
-                                })}
-                            </select>
+                    { updateMode ? 
+                        <div></div> :
+                        <label 
+                            htmlFor='milestone_item_type' 
+                            className='p02-c07-row1-col1'
+                        >task type</label>
+
+                    }
+                    { updateMode ?
+                        <div></div> :
+                        <div className='p02-c07-row1-col2'>
+                            <div className='p02-c07-textbox-container'>
+                                <select 
+                                    id="task_type" 
+                                >
+                                    <option value="" id='default-milestonetype'>--Please choose an option--</option>
+                                    {taskTypes.map((item) => {
+                                        return <option 
+                                            key={Math.random() * 100000} 
+                                            id={`task_type_${item.id}`} 
+                                            value={`${item.name}`}
+                                            // onClick={() => console.log('option clicked.. ')}
+                                        >{`${item.name}`}
+                                        </option>
+                                    })}
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <label 
-                        htmlFor='milestone_item_type' 
-                        className='p02-c07-row1-col1-w2'
-                    >certification document</label>
-                    <div className='p02-c07-row1-col2'>
-                        <div className='p02-c07-textbox-container'>
-                            <select 
-                                id="certification-document" 
-                            >
-                                <option value="-1" id='empty-documents'>--no document--</option>
-                                {certificationDocumentsNoTask.map((item) => {
-                                    return <option 
-                                        key={Math.random() * 100000} 
-                                        id={`${item.id}`} 
-                                        value={`${item.id}`}
-                                        // onClick={() => console.log('option clicked.. ')}
-                                    >{`${item.number}, ${item.revision}, ${item.name}`}
-                                    </option>
-                                })}
-                            </select>
+                    }
+                    { updateMode ?
+                        <div></div> :
+                        <label 
+                            htmlFor='milestone_item_type' 
+                            className='p02-c07-row1-col1-w2'
+                        >certification document</label>
+                    }
+                    { updateMode ?
+                        <div></div> :
+                        <div className='p02-c07-row1-col2'>
+                            <div className='p02-c07-textbox-container'>
+                                <select 
+                                    id="certification_document" 
+                                >
+                                    <option value="-1" id='empty-documents'>--no document--</option>
+                                    {certificationDocumentsNoTask.map((item) => {
+                                        return <option 
+                                            key={Math.random() * 100000} 
+                                            id={`${item.id}`} 
+                                            value={`${item.id}`}
+                                            // onClick={() => console.log('option clicked.. ')}
+                                        >{`${item.number}, ${item.revision}, ${item.name}`}
+                                        </option>
+                                    })}
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 <div className='p02-c07-footer-row1'>
                     <div className='p02-c07-row1-col1'>status (%)</div>

@@ -34,6 +34,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
 
     useEffect(() => {
@@ -127,11 +128,9 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
         .catch((error) => {
             console.log(error);
 
-            alert('problem with creating new milestone ')
+            alert(error.message);
 
-            // set_showSpinner_CreateUpdateItem(false);
-
-            // props.toogleVisibility();
+            set_showSpinner_CreateUpdateItem(false);
         })
     }
 
@@ -165,7 +164,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
         .catch((error) => {
             console.log(error);
 
-            alert('problem with deleting milestone from backend: ', error);
+            alert(error.message);
         })
     }
 
@@ -280,17 +279,20 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
         <div className='p02-c06-window'>
             <div className='p02-c06-nav-bar'>
                 <div className='p02-c06-nav-bar-left'>
-                    <img 
+                    {/* <img 
                         className='p02-c06-icons' 
                         src={delete_cross} 
                         alt=''
                         onClick={showState}
-                    />
-                    <img 
-                        className='p02-c06-icons' 
-                        src={create_new} alt='' 
-                        onClick={() => set_createMode(!createMode)} 
-                    />
+                    /> */}
+                    {  userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_milestone_item" ) !== -1 ?
+                        <img 
+                            className='p02-c06-icons' 
+                            src={create_new} alt='' 
+                            onClick={() => set_createMode(!createMode)} 
+                        /> :
+                        <div></div>
+                    }
                 </div>
                 <div className='p02-c06-nav-bar-right'>
                     <div className='p02-c06-textbox-container'>
@@ -333,18 +335,24 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                                 <td>{milestone.date}</td>
                                 <td>{milestone.comment}</td>
                                 <td>
-                                    <img 
-                                        className='p02-c06-icons' 
-                                        src={pencil_edit} 
-                                        alt='' 
-                                        onClick={() => switchToUpdateMode(milestone, index)} 
-                                    />
-                                    <img 
-                                        className='p02-c06-icons' 
-                                        src={delete_cross} 
-                                        alt='' 
-                                        onClick={() => deleteItem(milestone)} 
-                                    />
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ? 
+                                        <img 
+                                            className='p02-c06-icons' 
+                                            src={pencil_edit} 
+                                            alt='' 
+                                            onClick={() => switchToUpdateMode(milestone, index)} 
+                                        /> :
+                                        <div></div>
+                                    }
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_milestone_item" ) !== -1 ?
+                                        <img 
+                                            className='p02-c06-icons' 
+                                            src={delete_cross} 
+                                            alt='' 
+                                            onClick={() => deleteItem(milestone)} 
+                                        /> :
+                                        <div></div>
+                                    }
                                 </td>
                             </tr>
                         })}

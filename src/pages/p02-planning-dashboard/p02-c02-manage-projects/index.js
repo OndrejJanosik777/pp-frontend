@@ -191,7 +191,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             <div className='p02-c02-nav-bar'>
                 <div className='p02-c02-nav-bar-left'>
                     {/* <img className='p02-c02-icons' src={delete_cross} alt='' /> */}
-                    {userPermissions.findIndex(elem => elem === "create_project") !== -1 ?
+                    {userPermissions.findIndex(elem => elem === "create_project" || "all_permissions") !== -1 ?
                     <img className='p02-c02-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
                     :
                     <div></div>
@@ -226,12 +226,12 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                 <td>{project.number}</td>
                                 <td>{project.short_name}</td>
                                 <td>
-                                    {userPermissions.find(elem => elem === "edit_project") ?
+                                    {userPermissions.find(elem => elem === "edit_project"  || "all_permissions") ?
                                         <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
                                         :
                                         <div></div>
                                     }
-                                    {userPermissions.find(elem => elem === "delete_project") ? 
+                                    {userPermissions.find(elem => elem === "delete_project"  || "all_permissions") ? 
                                         <img className='p02-c02-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
                                         :
                                         <div></div>
