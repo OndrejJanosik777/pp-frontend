@@ -116,9 +116,11 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             fetchProjectDocuments();
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating new task, check console');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -148,9 +150,11 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             props.updateProject(props.activeProject);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with deleting task from backend: ', error);
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -183,9 +187,11 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             // set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating new task, check console');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -259,9 +265,11 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             // fetchProjectDocuments();
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with updating task: ', error.message);
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
 
     }

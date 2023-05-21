@@ -58,9 +58,11 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
             set_showSpinner_FetchingItems(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching tasks types');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -93,16 +95,17 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
 
             let updatedItem = [...taskTypes];
 
             updatedItem.pop();
 
             set_taskTypes([...updatedItem]);
-
-            alert('problem with creating new milestone Item Types');
-
         })
     }
 
@@ -126,9 +129,11 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                 
             }))
             .catch((error) => {
-                console.log(error);
+                console.log("error: ", error);
 
-                alert(error);
+                let message = error.message + "\n" + error.response.data;
+    
+                alert(message);
 
                 let updatedItems = [...taskTypes];
 
@@ -180,8 +185,11 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                 set_updateMode(false);
             }))
             .catch((error) => {
-                console.log(error);
-                alert('problem with updating Milestone Type.')
+                console.log("error: ", error);
+
+                let message = error.message + "\n" + error.response.data;
+
+                alert(message);
             })
     }
 

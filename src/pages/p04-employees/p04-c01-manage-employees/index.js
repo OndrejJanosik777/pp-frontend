@@ -148,9 +148,13 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
             set_showSpinner_CreateUpdateProject(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating employee')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+
+            set_showSpinner_CreateUpdateProject(false);
         })
     }
 
@@ -228,9 +232,11 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
             set_showSpinner_CreateUpdateProject(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with updating employee');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
 
             set_showSpinner_CreateUpdateProject(false);
         })

@@ -126,9 +126,11 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
             // props.toogleVisibility();
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert(error.message);
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
 
             set_showSpinner_CreateUpdateItem(false);
         })
@@ -162,9 +164,11 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
             
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert(error.message);
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -268,9 +272,11 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with updating Milestone Type.')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 

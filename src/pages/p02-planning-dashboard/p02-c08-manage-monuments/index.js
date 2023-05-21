@@ -99,11 +99,13 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating new milestone ')
+            let message = error.message + "\n" + error.response.data;
 
-            // set_showSpinner_CreateUpdateItem(false);
+            alert(message);
+
+            set_showSpinner_CreateUpdateItem(false);
         })
     }
 
@@ -127,9 +129,11 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
             props.updateProject(props.activeProject);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with deleting milestone from backend: ', error);
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -196,9 +200,11 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with updating Milestone Type.')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 

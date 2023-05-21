@@ -55,9 +55,11 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
             set_showSpinner_FetchingItems(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching milestone item types')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -89,16 +91,17 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
 
             let updatedMilestoneItems = [...props.milestoneTypes];
 
             updatedMilestoneItems.pop();
 
             props.set_milestoneTypes([...updatedMilestoneItems]);
-
-            alert('problem with creating new milestone Item Types');
-
         })
     }
 
@@ -122,9 +125,11 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                 
             }))
             .catch((error) => {
-                console.log(error);
+                console.log("error: ", error);
 
-                alert(error);
+                let message = error.message + "\n" + error.response.data;
+    
+                alert(message);
 
                 let updatedMilestoneTypes = [...props.milestoneTypes];
 
@@ -175,8 +180,11 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                 set_updateMode(false);
             }))
             .catch((error) => {
-                console.log(error);
-                alert('problem with updating Milestone Type.')
+                console.log("error: ", error);
+
+                let message = error.message + "\n" + error.response.data;
+    
+                alert(message);
             })
     }
 

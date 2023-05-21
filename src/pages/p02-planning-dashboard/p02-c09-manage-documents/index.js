@@ -134,11 +134,13 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating new document ')
+            let message = error.message + "\n" + error.response.data;
 
-            // set_showSpinner_CreateUpdateItem(false);
+            alert(message);
+
+            set_showSpinner_CreateUpdateItem(false);
         })
     }
 
@@ -162,9 +164,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             props.updateProject(props.activeProject);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with deleting milestone from backend: ', error);
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -193,9 +197,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             // set_projects(newProjects);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching projects');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
 
             set_showSpinner_FetchingDocuments(false);
         })
@@ -291,9 +297,13 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with updating Milestone Type.')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+
+            set_showSpinner_CreateUpdateItem(false);
         })
     }
 
@@ -354,7 +364,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             <th>name</th>
                             <th>doc. nr.</th>
                             <th>rev.</th>
-                            <th>date</th>
+                            <th>status updated</th>
                             <th>status</th>
                             <th>comment</th>
                             <th>action</th>
@@ -437,7 +447,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c09-footer-row1'>
-                    <div className='p02-c09-row1-col1'>date</div>
+                    <div className='p02-c09-row1-col1'>status updated at</div>
                     <div className='p02-c09-row1-col2'>
                         <div className='p02-c09-textbox-container'>
                             <input 
@@ -471,7 +481,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c09-footer-row1'>
-                    <div className='p02-c09-row1-col1'>Monuments:</div>
+                    <div className='p02-c09-row1-col1-large'>Select monuments affected with document:</div>
                 </div>
                 <div className='p02-c09-footer-row1'>
                     <div className='p02-c09-monument-container'>
@@ -524,7 +534,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             onClick={updateMode ? () => {
                                 // clearForm();
                                 set_updateMode(false);
-                                set_createMode(true);
+                                // set_createMode(true);
                             } : () => set_createMode(false)} 
                         />
                     </div>

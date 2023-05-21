@@ -158,7 +158,11 @@ const P02_PLANNING_DASHBOARD = () => {
                 set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
             }))
             .catch((error) => {
-                console.log('problem with deleting milestone item: ', error);
+                console.log("error: ", error);
+
+                let message = error.message + "\n" + error.response.data;
+    
+                alert(message);
 
                 set_projects([...originalProjects]);
             })
@@ -183,9 +187,11 @@ const P02_PLANNING_DASHBOARD = () => {
                 set_deleteProjectWarning_toogle(!deleteProjectWarning_toogle);
             }))
             .catch((error) => {
-                console.log(error);
+                console.log("error: ", error);
 
-                alert('Error: Project cannot be deleted.')
+                let message = error.message + "\n" + error.response.data;
+    
+                alert(message);
             })
     }
 
@@ -222,9 +228,11 @@ const P02_PLANNING_DASHBOARD = () => {
             set_projects(newProjects);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching projects')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -251,9 +259,11 @@ const P02_PLANNING_DASHBOARD = () => {
             set_userPermissions([...newPermissions]);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching user data..');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -276,9 +286,11 @@ const P02_PLANNING_DASHBOARD = () => {
             // set_showSpinner_FetchingItems(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching milestone item types')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -304,9 +316,11 @@ const P02_PLANNING_DASHBOARD = () => {
             // set_showSpinner_FetchingItems(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching tasks types');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -337,9 +351,11 @@ const P02_PLANNING_DASHBOARD = () => {
             set_projects([...newArray]);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching projects')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 

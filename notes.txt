@@ -1,3 +1,8 @@
+- when connecting to new database server:
+    - create superuser
+    - call endpoint to seed the database with groups, group-permission, task-types, milestone-types
+
+
 - admin - user that has "all permissions"
 
 - admin can:

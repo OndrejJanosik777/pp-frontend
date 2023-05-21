@@ -96,9 +96,11 @@ const P04_EMPLOYEES = (props) => {
             // console.log("employee deleted sucessfully");
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with deleting employee');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
 
             set_employees([...backupEmployees]);
         })
@@ -118,9 +120,11 @@ const P04_EMPLOYEES = (props) => {
             set_employees(response.data);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching user data..');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -142,9 +146,11 @@ const P04_EMPLOYEES = (props) => {
             set_employees([...updatedEmployees]);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching user data..');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -162,9 +168,11 @@ const P04_EMPLOYEES = (props) => {
             set_userGroups(response.data);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching user groups..');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -190,9 +198,11 @@ const P04_EMPLOYEES = (props) => {
             set_userPermissions([...newPermissions]);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with fetching user data..');
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
  

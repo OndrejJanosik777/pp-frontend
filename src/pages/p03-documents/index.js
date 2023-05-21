@@ -51,9 +51,11 @@ const P03_DOCUMENTS = () => {
             // set_showSpinner_CreateUpdateProject(false);
         }))
         .catch((error) => {
-            console.log(error);
-    
-            alert('problem with fetching documents')
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -83,7 +85,7 @@ const P03_DOCUMENTS = () => {
                                 <th>Name</th>
                                 <th>Rev.</th>
                                 <th>Status</th>
-                                <th>Last Change</th>
+                                <th>Status Updated</th>
                                 <th>Deadline</th>
                                 <th>Responsible</th>
                                 <th>Comment</th>

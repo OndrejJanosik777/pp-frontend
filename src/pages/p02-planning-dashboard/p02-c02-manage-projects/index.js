@@ -71,9 +71,11 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             console.log("projects deleted sucessfully");
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating project')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -120,9 +122,11 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             set_showSpinner_CreateUpdateProject(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating project')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
@@ -179,9 +183,11 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             set_showSpinner_CreateUpdateProject(false);
         }))
         .catch((error) => {
-            console.log(error);
+            console.log("error: ", error);
 
-            alert('problem with creating project')
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
         })
     }
 
