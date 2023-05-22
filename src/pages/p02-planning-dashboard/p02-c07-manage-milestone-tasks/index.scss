@@ -100,12 +100,32 @@
 
             table {
                 width: 100%;
-                thead, tbody {
+                thead {
                     width: 100%;
+
+                    tr:first-child {
+                        width: 100%;
+                        display: grid;
+                        text-align: center;
+                        grid-template-columns:  300px 
+                                                125px 
+                                                150px 
+                                                1fr 
+                                                275px
+                                                75px;
+                    }
+
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 3% 13% 4% 10% 10% 10% 10% 35% 5%;
+                        text-align: center;
+                        // grid-template-columns: repeat(12, 1fr);
+                        grid-template-columns:  25px 125px 75px 75px 
+                                                75px 50px 
+                                                75px 75px 
+                                                1fr 
+                                                75px 100px 100px 
+                                                75px;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
@@ -125,6 +145,16 @@
                     
                     tr {
                         border-bottom: 1px solid #F6F6F6;
+                        width: 100%;
+                        display: grid;
+                        text-align: center;
+                        // grid-template-columns: repeat(12, 1fr);
+                        grid-template-columns:  25px 125px 75px 75px 
+                                                75px 50px 
+                                                75px 75px 
+                                                1fr 
+                                                75px 100px 100px 
+                                                75px;
 
                         td:first-child {
                             border-right: 1px solid #D0D0D0;

@@ -42,9 +42,11 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
     useEffect(() => {
         console.log('component ManageTasks loaded: ... ');
-        // console.log('props.activeProject: ', props.activeProject);
+        console.log('props: ', props);
 
         fetchProjectDocuments();
+
+        fetchTasks(props.activeMilestoneItem);
     }, []);
 
     const showState = () => {
@@ -60,7 +62,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
     const createNewItem = () => {
         // update in local state - no
-        console.log('creating new task')
+        // console.log('creating new task')
         const task_type = props.taskTypes.find(
             elem => elem.name === document.getElementById('task_type').value).id;
         const estimated_hours = document.getElementById('estimated_hours').value;
@@ -131,7 +133,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/tasks/${task.id}/`,
+            url: baseUrl + `/company/tasks/${task.task_id}/`,
             headers: {
                 "Authorization": token
             }
@@ -141,7 +143,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
             let updatedTasks = [...tasks];
 
-            let index =  updatedTasks.findIndex(elem => elem.id === task.id);
+            let index =  updatedTasks.findIndex(elem => elem.id === task.task_id);
 
             updatedTasks.splice(index, 1);
 
@@ -195,11 +197,35 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         })
     }
 
+    const fetchTasks = (milestoneItem) => {
+        axios({
+            method: 'get',
+            url: baseUrl + `/company/get-tasks/?milestone_id=${milestoneItem.id}`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            console.log('milestone tasks fetched succesfully: ', response.data);
+
+            set_tasks([...response.data]);
+
+            set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
+    }
+
     const switchToUpdateMode = (item, index) => {
-        document.getElementById('status').value = item.status;
-        document.getElementById('estimated_hours').value = item.estimated_hours;
-        document.getElementById('booked_hours').value = item.booked_hours;
-        document.getElementById('comment').value = item.comment;
+        document.getElementById('status').value = item.task_status_percentage;
+        document.getElementById('estimated_hours').value = item.task_estimated_hours;
+        document.getElementById('booked_hours').value = item.task_booked_hours;
+        document.getElementById('comment').value = item.task_comment;
 
         set_updateMode(true);
 
@@ -212,13 +238,13 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         const booked_hours = document.getElementById('booked_hours').value;
         const certification_document = item.certification_document;
         const comment = document.getElementById('comment').value;
-        const deadline = item.deadline;
+        const deadline = item.task_deadline;
         const estimated_hours = document.getElementById('estimated_hours').value;
-        const id = item.id;
-        const milestone_item = item.milestone_item;
+        const id = item.task_id;
+        const milestone_item = props.activeMilestoneItem.id;
         const status = document.getElementById('status').value;
-        const task_type = item.task_type;
-        const users = [...item.users];
+        const task_type = item.task_type_id;
+        const users = [];
 
         set_showSpinner_CreateUpdateItem(true);
 
@@ -326,15 +352,27 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                 <table>
                     <thead>
                         <tr>
-                            <th>id</th>
-                            <th>task type</th>
-                            <th>status (%)</th>
-                            <th>milestone item</th>
-                            <th>estimated hours</th>
-                            <th>booked hours</th>
+                            <th>task</th>
+                            <th>milestone</th>
+                            <th>hours</th>
+                            <th>task</th>
                             <th>document</th>
+                            <th>possible</th>
+                        </tr>
+                        <tr>
+                            <th>id</th>
+                            <th>type</th>
+                            <th>status (%)</th>
+                            <th>deadline</th>
+                            <th>deadline</th>
+                            <th>name</th>
+                            <th>estimated</th>
+                            <th>booked</th>
                             <th>comment</th>
-                            <th>action</th>
+                            <th>number</th>
+                            <th>status</th>
+                            <th>status updated</th>
+                            <th>actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -351,14 +389,18 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                             // console.log("certificationDocuments: ", certificationDocuments.find((elem) => elem.id === task.certification_document).number);
 
                             return <tr key={Math.random() * 100000}>
-                                <td>{task.id}</td>
-                                <td>{taskTypes.find(elem => elem.id === task.task_type).name}</td>
-                                <td>{task.status}</td>
-                                <td>{props.activeMilestoneItem.milestone_item_type.short_name}</td>
-                                <td>{task.estimated_hours}</td>
-                                <td>{task.booked_hours}</td>
-                                <td>{certificationDocument}</td>
-                                <td>{task.comment}</td>
+                                <td>{task.task_id}</td>
+                                <td>{task.task_type_name}</td>
+                                <td>{task.task_status_percentage}</td>
+                                <td>{task.task_deadline}</td>
+                                <td>{task.milestone_deadline}</td>
+                                <td>{task.milestone_short_name}</td>
+                                <td>{task.task_estimated_hours}</td>
+                                <td>{task.task_booked_hours}</td>
+                                <td>{task.task_comment}</td>
+                                <td>{task.document_number}</td>
+                                <td>{task.document_acceptance_status}</td>
+                                <td>{task.document_last_status_update}</td>
                                 <td>
                                     { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_task" ) !== -1 ?
                                         <img 
