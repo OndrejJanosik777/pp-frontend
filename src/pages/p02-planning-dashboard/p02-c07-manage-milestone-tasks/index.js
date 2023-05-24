@@ -50,13 +50,6 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     }, []);
 
     const showState = () => {
-        // console.log('props: ', props);
-        // console.log('props.activeProject: ', props.activeProject);
-        // console.log('props.taskTypes: ', props.taskTypes);
-        // console.log('props.activeMilestoneItem: ', props.activeMilestoneItem);
-        // console.log('props.activeMilestoneItem.tasks: ', props.activeMilestoneItem.tasks);
-        // console.log('createMode: ', createMode);
-        // console.log('certificationDocuments: ', certificationDocuments);
         console.log('tasks: ', tasks);
     }
 

@@ -37,20 +37,23 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
 
     useEffect(() => {
-        console.log('component ManageTasks loaded: ... ');
-        // console.log('props.activeProject: ', props.activeProject);
+        console.log('component P02_C10_MANAGE_PROJECT_TASKS loaded: ... ');
+        // console.log('props: ', props);
 
-        // fetchProjectDocuments();
+        fetchProjectDocuments();
+
+        fetchTasks(props.activeProject);
     }, []);
 
     const showState = () => {
-        console.log('...local state of component p02-c10-manage-tasks...');
-        // console.log('props: ', props);
-        // console.log('props.activeProject: ', props.activeProject);
-        // console.log('props.taskTypes: ', props.taskTypes);
+        console.log('...local state of component P02_C10_MANAGE_PROJECT_TASKS...');
+        console.log('props: ', props);
+        console.log('tasks: ', tasks);
+        console.log('certificationDocuments: ', certificationDocuments);
         // console.log('props.activeMilestoneItem: ', props.activeMilestoneItem);
         // console.log('props.activeMilestoneItem.tasks: ', props.activeMilestoneItem.tasks);
         // console.log('createMode: ', createMode);
@@ -170,40 +173,64 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     }
 
     const fetchProjectDocuments = () => {
-        // axios({
-        //     method: 'get',
-        //     url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
-        //     headers: {
-        //         "Authorization": token
-        //     }
-        // })
-        // .then((response => {
-        //     console.log('project documents fetched succesfully: ', response.data);
+        axios({
+            method: 'get',
+            url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            console.log('project documents fetched succesfully: ', response.data);
 
-        //     let certDocumentsNoTask = [];
+            let certDocumentsNoTask = [];
 
-        //     response.data.map((document) => {
-        //         if (document.task === null) {
-        //             certDocumentsNoTask.push(document);
-        //         }
+            response.data.map((document) => {
+                if (document.task === null) {
+                    certDocumentsNoTask.push(document);
+                }
 
 
-        //     })
+            })
 
-        //     set_certificationDocumentsNoTask([...certDocumentsNoTask]);
-        //     set_certificationDocuments([...response.data]);
+            set_certificationDocumentsNoTask([...certDocumentsNoTask]);
+            set_certificationDocuments([...response.data]);
 
-        //     // props.updateProject(props.activeProject);
+            // props.updateProject(props.activeProject);
 
-        //     // set_showSpinner_CreateUpdateItem(false);
-        // }))
-        // .catch((error) => {
-            // console.log("error: ", error);
+            // set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
 
-            // let message = error.message + "\n" + error.response.data;
+            let message = error.message + "\n" + error.response.data;
 
-            // alert(message);
-        // })
+            alert(message);
+        })
+    }
+
+    const fetchTasks = (project) => {
+        axios({
+            method: 'get',
+            url: baseUrl + `/company/get-tasks/?project_id=${project.id}`,
+            headers: {
+                "Authorization": token
+            }
+        })
+        .then((response => {
+            console.log('project tasks fetched succesfully: ', response.data);
+
+            set_tasks([...response.data]);
+
+            set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
     }
 
     const switchToUpdateMode = (item, index) => {
@@ -325,12 +352,15 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                         src={delete_cross} 
                         alt=''
                         onClick={showState}
-                    />
-                    <img 
-                        className='p02-c10-icons' 
-                        src={create_new} alt='' 
-                        // onClick={() => set_createMode(!createMode)} 
                     /> */}
+                    {/* { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_task" ) !== -1 ?
+                        <img 
+                            className='p02-c10-icons' 
+                            src={create_new} alt='' 
+                            onClick={() => set_createMode(!createMode)} 
+                        /> : 
+                        <div></div>
+                    } */}
                 </div>
                 <div className='p02-c10-nav-bar-right'>
                     <div className='p02-c10-textbox-container'>
@@ -339,10 +369,19 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                             type='text' 
                             placeholder='Search ...' 
                         />
-                        <img className='p02-c10-img' src={magnifier} alt='' />
+                        <img 
+                            className='p02-c10-img' 
+                            src={magnifier} 
+                            alt='' 
+                        />
                     </div>
                     <img className='p02-c10-icons' src={edit_panels} alt='' />
-                    <img className='p02-c10-icons' src={questionmark_blue} alt='' />
+                    <img 
+                        className='p02-c10-icons' 
+                        src={questionmark_blue} 
+                        alt='' 
+                        onClick={() => showState()}
+                    />
                     <input 
                         type='button' 
                         className='p02-c10-button' 
@@ -352,59 +391,77 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                 </div>
             </div>
             <div className='p02-c10-content'>
-                <table className='p02-c10-table-01'>
+                <table>
                     <thead>
                         <tr>
                             <th>task</th>
                             <th>milestone</th>
                             <th>hours</th>
-                            <th></th>
+                            <th>task</th>
+                            <th>document</th>
+                            <th>possible</th>
                         </tr>
-                    </thead>
-                </table>
-                <table className='p02-c10-table-02'>
-                    <thead>
                         <tr>
                             <th>id</th>
                             <th>type</th>
-                            <th>deadline</th>
                             <th>status (%)</th>
-                            <th>item</th>
                             <th>deadline</th>
+                            <th>deadline</th>
+                            <th>name</th>
                             <th>estimated</th>
                             <th>booked</th>
                             <th>comment</th>
-                            
+                            <th>number</th>
+                            <th>status</th>
+                            <th>status updated</th>
+                            <th>actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {/* TODO:  */}
                         {tasks.map((task, index) => {
+                            let certificationDocument = undefined;
+
+                            if (task.certification_document !== null) {
+                                // certificationDocument = certificationDocuments.find(elem => elem.id === task.certification_document).number;
+                            }
+
+                            console.log("certificationDocuments: ", certificationDocuments.length);
+                            // console.log("certificationDocuments: ", task.certification_document);
+                            // console.log("certificationDocuments: ", certificationDocuments.find((elem) => elem.id === task.certification_document).number);
+
                             return <tr key={Math.random() * 100000}>
-                                <td>{task.id}</td>
-                                <td>{taskTypes.find(elem => elem.id === task.task_type).name}</td>
-                                <td>{task.status}</td>
-                                <td>{props.activeMilestoneItem.milestone_item_type.short_name}</td>
-                                <td>{task.estimated_hours}</td>
-                                <td>{task.booked_hours}</td>
-                                <td>{task.certification_document === null ?
-                                    "no" :
-                                    "yes"
-                                }</td>
-                                <td>{task.comment}</td>
+                                <td>{task.task_id}</td>
+                                <td>{task.task_type_name}</td>
+                                <td>{task.task_status_percentage}</td>
+                                <td>{task.task_deadline}</td>
+                                <td>{task.milestone_deadline}</td>
+                                <td>{task.milestone_short_name}</td>
+                                <td>{task.task_estimated_hours}</td>
+                                <td>{task.task_booked_hours}</td>
+                                <td>{task.task_comment}</td>
+                                <td>{task.document_number}</td>
+                                <td>{task.document_acceptance_status}</td>
+                                <td>{task.document_last_status_update}</td>
                                 <td>
-                                    <img 
-                                        className='p02-c10-icons' 
-                                        src={pencil_edit} 
-                                        alt='' 
-                                        onClick={() => switchToUpdateMode(task, index)} 
-                                    />
-                                    <img 
-                                        className='p02-c10-icons' 
-                                        src={delete_cross} 
-                                        alt='' 
-                                        onClick={() => deleteItem(task)} 
-                                    />
+                                    {/* { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_task" ) !== -1 ?
+                                        <img 
+                                            className='p02-c10-icons' 
+                                            src={pencil_edit} 
+                                            alt='' 
+                                            onClick={() => switchToUpdateMode(task, index)} 
+                                        /> :
+                                        <div></div>
+                                    } 
+                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_task" ) !== -1 ?
+                                        <img 
+                                            className='p02-c10-icons' 
+                                            src={delete_cross} 
+                                            alt='' 
+                                            onClick={() => deleteItem(task)} 
+                                        /> :
+                                        <div></div>
+                                    } */}
                                 </td>
                             </tr>
                         })}
@@ -413,50 +470,63 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
             </div>
             <div className={createMode || updateMode ? 'p02-c10-win-footer' : 'p02-c10-win-footer-hidden'}>
                 <div className='p02-c10-footer-row1'>
-                    <label 
-                        htmlFor='milestone_item_type' 
-                        className='p02-c10-row1-col1'
-                    >task type</label>
-                    <div className='p02-c10-row1-col2'>
-                        <div className='p02-c10-textbox-container'>
-                            <select 
-                                id="task_type" 
-                            >
-                                <option value="" id='default-milestonetype'>--Please choose an option--</option>
-                                {taskTypes.map((item) => {
-                                    return <option 
-                                        key={Math.random() * 100000} 
-                                        id={`task_type_${item.id}`} 
-                                        value={`${item.name}`}
-                                        // onClick={() => console.log('option clicked.. ')}
-                                    >{`${item.name}`}
-                                    </option>
-                                })}
-                            </select>
+                    { updateMode ? 
+                        <div></div> :
+                        <label 
+                            htmlFor='milestone_item_type' 
+                            className='p02-c10-row1-col1'
+                        >task type</label>
+
+                    }
+                    { updateMode ?
+                        <div></div> :
+                        <div className='p02-c10-row1-col2'>
+                            <div className='p02-c10-textbox-container'>
+                                <select 
+                                    id="task_type" 
+                                >
+                                    <option value="" id='default-milestonetype'>--Please choose an option--</option>
+                                    {taskTypes.map((item) => {
+                                        return <option 
+                                            key={Math.random() * 100000} 
+                                            id={`task_type_${item.id}`} 
+                                            value={`${item.name}`}
+                                            // onClick={() => console.log('option clicked.. ')}
+                                        >{`${item.name}`}
+                                        </option>
+                                    })}
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <label 
-                        htmlFor='milestone_item_type' 
-                        className='p02-c10-row1-col1-w2'
-                    >certification document</label>
-                    <div className='p02-c10-row1-col2'>
-                        <div className='p02-c10-textbox-container'>
-                            <select 
-                                id="certification-document" 
-                            >
-                                <option value="-1" id='empty-documents'>--no document--</option>
-                                {certificationDocumentsNoTask.map((item) => {
-                                    return <option 
-                                        key={Math.random() * 100000} 
-                                        id={`${item.id}`} 
-                                        value={`${item.id}`}
-                                        // onClick={() => console.log('option clicked.. ')}
-                                    >{`${item.number}, ${item.revision}, ${item.name}`}
-                                    </option>
-                                })}
-                            </select>
+                    }
+                    { updateMode ?
+                        <div></div> :
+                        <label 
+                            htmlFor='milestone_item_type' 
+                            className='p02-c10-row1-col1-w2'
+                        >certification document</label>
+                    }
+                    { updateMode ?
+                        <div></div> :
+                        <div className='p02-c10-row1-col2'>
+                            <div className='p02-c10-textbox-container'>
+                                <select 
+                                    id="certification_document" 
+                                >
+                                    <option value="-1" id='empty-documents'>--no document--</option>
+                                    {certificationDocumentsNoTask.map((item) => {
+                                        return <option 
+                                            key={Math.random() * 100000} 
+                                            id={`${item.id}`} 
+                                            value={`${item.id}`}
+                                            // onClick={() => console.log('option clicked.. ')}
+                                        >{`${item.number}, ${item.revision}, ${item.name}`}
+                                        </option>
+                                    })}
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 <div className='p02-c10-footer-row1'>
                     <div className='p02-c10-row1-col1'>status (%)</div>
@@ -541,7 +611,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                     <div className='p02-c10-row2-col2'>
                         <input 
                             type='button' 
-                            className='p02-c10-button' 
+                            className='p02-c06-button' 
                             value={updateMode ? 'Cancel' : 'Close'} 
                             onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
                         />
@@ -549,7 +619,6 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                 </div>
             </div>
         </div>
-
     </div> );
 }
  

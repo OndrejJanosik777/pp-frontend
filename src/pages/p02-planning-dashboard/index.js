@@ -452,6 +452,7 @@ const P02_PLANNING_DASHBOARD = () => {
                         activeProject={activeProject}
                         // activeMilestoneItem={activeMilestoneItem}
                         updateProject={updateProject}
+                        userPermissions={userPermissions}
                         // updateProjectInState={updateProjectInState}
                         // milestoneTypes={milestoneTypes}
                         // taskTypes={taskTypes}
