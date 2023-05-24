@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import planeSVG from './assets/airplane.svg';
-import MilestoneTag from '../milestone-tag';
+import P02_C05_C01_MILESTONE_TAG from './p02-c05-c01-milestone-tag';
 import './index.scss';
-
+ 
 const P02_C05_PROJECT = (props) => {
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -69,6 +69,10 @@ const P02_C05_PROJECT = (props) => {
         set_totalTasks(totalTasks);
 
     }, []);
+
+    const showState = () => {
+        console.log('showing state of component: ""P02_C05_PROJECT"', props);
+    }
 
     const display_modal_createNewTask = (project, milestoneItem) => {
         console.log(`creating new Task for milestone ${milestoneItem.id} within project ${project.id}`);
@@ -141,18 +145,34 @@ const P02_C05_PROJECT = (props) => {
     const middleStyle = {
         display: 'flex',
         flexDirection: 'column',
-        height: `${props.project.milestone_items.length * 50}px`,
-        minHeight: '10rem',
+        height: `${props.project.milestone_items.length * 35 + 50}px`,
+        minHeight: '100%',
         borderWidth: '1px',
         borderColor: 'black',
         borderStyle: 'solid',
         position: 'relative',
         // backgroundColor: 'green',
         width: '100%',
+        // zIndex: -10,
+    }
+
+    const todayColumn = {
+        width: '1rem',
+        height: '100%',
+        backgroundColor: 'greenyellow',
+        position: 'absolute',
+        left: `${props.dateOffset * -1}rem`,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // transform: 'rotate(90deg)',
+        textOrientation: 'upright',
+        writingMode: 'vertical-rl',
+        zIndex: 0,
     }
 
     return ( <div className='p02-c05-project'>
-        <div className='p02-left-container'>
+        <div className='p02-c05-left-container'>
             <div>{`#${props.project.id} : ${props.project.number}`}</div>
             <div>{props.project.short_name}</div>
             <div>
@@ -160,11 +180,11 @@ const P02_C05_PROJECT = (props) => {
                     className='plane-icons'
                     src={planeSVG}
                     alt=''
-                // onClick={() => editMilestoneType(milestoneType.id)} 
+                    onClick={() => showState()} 
                 />
             </div>
             <div 
-                className='p02-row-left'
+                className='p02-c05-row-left'
                 onClick={
                     () => {
                         props.set_activeProject(props.project);
@@ -175,7 +195,7 @@ const P02_C05_PROJECT = (props) => {
                 {`Monuments: ${props.project.monuments.length}`}
             </div>
             <div 
-                className='p02-row-left'
+                className='p02-c05-row-left'
                 onClick={
                     () => {
                         props.set_activeProject(props.project);
@@ -186,7 +206,7 @@ const P02_C05_PROJECT = (props) => {
                 {`Documents: ${certificationDocumentIds.length}`}
             </div>
             <div 
-                className='p02-row-left'
+                className='p02-c05-row-left'
                 onClick={
                     () => {
                         props.set_activeProject(props.project);
@@ -197,7 +217,7 @@ const P02_C05_PROJECT = (props) => {
                 {`Milestones: ${achievedMilestones.length}/${props.project.milestone_items.length}`}
             </div>
             <div 
-                className='p02-row-left'
+                className='p02-c05-row-left'
                 onClick={
                     () => {
                         props.set_activeProject(props.project);
@@ -213,7 +233,7 @@ const P02_C05_PROJECT = (props) => {
             props.project.milestone_items.map((milestoneItem, index) => {
                 // console.log('drawing milestone items: ', index)
 
-                return < MilestoneTag
+                return < P02_C05_C01_MILESTONE_TAG
                     key={Math.random() * 100000}
                     dateOffset={props.dateOffset}
                     topOffset={(index - 1) * 30}  // offset in px from top
@@ -234,6 +254,7 @@ const P02_C05_PROJECT = (props) => {
                 />
             })
             }
+            <div className='p02-c05-todayColumn' style={todayColumn}>TODAY</div>
         </div>
     </div> );
 }

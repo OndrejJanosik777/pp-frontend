@@ -4,7 +4,6 @@ import axios from 'axios';
 import moment from 'moment';
 // icons, pictures
 import planeSVG from './assets/airplane.svg';
-import MilestoneTag from './milestone-tag';
 import home from './assets/home.png';
 import small_arrow_down from './assets/small_arrow_down.png';
 import arrow_left from './assets/arrow_left.png';
@@ -165,33 +164,6 @@ const P02_PLANNING_DASHBOARD = () => {
                 alert(message);
 
                 set_projects([...originalProjects]);
-            })
-    }
-
-    const deleteProject = (project) => {
-        const index = projects.findIndex(elem => elem.id === project.id)
-
-        let modifiedProjects = [...projects];
-        modifiedProjects.splice(index, 1);
-
-        set_projects([...modifiedProjects]);
-
-        axios({
-            method: 'delete',
-            url: baseUrl + `/company/projects/${project.id}/`,
-            headers: {
-                "Authorization": token
-            }
-        })
-            .then((response => {
-                set_deleteProjectWarning_toogle(!deleteProjectWarning_toogle);
-            }))
-            .catch((error) => {
-                console.log("error: ", error);
-
-                let message = error.message + "\n" + error.response.data;
-    
-                alert(message);
             })
     }
 

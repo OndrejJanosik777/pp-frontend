@@ -1,0 +1,67 @@
+.p02-c05-c01-milestone-tag {
+    position: relative;
+    width: 100%;
+    // z-index: 10;
+
+    .p02-c05-c01-dragable {
+        // border-radius: 8px;
+        position: relative;
+        z-index: 10;
+
+        &:hover {
+            background-color: rgb(42, 165, 42);
+            color: rgb(255, 255, 255);
+        }
+    }
+    
+    .p02-c05-c01-not-dragable {
+        // border-radius: 8px;
+        position: relative;
+        z-index: 10;
+
+        &:hover {
+            // background-color: rgb(136, 83, 83);
+            color: black;
+        }
+    }
+
+    .p02-c05-c01-context-container {
+        padding-inline-start: 0;
+        // padding: 0.1rem 0.4rem;
+        // position: absolute;
+        height: fit-content;
+        width: 100%;
+        line-height: normal;
+        list-style-type: none;
+        background-color: rgb(153, 153, 173);
+        border: 1px solid rgb(0, 0, 0);
+        border-radius: 3px;
+        z-index: 15;
+        padding: 2px 2px;
+
+        .p02-c05-c01-context-item {
+            padding: 1px 2px;
+            // width: 90px;
+            color: white;
+
+            .p02-c05-c01-badge {
+                width: 90px;
+                // background-color: azure;
+                // padding: 0px 1px;
+    
+                &:hover {
+                    cursor: pointer;
+                    background-color: black;
+                    color: white;
+                    // transform: scale(1.1);
+                    // transition: 0.1s;
+                    // text-align: ;
+                }
+            }
+        }
+    }
+
+    .p02-c05-c01-tasks {
+        position: absolute;
+    }
+}

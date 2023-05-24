@@ -3,7 +3,7 @@
     grid-template-columns: 8rem 1fr;
     position: relative;
 
-    .p02-left-container {
+    .p02-c05-left-container {
         border: 1px solid black;
         min-height: 10rem;
         display: flex;
@@ -14,8 +14,9 @@
         width: 8rem;
         max-width: 8rem;
         overflow: hidden;
+        z-index: 14;
 
-        .p02-row-left {
+        .p02-c05-row-left {
             width: 100%;
             text-align: left;
             padding-left: 0.2rem;
@@ -28,6 +29,14 @@
                 background-color: #797474;
                 color: #F1F1F1;
             }
+        }
+
+        .p02-c05-todayColumn {
+            background-color: rgba(172, 255, 47, 0.253);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(90deg);
         }
     }
     
