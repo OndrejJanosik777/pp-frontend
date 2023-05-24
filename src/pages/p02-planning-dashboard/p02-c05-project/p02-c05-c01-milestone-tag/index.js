@@ -22,6 +22,8 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const [deltaTag, set_deltaTag] = useState(10);
     const [deltaStart, set_deltaStart] = useState(props.deltaStart);
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
+    const [tasks, set_tasks] = useState([...props.milestoneItem.tasks]);
+    const [tasksDisplayed, set_tasksDisplayed] = useState(false);
 
     useEffect(() => {
         // console.log('props.deltaStart: ', props.deltaStart)
@@ -85,6 +87,12 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         }
     }, [isMoving])
 
+    const showState = () => {
+        console.log('props: ', props);
+        console.log('tasks: ', tasks);
+        console.log('leftOffset: ', leftOffset);
+    }
+
     const mouseClicked = (event) => {
         // console.log('mouse clicked: ');
         // console.log('leftOffset: ', leftOffset);
@@ -132,6 +140,10 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         justifyContent: `center`,
         alignItems: `center`,
     }
+
+    
+
+    // const TaskTag = 
 
     const MilestoneTagStyle = {
         paddingLeft: `${leftOffset}px`,
@@ -205,9 +217,9 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                     <li className='p02-c05-c01-context-item'>
                         <span
                             className="p02-c05-c01-badge"
-                        // onClick={() => displayNewMilestone(project)}
+                            onClick={() => set_tasksDisplayed(!tasksDisplayed)}
                         >
-                            Display Tasks
+                            {tasksDisplayed ? 'Hide Tasks' : "Show Tasks"}
                         </span>
                     </li>
                 </ul>
@@ -215,12 +227,64 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             :
             <div></div>}
         {milestoneTag_visibility ?
-            <div style={TaskNumberCircle}>
+            <div 
+                style={TaskNumberCircle}
+                onClick={() => showState()}
+            >
                 {props.milestoneItem.tasks.length}
             </div>
             :
             <div></div>
         }
+        {tasks.map((task, index) => {
+            let taskDeadline = moment(task.deadline);
+            let milestoneDeadline = moment(props.milestoneItem.date);
+
+            let difference = taskDeadline.diff(milestoneDeadline, "days");
+
+            console.log('difference tags: ', difference);
+
+            const TaskTag = {
+                position: 'absolute',
+                marginLeft: `${leftOffset - 80}px`,
+                marginTop: `${10 * index}px`,
+                backgroundColor: `lightgrey`,
+                width: `80px`,
+                height: `10px`,
+                fontSize: `10px`,
+                color: `black`,
+                // borderRadius: `50%`,
+                zIndex: `10`,
+                display: `flex`,
+                justifyContent: `center`,
+                alignItems: `center`,
+                borderWidth: '1px',
+                borderColor: 'black',
+                borderStyle: 'solid',
+            }
+            
+            if (tasksDisplayed && milestoneTag_visibility) {
+                return <div
+                        style={TaskTag}
+                        onClick={() => showState()}
+                        key={Math.random() * 100000}
+                    >
+                    task
+                </div>
+            }
+        })}
+        {/* {milestoneTag_visibility ?
+            {tasks.map((task))}
+            <div 
+                style={TaskTag}
+                // className='p02-c05-c01-tasks'
+                onClick={() => showState()}
+            >
+                task
+            </div>
+            :
+            <div></div>
+        } */}
     </div>);
 }
 
