@@ -1,0 +1,35 @@
+.p02-c05-c01-task-tag {
+    color: black;
+    display: flex;
+    // flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 20px;
+    font-size: 10px;
+    z-index: 10;
+    
+    .p02-c05-c01-task-bar {
+        background-color: rgb(150, 150, 150);
+        height: 10px;
+        width: 100%;
+        border: 2px solid black;
+
+        &:hover {
+            cursor: pointer;
+            // background-color: rgb(44, 44, 44);
+            // color: white;
+            border: 2px dotted rgb(172, 241, 81);
+        }
+
+        .p02-c05-c01-bar-progress {
+            background-color: rgb(172, 241, 81);
+            height: 6px;
+        } 
+
+        .p02-c05-c01-task-label {
+            // padding-left: 5px;
+            // background-color: coral;
+        }
+    }
+}

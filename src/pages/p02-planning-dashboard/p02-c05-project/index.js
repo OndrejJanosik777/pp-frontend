@@ -307,7 +307,6 @@ const P02_C05_PROJECT = (props) => {
                     topOffset={(index - 1) * 30}  // offset in px from top
                     project={props.project}
                     milestoneItem={milestoneItem}
-                    deltaStart={50 + 8*16}
                     displayLimit={props.displayedDays}
                     updateMilestoneItemDeadline={updateMilestoneItemDeadline}
                     updateMilestoneItem={updateMilestoneItem}

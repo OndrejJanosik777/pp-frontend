@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './index.scss';
 import moment from 'moment';
+import P02_C02_C01_TASK_TAG from './p02-c05-c01-task-tag';
 
 const P02_C05_C01_MILESTONE_TAG = (props) => {
     const getStartPosition = () => {
@@ -27,14 +28,12 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     // const [loaded, setLoaded] = useState([]);
-    const [leftOffsetMilestone, set_leftOffsetMilestone] = useState(0);
-    const [leftOffsetTasks, set_leftOffsetTasks] = useState([]); // relative offset vs. milestone item
-    const [originalLeftOffset, set_originalLeftOffset] = useState(0);
-    const [milestoneIsMoving, set_milestoneIsMoving] = useState(false);
+    const [leftOffsetMilestone, set_leftOffsetMilestone] = useState(0);     // distance from beginning of left center edge to milestone in px
+    const [leftOffsetTasks, set_leftOffsetTasks] = useState([]);            // relative offset vs. milestone item per task
+    const [initialLeftOffset, set_initialLeftOffset] = useState(0);         // used to calculate delta-days
+    const [milestoneIsMoving, set_milestoneIsMoving] = useState(false);     
     const [milestoneTag_visibility, set_milestoneTag_visibility] = useState(false);
     const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
-    const [deltaTag, set_deltaTag] = useState(10);
-    const [deltaStart, set_deltaStart] = useState(props.deltaStart);
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [tasks, set_tasks] = useState([]);
     const [tasksDisplayed, set_tasksDisplayed] = useState(true);
@@ -42,7 +41,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const showState = () => {
         console.log('props: ', props);
         console.log('tasks: ', tasks);
-        console.log('leftOffset: ', leftOffsetMilestone);
+        console.log('leftOffsetMilestone: ', leftOffsetMilestone);
         console.log('leftOffsetTasks: ', leftOffsetTasks);
     }
 
@@ -69,14 +68,14 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             // if (difference < props.displayLimit - 1) {
             set_milestoneTag_visibility(true);
             set_leftOffsetMilestone(difference * 16);
-            set_originalLeftOffset(difference * 16);
+            set_initialLeftOffset(difference * 16);
         }
     }, [props.dateOffset]);
 
     const handleMilestoneTagMove = useRef((event) => {
         // let newLeftOffset = event.clientX - 9 * 16;
         // let newLeftOffset = event.clientX - 22 * 10;
-        let newLeftOffset = event.clientX - deltaTag - deltaStart;
+        let newLeftOffset = event.clientX - 10 - (50 + 8*16); // 50 + 8*16 => distance screen left edge to beginning project center section
         // console.log("event.clientX: ", event.clientX);
         // console.log("startingX: ", startingX);
         // console.log("leftOffset: ", leftOffset);
@@ -103,7 +102,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             window.removeEventListener('mousemove', handleMilestoneTagMove.current);
 
             // update date in dashboard component
-            let deltaDays = parseInt((leftOffsetMilestone - originalLeftOffset) / 16);
+            let deltaDays = parseInt((leftOffsetMilestone - initialLeftOffset) / 16);
             // console.log('deltaDays: ', deltaDays) // second day from dateOffset
 
             if (deltaDays !== 0) {
@@ -183,12 +182,51 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         // console.log(`context menu clicked: ${event.clientX} ${event.clientY}`);
     }
 
+    const updateTaskDeadline = (task, days) => {
+        // local state update
+        let updatedTasks = [...tasks];
+        let backupTasks = [...tasks];
+
+        let index = updatedTasks.findIndex(elem => elem.task_id === task.task_id);
+
+        updatedTasks[index].task_deadline = moment(task.task_deadline).add(days, 'days').format("YYYY-MM-DD");
+
+        updatedTasks.sort((a, b) => {
+            return moment(a.task_deadline) - moment(b.task_deadline);
+        });
+
+        set_tasks([...updatedTasks]);
+
+        // database update
+        axios({
+            method: 'patch',
+            url: baseUrl + '/company/tasks/' + updatedTasks[index].task_id + '/',
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                deadline: updatedTasks[index].task_deadline,
+            }
+        })
+        .then((response => {
+            // console.log('tasks deadline updated in database: ', response.data);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+
+            set_tasks([...backupTasks]);
+        });
+    }
+
     const ContextMenuStyle = {
         position: 'absolute',
         marginLeft: `${leftOffsetMilestone}px`,
         marginTop: `${-25}px`,
         zIndex: `15`,
-        // width: `100px`,
     }
 
     const TaskNumberCircle = {
@@ -297,68 +335,17 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             <div></div>
         }
         {tasks.map((task, index) => {
-            let taskDeadline = moment(task.task_deadline);
-            let milestoneDeadline = moment(props.milestoneItem.date);
-            let difference = taskDeadline.diff(milestoneDeadline, "days");
-            let taskWidth = Math.ceil(task.task_estimated_hours / 8);
-
-            // console.log('difference tags: ', difference);
-
-            const TaskTag = {
-                marginLeft: `${leftOffsetMilestone + (difference - taskWidth) * 16}px`,
-                // marginLeft: `${leftOffsetTasks[index]}`,
-                marginTop: `${10 * index}px`,
-            }
-
-            const TaskBar = {
-                width: `${taskWidth}rem`,
-            }
-
-            const BarProgress = {
-                width: `${task.task_status_percentage}%`,
-            }
-            
             if (tasksDisplayed && milestoneTag_visibility) {
-
-
-                return <div
-                        style={TaskTag}
-                        // onClick={() => showState()}
-                        className='p02-c05-c01-tasks'
-                        key={Math.random() * 100000}
-                        // onClick={() => console.log('task clicked...')}
-                        onClick={() => props.updateTaskDeadline(-1, task)}
-                    >
-                        <div 
-                            className='p02-c05-c01-task-bar' 
-                            style={TaskBar}
-                        >
-                        <div 
-                            className='p02-c05-c01-bar-progress'
-                            style={BarProgress}
-                        ></div>
-                        </div>
-                        <div>
-                            {task.document_number === null ?
-                                task.task_comment :
-                                `${task.document_number} : ${task.document_name}`
-                            }
-                        </div>
-                </div>
+                return <P02_C02_C01_TASK_TAG 
+                    key={Math.random() * 100000}
+                    milestoneItem = {props.milestoneItem}
+                    index = {index}
+                    task = {task}
+                    leftOffsetMilestone = {leftOffsetMilestone}
+                    updateTaskDeadline = {updateTaskDeadline}
+                />
             }
         })}
-        {/* {milestoneTag_visibility ?
-            {tasks.map((task))}
-            <div 
-                style={TaskTag}
-                // className='p02-c05-c01-tasks'
-                onClick={() => showState()}
-            >
-                task
-            </div>
-            :
-            <div></div>
-        } */}
     </div>);
 }
 
