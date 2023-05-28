@@ -98,15 +98,15 @@ const P02_C05_PROJECT = (props) => {
 
         let projectIndex = props.projects.findIndex(element => element.id === project.id);
         let milestoneIndex = props.projects[projectIndex].milestone_items.findIndex(element => element.id === milestoneItem.id);
-        let originalDate = props.projects[projectIndex].milestone_items[milestoneIndex].date;
+        let currentDeadline = props.projects[projectIndex].milestone_items[milestoneIndex].date;
         // console.log('originalDate: ', originalDate);
 
-        let newDate = moment(originalDate).add(days, 'days').format("YYYY-MM-DD");
+        let newDeadline = moment(currentDeadline).add(days, 'days').format("YYYY-MM-DD");
         // console.log('newDate: ', newDate);
 
         let originalProjects = [...props.projects];
         let updatedProjects = [...props.projects];
-        updatedProjects[projectIndex].milestone_items[milestoneIndex].date = newDate;
+        updatedProjects[projectIndex].milestone_items[milestoneIndex].date = newDeadline;
         // console.log('updateddisplayedProjects: ', updateddisplayedProjects);
         // updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
         props.set_projects([...updatedProjects]);
@@ -129,7 +129,7 @@ const P02_C05_PROJECT = (props) => {
             }
         })
         .then((response => {
-            console.log('milestone deadline updated in database: ', response.data);
+            // console.log('milestone deadline updated in database: ', response.data);
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -140,6 +140,40 @@ const P02_C05_PROJECT = (props) => {
 
             props.set_projects([...originalProjects]);
         })
+    }
+
+    const updateTaskDeadline = (days, task) => {
+        console.log('updating deadline: ', task);
+        console.log('with days: ', days);
+
+        let currentDeadline = moment(task.task_deadline);
+
+        let newDeadline = moment(currentDeadline).add(days, 'days').format("YYYY-MM-DD");
+
+        axios({
+            method: 'patch',
+            url: baseUrl + '/company/tasks/' + task.task_id + "/",
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                id: task.task_id,
+                // name: updatedMilestoneItem.name,
+                // milestone_item_type: milestoneItem.id,
+                deadline: newDeadline,
+                // comment: updatedMilestoneItem.comment
+            }
+        })
+        .then((response => {
+            // console.log('milestone deadline updated in database: ', response.data);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        });
     }
 
     const middleStyle = {
@@ -170,6 +204,40 @@ const P02_C05_PROJECT = (props) => {
         writingMode: 'vertical-rl',
         zIndex: 0,
     }
+
+    const getDaysMarkers = () => {
+        let result
+
+        for (let i=0; i<props.displayedDays; i++) {
+            
+            const dayMarkers = {
+                width: '1rem',
+                height: '100%',
+                borderLeftColor: "lightgrey",
+                borderLeftWidth: '1px',
+                borderLeftStyle: 'solid',
+                zIndex: 1,
+                position: 'absolute',
+                left: `${16 * 2 - 1}px`,
+            }
+    
+            let test = 
+                <div id='test-element' style={{dayMarkers}}>
+                    {/* <div style={dayMarkers}></div> */}
+                    {/* <div style={dayMarkers}></div> */}
+                    {/* <div style={dayMarkers}></div> */}
+                </div>
+            ;
+
+            // document.getElementById('test-element').appendChild(<div style={{dayMarkers}}></div>)
+            // document.getElementById('test-element').appendChild(<div style={{dayMarkers}}></div>)
+            // document.getElementById('test-element').appendChild(<div style={{dayMarkers}}></div>)
+
+            return test;
+        }
+
+    }
+
 
     return ( <div className='p02-c05-project'>
         <div className='p02-c05-left-container'>
@@ -243,6 +311,7 @@ const P02_C05_PROJECT = (props) => {
                     displayLimit={props.displayedDays}
                     updateMilestoneItemDeadline={updateMilestoneItemDeadline}
                     updateMilestoneItem={updateMilestoneItem}
+                    updateTaskDeadline={updateTaskDeadline}
                     display_modal_createNewTask={display_modal_createNewTask}
                     // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
                     // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
@@ -254,7 +323,8 @@ const P02_C05_PROJECT = (props) => {
                 />
             })
             }
-            <div className='p02-c05-todayColumn' style={todayColumn}>TODAY</div>
+            <div style={todayColumn}>TODAY</div>
+            {getDaysMarkers()}
         </div>
     </div> );
 }
