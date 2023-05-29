@@ -54,7 +54,7 @@ const ManageCertificationDocuments = (props) => {
             .catch((error) => {
                 console.log(error);
 
-                alert('problem with fetching monuments');
+                alert('problem with fetching documents');
             })
     }
 

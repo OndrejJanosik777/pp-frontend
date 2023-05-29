@@ -27,9 +27,15 @@
             height: 6px;
         } 
 
-        .p02-c05-c01-task-label {
-            // padding-left: 5px;
-            // background-color: coral;
-        }
+    }
+
+    .p02-c05-c01-task-label {
+        padding-left: 2px;
+        // height: 10px;
+        
+        // &:hover {
+        //     font-weight: bold;
+        //     background-color: aquamarine;
+        // }
     }
 }

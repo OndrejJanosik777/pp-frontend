@@ -55,7 +55,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
             // update date in dashboard component
             let deltaDays = parseInt((offsetTask - initialOffsetTask) / 16);
-            console.log('deltaDays: ', deltaDays) // second day from dateOffset
+            // console.log('deltaDays: ', deltaDays) // second day from dateOffset
 
             if (deltaDays !== 0) {
                 props.updateTaskDeadline(task, deltaDays);
@@ -97,7 +97,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
         className='p02-c05-c01-task-tag'
         onClick={(e) => taskClicked(e)}
         // title={props.milestoneItem.milestone_item_type.name + '\n' + props.milestoneItem.date}
-        title={`task deadline: \n${task.task_deadline}`}
+        title={`task deadline: \n${task.task_deadline} \n(${task.task_status_percentage}%)`}
     >
         <div 
             className='p02-c05-c01-task-bar' 

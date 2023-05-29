@@ -49,7 +49,7 @@ const C01_NAVBAR = () => {
             }
         })
         .then((response => {
-            console.log('user data fetched: ', response.data)
+            // console.log('user data fetched: ', response.data)
 
             set_loggedUser(response.data)
         }))

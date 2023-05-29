@@ -12,7 +12,7 @@ const P02_C01_TIMELINE = (props) => {
 
 
     useEffect(() => {
-        console.log('timeline created...');
+        // console.log('timeline created...');
         // console.log('box width: ', props.box.clientWidth);
     }, []);
 

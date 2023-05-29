@@ -99,7 +99,7 @@ const P02_PLANNING_DASHBOARD = () => {
     })
     // hook to run while loading component
     useEffect(() => {
-        console.log('dashboard Projects loaded...');
+        // console.log('dashboard Projects loaded...');
 
         window.addEventListener('resize', handleResize.current);
 
@@ -132,7 +132,8 @@ const P02_PLANNING_DASHBOARD = () => {
 
         axios({
             method: 'get',
-            url: baseUrl + '/company/projects/',
+            // url: baseUrl + '/company/projects/',
+            url: baseUrl + '/company/get-projects-for-dashboard/',
             headers: {
                 "Authorization": token
             }
@@ -144,7 +145,7 @@ const P02_PLANNING_DASHBOARD = () => {
                 newProjects.push({...item, displayed: true})
             })
 
-            console.log('projects: ', newProjects);
+            // console.log('projects: ', newProjects);
 
             set_showSpinner_FetchingProjects(false);
 
@@ -229,7 +230,7 @@ const P02_PLANNING_DASHBOARD = () => {
             }
         })
         .then((response => {
-            console.log('fetch tasks types: ', response.data);
+            // console.log('fetch tasks types: ', response.data);
 
             let tasksTypes = response.data;
 
@@ -257,11 +258,12 @@ const P02_PLANNING_DASHBOARD = () => {
     }
 
     const updateProject = (project) => {
-        let displayed = project.displayed;
+        let isDisplayed = project.displayed;
 
         axios({
             method: 'get',
-            url: baseUrl + `/company/projects/${project.id}/`,
+            // url: baseUrl + `/company/projects/${project.id}/`,
+            url: baseUrl + `/company/get-projects-for-dashboard/?project_id=${project.id}`,
             headers: {
                 "Authorization": token
             }
@@ -270,7 +272,9 @@ const P02_PLANNING_DASHBOARD = () => {
             const index = projects.findIndex((elem) => elem.id === project.id);
 
             let newArray = [...projects];
-            newArray[index] = { ...response.data, displayed: displayed };
+            newArray[index] = { ...response.data[0], displayed: isDisplayed };
+
+            console.log('project is updated: ', newArray);
 
             set_projects([...newArray]);
         }))
@@ -457,19 +461,6 @@ const P02_PLANNING_DASHBOARD = () => {
                                 })
                             })
 
-                            let certificationDocumentIds = [];
-
-                            project.monuments.map((monument) => {
-                                monument.certification_documents.map((document) => {
-                                    // console.log('document: ', document);
-                                    let index = certificationDocumentIds.findIndex((elem) => elem === document.id);
-
-                                    if (index === -1) {
-                                        certificationDocumentIds.push(document.id)
-                                    }
-                                })
-                            })
-
                             const middleStyle = {
                                 display: 'flex',
                                 flexDirection: 'column',
@@ -504,6 +495,7 @@ const P02_PLANNING_DASHBOARD = () => {
                                     set_manageDocuments_modalToogle={set_manageDocuments_modalToogle}
                                     set_manageProjectTasks_modalToogle={set_manageProjectTasks_modalToogle}
                                     userPermissions={userPermissions}
+                                    updateProject={updateProject}
                                 />
                             }
                         })

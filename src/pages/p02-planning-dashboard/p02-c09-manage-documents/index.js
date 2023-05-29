@@ -41,9 +41,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
-        console.log('(modal) component ManageMonuments loaded: ... ');
+        // console.log('(modal) component ManageMonuments loaded: ... ');
 
-        console.log('props: ', props);
+        // console.log('props: ', props);
 
         fetchDocuments();
 
@@ -122,6 +122,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 acceptance_status: acceptance_status,
                 comment: comment,
                 monuments: selectedMonuments,
+                project: props.activeProject.id,
             }
         })
         .then((response => {
@@ -187,7 +188,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             //     newProjects.push({...item, displayed: true})
             // })
 
-            console.log('documents: ', response.data);
+            // console.log('documents: ', response.data);
 
             set_documents(response.data);
 
@@ -281,6 +282,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 acceptance_status: acceptance_status,
                 comment: comment,
                 monuments: selectedMonuments,
+                project: props.activeProject.id,
             }
         })
         .then((response => {

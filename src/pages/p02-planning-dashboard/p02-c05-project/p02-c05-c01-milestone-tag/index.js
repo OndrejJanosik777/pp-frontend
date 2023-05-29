@@ -46,11 +46,17 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     }
 
     useEffect(() => {
-        let id = props.milestoneItem.id;
+        if (props.milestoneItem.tasks !== undefined) {
+            let newTasks = [...props.milestoneItem.tasks];
 
-        // console.log('props: ', props);
+            newTasks.sort((a, b) => {
+                return moment(a.task_deadline) - moment(b.task_deadline);
+            });
 
-        fetchTasks(id);
+            set_tasks([...newTasks]);
+        }
+
+        // fetchTasks(id);
     }, [])
 
     useEffect(() => {
@@ -106,13 +112,29 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             // console.log('deltaDays: ', deltaDays) // second day from dateOffset
 
             if (deltaDays !== 0) {
-                console.log('delta is not zero');
+                console.log('delta is not zero', deltaDays);
 
                 props.updateMilestoneItemDeadline(deltaDays, props.project, props.milestoneItem);
 
-                tasks.map((task) => {
+                // let updatedTasks = [...tasks];
+
+                tasks.map((task, index) => {
+                    let actualDeadline = moment(task.task_deadline).format("YYYY-MM-DD");
+
+                    let newDeadline = moment(actualDeadline).add(deltaDays, 'days').format("YYYY-MM-DD");
+
+                    console.log(`currentDeadline: ${actualDeadline} `)
+                    console.log(`newDeadline: ${newDeadline} `)
+                    
+                    // updatedTasks[index].task_deadline = newDeadline;
+
                     props.updateTaskDeadline(deltaDays, task);
                 })
+                
+                // console.log('tasks: ', tasks);
+                // console.log('tasks: ', updatedTasks);
+
+                // set_tasks([...updatedTasks]);
             }
         }
     }, [milestoneIsMoving])

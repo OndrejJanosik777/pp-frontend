@@ -22,7 +22,7 @@ const P02_C05_PROJECT = (props) => {
     const [achievedMilestones, set_achievedMilestones] = useState({});
     const [completedTasks, set_completedTasks] = useState(0);
     const [totalTasks, set_totalTasks] = useState(0);
-    const [certificationDocumentIds, set_certificationDocumentIds] = useState([]);
+    const [documents, set_documents] = useState([]);
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
@@ -42,6 +42,10 @@ const P02_C05_PROJECT = (props) => {
         let totalTasks = 0;
         let completedTasks = 0;
 
+        if (props.project.documents !== undefined) {
+            set_documents([...props.project.documents]);
+        }
+
         props.project.milestone_items.map((milestoneItem) => {
             totalTasks += milestoneItem.tasks.length;
 
@@ -51,23 +55,6 @@ const P02_C05_PROJECT = (props) => {
                 }
             })
         })
-
-        let certificationDocumentIds = [];
-
-        props.project.monuments.map((monument) => {
-            monument.certification_documents.map((document) => {
-                // console.log('document: ', document);
-                let index = certificationDocumentIds.findIndex((elem) => elem === document.id);
-
-                if (index === -1) { 
-                    certificationDocumentIds.push(document.id)
-                }
-            })
-        })
-
-        set_certificationDocumentIds(certificationDocumentIds);
-        set_totalTasks(totalTasks);
-
     }, []);
 
     const showState = () => {
@@ -109,7 +96,7 @@ const P02_C05_PROJECT = (props) => {
         updatedProjects[projectIndex].milestone_items[milestoneIndex].date = newDeadline;
         // console.log('updateddisplayedProjects: ', updateddisplayedProjects);
         // updateMilestoneItem({ ...updateddisplayedProjects[projectIndex].milestone_items[milestoneIndex] })
-        props.set_projects([...updatedProjects]);
+        // props.set_projects([...updatedProjects]);
 
         let updatedMilestoneItem = { ...updatedProjects[projectIndex].milestone_items[milestoneIndex] };
 
@@ -130,6 +117,8 @@ const P02_C05_PROJECT = (props) => {
         })
         .then((response => {
             // console.log('milestone deadline updated in database: ', response.data);
+
+            props.updateProject(props.project);
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -143,8 +132,8 @@ const P02_C05_PROJECT = (props) => {
     }
 
     const updateTaskDeadline = (days, task) => {
-        console.log('updating deadline: ', task);
-        console.log('with days: ', days);
+        // console.log('updating deadline: ', task);
+        // console.log('with days: ', days);
 
         let currentDeadline = moment(task.task_deadline);
 
@@ -166,6 +155,8 @@ const P02_C05_PROJECT = (props) => {
         })
         .then((response => {
             // console.log('milestone deadline updated in database: ', response.data);
+
+            // props.updateProject(props.project);
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -271,7 +262,7 @@ const P02_C05_PROJECT = (props) => {
                     }
                 }
             >
-                {`Documents: ${certificationDocumentIds.length}`}
+                {`Documents: ${documents.length}`}
             </div>
             <div 
                 className='p02-c05-row-left'
