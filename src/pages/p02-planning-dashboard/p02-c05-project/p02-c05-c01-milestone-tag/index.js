@@ -114,27 +114,13 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             if (deltaDays !== 0) {
                 console.log('delta is not zero', deltaDays);
 
-                props.updateMilestoneItemDeadline(deltaDays, props.project, props.milestoneItem);
+                let taskToUpdate = [];
 
-                // let updatedTasks = [...tasks];
-
-                tasks.map((task, index) => {
-                    let actualDeadline = moment(task.task_deadline).format("YYYY-MM-DD");
-
-                    let newDeadline = moment(actualDeadline).add(deltaDays, 'days').format("YYYY-MM-DD");
-
-                    console.log(`currentDeadline: ${actualDeadline} `)
-                    console.log(`newDeadline: ${newDeadline} `)
-                    
-                    // updatedTasks[index].task_deadline = newDeadline;
-
-                    props.updateTaskDeadline(deltaDays, task);
+                tasks.map((task) => {
+                    taskToUpdate.push(task.task_id);
                 })
-                
-                // console.log('tasks: ', tasks);
-                // console.log('tasks: ', updatedTasks);
 
-                // set_tasks([...updatedTasks]);
+                props.updateMilestoneItemDeadlineWithTasks(props.milestoneItem, deltaDays, [...taskToUpdate]);
             }
         }
     }, [milestoneIsMoving])

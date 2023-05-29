@@ -42,7 +42,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
     useEffect(() => {
         console.log('component ManageTasks loaded: ... ');
-        console.log('props: ', props);
+        // console.log('props: ', props);
 
         fetchProjectDocuments();
 
@@ -51,6 +51,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
     const showState = () => {
         console.log('tasks: ', tasks);
+        console.log('selectedItem: ', selectedItem);
     }
 
     const createNewItem = () => {
@@ -162,7 +163,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             }
         })
         .then((response => {
-            console.log('project documents fetched succesfully: ', response.data);
+            // console.log('project documents fetched succesfully: ', response.data);
 
             let certDocumentsNoTask = [];
 
@@ -199,7 +200,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             }
         })
         .then((response => {
-            console.log('milestone tasks fetched succesfully: ', response.data);
+            // console.log('milestone tasks fetched succesfully: ', response.data);
 
             set_tasks([...response.data]);
 
@@ -226,7 +227,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     }
 
     const updateItem = (item) => {
-        console.log('updateItem: ', item);
+        // console.log('updating Item: ', item);
 
         const booked_hours = document.getElementById('booked_hours').value;
         const certification_document = item.certification_document;
@@ -266,22 +267,19 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             }
         })
         .then((response => {
-            console.log('task updated succesfully: ', response.data);
+            // console.log('task updated succesfully: ', response.data);
 
-            let index = tasks.findIndex(elem => elem.id === response.data.id);
+            let index = tasks.findIndex(elem => elem.task_id === response.data.task_id);
 
             let updatedTasks = [...tasks];
 
-            updatedTasks.splice(index, 1, response.data);
+            updatedTasks.splice(index, 1, {...response.data});
 
             set_tasks([...updatedTasks]);
 
-            // props.updateProject(props.activeProject);
+            props.updateProject(props.activeProject);
 
             set_showSpinner_CreateUpdateItem(false);
-
-            // 
-            // fetchProjectDocuments();
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -377,7 +375,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 // certificationDocument = certificationDocuments.find(elem => elem.id === task.certification_document).number;
                             }
 
-                            console.log("certificationDocuments: ", certificationDocuments.length);
+                            // console.log("certificationDocuments: ", certificationDocuments.length);
                             // console.log("certificationDocuments: ", task.certification_document);
                             // console.log("certificationDocuments: ", certificationDocuments.find((elem) => elem.id === task.certification_document).number);
 

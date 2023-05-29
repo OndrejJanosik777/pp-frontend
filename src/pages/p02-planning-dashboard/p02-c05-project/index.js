@@ -79,6 +79,32 @@ const P02_C05_PROJECT = (props) => {
         props.set_editMilestone_toogle(!props.editMilestone_toogle);
     }
 
+    const updateMilestoneItemDeadlineWithTasks = (milestoneItem, deltaDays, tasks) => {
+        axios({
+            method: 'patch',
+            url: baseUrl + '/company/update-milestone-with-tasks/' + milestoneItem.id + "/",
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                tasks: tasks,
+                delta_days: parseInt(deltaDays)
+            }
+        })
+        .then((response => {
+            // console.log('milestone deadline updated in database: ', response.data);
+
+            props.updateProject(props.project);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
+    }
+
     const updateMilestoneItemDeadline = (days, project, milestoneItem) => {
         // update in component state
         // console.log(`moving milestone with id ${milestoneItemId} within project with id ${projectId} by ${days}... `);
@@ -300,6 +326,7 @@ const P02_C05_PROJECT = (props) => {
                     milestoneItem={milestoneItem}
                     displayLimit={props.displayedDays}
                     updateMilestoneItemDeadline={updateMilestoneItemDeadline}
+                    updateMilestoneItemDeadlineWithTasks={updateMilestoneItemDeadlineWithTasks}
                     updateMilestoneItem={updateMilestoneItem}
                     updateTaskDeadline={updateTaskDeadline}
                     display_modal_createNewTask={display_modal_createNewTask}
