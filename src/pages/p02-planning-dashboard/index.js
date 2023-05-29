@@ -119,54 +119,6 @@ const P02_PLANNING_DASHBOARD = () => {
         console.log('userPermissions: ', userPermissions);
     }
 
-    // functions for managing projects
-    const addNewProjectToState = (project) => {
-        set_projects([...projects, project]);
-        set_createProject_toogle(!createProject_toogle);
-    }
-
-    const deleteMilestoneItem = (project, milestoneItem) => {
-        console.log(`deleting item: ${milestoneItem.id}`);
-
-        // update in component state
-        let projectIndex = projects.findIndex(elem => elem.id === project.id)
-        let milestoneItemIndex = projects[projectIndex].milestone_items.findIndex(elem => elem.id === milestoneItem.id)
-
-        // console.log(`projectIndex: ${projectIndex}`);
-        // console.log(`milestoneItemIndex: ${milestoneItemIndex}`);
-
-        let originalProjects = [...projects];
-        let updatedProjects = [...projects];
-
-        updatedProjects[projectIndex].milestone_items.splice(milestoneItemIndex, 1);
-        console.log(`updatedProjects:`, updatedProjects);
-
-        set_projects([...updatedProjects]);
-
-        // update in database
-        axios({
-            method: 'delete',
-            url: baseUrl + '/company/milestone-items/' + milestoneItem.id + "/",
-            headers: {
-                "Authorization": token
-            }
-        })
-            .then((response => {
-                console.log('milestone deleted from database: ', response.data);
-
-                set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
-            }))
-            .catch((error) => {
-                console.log("error: ", error);
-
-                let message = error.message + "\n" + error.response.data;
-    
-                alert(message);
-
-                set_projects([...originalProjects]);
-            })
-    }
-
     const display_modal_warning_deleteMilestoneItem = (project, milestone) => {
         set_activeProject(project);
         set_activeMilestoneItem(milestone);

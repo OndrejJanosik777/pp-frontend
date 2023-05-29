@@ -191,9 +191,9 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
         updatedTasks[index].task_deadline = moment(task.task_deadline).add(days, 'days').format("YYYY-MM-DD");
 
-        updatedTasks.sort((a, b) => {
-            return moment(a.task_deadline) - moment(b.task_deadline);
-        });
+        // updatedTasks.sort((a, b) => {
+        //     return moment(a.task_deadline) - moment(b.task_deadline);
+        // });
 
         set_tasks([...updatedTasks]);
 
