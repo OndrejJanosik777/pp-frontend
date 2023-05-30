@@ -39,22 +39,25 @@ const P02_C05_PROJECT = (props) => {
 
         set_achievedMilestones(achievedMilestones);
 
-        let totalTasks = 0;
-        let completedTasks = 0;
+        let newTotalTasks = 0;
+        let newCompletedTasks = 0;
 
         if (props.project.documents !== undefined) {
             set_documents([...props.project.documents]);
         }
 
         props.project.milestone_items.map((milestoneItem) => {
-            totalTasks += milestoneItem.tasks.length;
+            newTotalTasks += milestoneItem.tasks.length;
 
             milestoneItem.tasks.map((task) => {
-                if (task.status === 100) {
-                    completedTasks += 1;
+                if (task.task_status_percentage === 100) {
+                    newCompletedTasks += 1;
                 }
             })
         })
+
+        set_totalTasks(newTotalTasks);
+        set_completedTasks(newCompletedTasks);
     }, []);
 
     const showState = () => {
