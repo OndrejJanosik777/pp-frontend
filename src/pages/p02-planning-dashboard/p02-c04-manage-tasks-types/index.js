@@ -9,7 +9,7 @@ import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import axios from 'axios';
-import './index.scss';
+import './index.scss'; 
 
 const P02_C04_MANAGE_TASK_TYPES = (props) => {
     const getBaseUrl = () => {

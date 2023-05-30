@@ -14,6 +14,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [index, set_index] = useState(props.index);
     const [task, set_task] = useState(props.task);
     const [initialClickDistance, set_initialClickDistance] = useState(10);
+    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     const showState = () => {
         console.log('props: ', props);
@@ -63,20 +64,15 @@ const P02_C02_C01_TASK_TAG = (props) => {
         }
     }, [taskIsMoving])
 
-    const updateTaskDeadline = (task, days) => {
-        let newTask = {...task};
-
-        newTask.task_deadline = moment(task.task_deadline).add(days, 'days').format("YYYY-MM-DD");
-
-        set_task({...newTask});
-    }
-
     const taskClicked = (event) => {
-        let distance = event.clientX - leftOffsetMilestone - (50 + 8*16);
+        if (userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_task" ) !== -1) {
 
-        console.log('event.clientX - leftOffsetMilestone: ', distance);
-
-        set_taskIsMoving(!taskIsMoving);
+            let distance = event.clientX - leftOffsetMilestone - (50 + 8*16);
+    
+            console.log('event.clientX - leftOffsetMilestone: ', distance);
+    
+            set_taskIsMoving(!taskIsMoving);
+        }
     }
 
     const TaskTag = {

@@ -7,7 +7,7 @@ import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import './index.scss';
-import axios from 'axios';
+import axios from 'axios'; 
 
 const P02_C02_MANAGE_PROJECTS = (props) => {
     const getBaseUrl = () => {
@@ -35,6 +35,10 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
 
         set_projects(props.projects);
     }, []);
+
+    const showState = () => {
+        console.log('userPermissions: ', userPermissions);
+    }
 
     const checkboxChanged = (project) => {
         console.log('checkbox checked...', project);
@@ -197,7 +201,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             <div className='p02-c02-nav-bar'>
                 <div className='p02-c02-nav-bar-left'>
                     {/* <img className='p02-c02-icons' src={delete_cross} alt='' /> */}
-                    {userPermissions.findIndex(elem => elem === "create_project" || "all_permissions") !== -1 ?
+                    {userPermissions.findIndex(elem => elem === "create_project" || elem ===  "all_permissions") !== -1 ?
                     <img className='p02-c02-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
                     :
                     <div></div>
@@ -209,7 +213,12 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                         <img className='p02-c02-img' src={magnifier} alt='' />
                     </div>
                     <img className='p02-c02-icons' src={edit_panels} alt='' />
-                    <img className='p02-c02-icons' src={questionmark_blue} alt='' />
+                    <img 
+                        className='p02-c02-icons' 
+                        src={questionmark_blue} 
+                        alt='' 
+                        onClick={() => showState()}
+                    />
                     <input type='button' className='button' value={'X'} onClick={() => props.toogleVisibility(false)} />
                 </div>
             </div>
@@ -232,12 +241,12 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                 <td>{project.number}</td>
                                 <td>{project.short_name}</td>
                                 <td>
-                                    {userPermissions.find(elem => elem === "edit_project"  || "all_permissions") ?
+                                    {userPermissions.find(elem => elem === "edit_project"  || elem ===  "all_permissions") ?
                                         <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
                                         :
                                         <div></div>
                                     }
-                                    {userPermissions.find(elem => elem === "delete_project"  || "all_permissions") ? 
+                                    {userPermissions.find(elem => elem === "delete_project"  || elem ===  "all_permissions") ? 
                                         <img className='p02-c02-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
                                         :
                                         <div></div>

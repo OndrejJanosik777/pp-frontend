@@ -351,6 +351,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                     task = {task}
                     leftOffsetMilestone = {leftOffsetMilestone}
                     updateTaskDeadline = {updateTaskDeadline}
+                    userPermissions = {userPermissions}
                 />
             }
         })}
