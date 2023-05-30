@@ -286,22 +286,23 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                     className='p02-c05-c01-context-container' 
                     onMouseLeave={() => set_contextMenu_visibility(!contextMenu_visibility)}
                 >
-                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_document" ) !== -1 ?
+                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ?
                         <li className='p02-c05-c01-context-item'>
                             <span
                                 className="p02-c05-c01-badge"
-                                onClick={() => props.updateMilestoneItem(props.project, props.milestoneItem)}
+                                // onClick={() => props.updateMilestoneItem(props.project, props.milestoneItem)}
+                                // onClick={() => props.set_manageMilestones_modalToogle(true)}
                             >
                                 Edit Milestone
                             </span>
                         </li> :
                         <div></div>
                     }
-                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_document" ) !== -1 ?
+                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_milestone_item" ) !== -1 ?
                         <li className='p02-c05-c01-context-item'>
                             <span
                                 className="p02-c05-c01-badge"
-                                onClick={() => props.deleteMilestoneItem(props.project, props.milestoneItem)}
+                                // onClick={() => props.deleteMilestoneItem(props.project, props.milestoneItem)}
                             >
                                 Delete Milestone
                             </span>

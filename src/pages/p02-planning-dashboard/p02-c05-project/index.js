@@ -337,6 +337,7 @@ const P02_C05_PROJECT = (props) => {
                     // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
                     deleteMilestoneItem={() => props.display_modal_warning_deleteMilestoneItem(props.project, milestoneItem)}
                     set_manageMilestoneTasks_modalToogle={props.set_manageMilestoneTasks_modalToogle}
+                    set_manageMilestones_modalToogle={props.set_manageMilestones_modalToogle}
                     set_activeMilestoneItem={props.set_activeMilestoneItem}
                     set_activeProject={props.set_activeProject}
                     userPermissions={userPermissions}
