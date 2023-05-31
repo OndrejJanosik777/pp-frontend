@@ -183,7 +183,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 hours_S: hours_S,
                 hours_Z: hours_Z,
                 certification_documents: item.certification_documents,
-                project: item.project,
+                project: props.activeProject.id,
             }
         })
         .then((response => {
@@ -238,7 +238,12 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                         <img className='p02-c08-img' src={magnifier} alt='' />
                     </div>
                     <img className='p02-c08-icons' src={edit_panels} alt='' />
-                    <img className='p02-c08-icons' src={questionmark_blue} alt='' />
+                    <img 
+                        className='p02-c08-icons' 
+                        src={questionmark_blue} 
+                        alt='' 
+                        onClick={() => showState()}
+                    />
                     <input 
                         type='button' 
                         className='p02-c08-button' 
