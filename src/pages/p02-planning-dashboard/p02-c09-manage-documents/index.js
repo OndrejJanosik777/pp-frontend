@@ -68,7 +68,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         document.getElementById('name').value = '...';
         document.getElementById('number').value = '...';
         document.getElementById('revision').value = '...';
-        document.getElementById('date').value = '';
+        document.getElementById('deadline').value = '';
         document.getElementById('acceptance_status').value = '';
         document.getElementById('comment').value = '...';
 
@@ -87,7 +87,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         const name = document.getElementById('name').value;
         const number = document.getElementById('number').value;
         const revision = document.getElementById('revision').value;
-        const date = document.getElementById('date').value;
+        let deadline = document.getElementById('deadline').value;
         const acceptance_status = document.getElementById('acceptance_status').value;
         const comment = document.getElementById('comment').value;
         const selectedMonuments = [];
@@ -101,7 +101,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         if (name === "") return alert('missing input');
         if (number === "") return alert('missing input');
         if (revision === "") return alert('missing input');
-        if (date === "") return alert('missing input');
+        if (deadline === "") {
+            deadline = null;
+        }
         if (acceptance_status === "") return alert('missing input');
         if (comment === "") return alert('missing input');
         if (selectedMonuments.length === 0) return alert('missing input');
@@ -118,7 +120,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 name: name,
                 number: number,
                 revision: revision,
-                date: date,
+                deadline: deadline,
+                last_status_update: moment().format('YYYY-MM-DD'),
                 acceptance_status: acceptance_status,
                 comment: comment,
                 monuments: selectedMonuments,
@@ -216,7 +219,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         document.getElementById('name').value = item.name;
         document.getElementById('number').value = item.number;
         document.getElementById('revision').value = item.revision;
-        document.getElementById('date').value = item.date;
+        document.getElementById('deadline').value = item.deadline;
         document.getElementById('acceptance_status').value = item.acceptance_status;
         document.getElementById('comment').value = item.comment;
 
@@ -247,7 +250,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         const name = document.getElementById('name').value;
         const number = document.getElementById('number').value;
         const revision = document.getElementById('revision').value;
-        const date = document.getElementById('date').value;
+        let deadline = document.getElementById('deadline').value;
         const acceptance_status = document.getElementById('acceptance_status').value;
         const comment = document.getElementById('comment').value;
         const selectedMonuments = [];
@@ -261,7 +264,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         if (name === "") return alert('missing input');
         if (number === "") return alert('missing input');
         if (revision === "") return alert('missing input');
-        if (date === "") return alert('missing input');
+        if (deadline === "") {
+            deadline = null;
+        }
         if (acceptance_status === "") return alert('missing input');
         if (comment === "") return alert('missing input');
         if (selectedMonuments.length === 0) return alert('missing input');
@@ -269,7 +274,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         set_showSpinner_CreateUpdateItem(true);
 
         axios({
-            method: 'put',
+            method: 'patch',
             url: baseUrl + `/company/certification-documents/${item.id}/`,
             headers: {
                 "Authorization": token
@@ -278,7 +283,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 name: name,
                 number: number,
                 revision: revision,
-                date: date,
+                deadline: deadline,
                 acceptance_status: acceptance_status,
                 comment: comment,
                 monuments: selectedMonuments,
@@ -349,7 +354,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                         <img className='p02-c09-img' src={magnifier} alt='' />
                     </div>
                     <img className='p02-c09-icons' src={edit_panels} alt='' />
-                    <img className='p02-c09-icons' src={questionmark_blue} alt='' />
+                    <img 
+                        className='p02-c09-icons' 
+                        src={questionmark_blue} 
+                        alt='' 
+                        onClick={() => showState()}
+                    />
                     <input 
                         type='button' 
                         className='p02-c09-button' 
@@ -366,8 +376,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             <th>name</th>
                             <th>doc. nr.</th>
                             <th>rev.</th>
-                            <th>status updated</th>
+                            <th>deadline</th>
                             <th>status</th>
+                            <th>last status update</th>
                             <th>comment</th>
                             <th>action</th>
                         </tr>
@@ -380,8 +391,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 <td>{document.name}</td>
                                 <td>{document.number}</td>
                                 <td>{document.revision}</td>
-                                <td>{document.date}</td>
+                                <td>{document.deadline}</td>
                                 <td>{document.acceptance_status}</td>
+                                <td>{document.last_status_update}</td>
                                 <td>{document.comment}</td>
                                 <td>
                                     { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_document" ) !== -1 ? 
@@ -449,13 +461,13 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c09-footer-row1'>
-                    <div className='p02-c09-row1-col1'>status updated at</div>
+                    <div className='p02-c09-row1-col1'>deadline</div>
                     <div className='p02-c09-row1-col2'>
                         <div className='p02-c09-textbox-container'>
                             <input 
                                 type='date' 
                                 className='p02-c09-date' 
-                                id='date' 
+                                id='deadline' 
                                 placeholder='...' 
                             />
                         </div>
@@ -475,6 +487,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             >
                                 <option value="" id='default-milestonetype'>--Please choose an option--</option>
                                 <option id='in_work' value='in work'>in work</option>
+                                <option id='check_loop' value='check loop'>check loop</option>
+                                <option id='approved' value='approved'>approved</option>
                                 <option id='sended' value='sended'>sended</option>
                                 <option id='accepted' value='accepted'>accepted</option>
                                 <option id='rejected' value='rejected'>rejected</option>

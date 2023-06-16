@@ -132,7 +132,6 @@ const P02_PLANNING_DASHBOARD = () => {
 
         axios({
             method: 'get',
-            // url: baseUrl + '/company/projects/',
             url: baseUrl + '/company/get-projects-for-dashboard/',
             headers: {
                 "Authorization": token

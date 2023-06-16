@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import LandingPage from './pages/p01-landing-page';
-import Dashboard from './pages/p02-planning-dashboard';
+import P02_PLANNING_DASHBOARD from './pages/p02-planning-dashboard';
 import Playground from './pages/p00-playground';
 import P03_DOCUMENTS from './pages/p03-documents';
 import P04_EMPLOYEES from './pages/p04-employees';
@@ -15,7 +15,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<LandingPage />} ></Route>
-      <Route path="/Dashboard/" element={<Dashboard />} ></Route>
+      <Route path="/Dashboard/" element={<P02_PLANNING_DASHBOARD />} ></Route>
       <Route path="/documents/" element={<P03_DOCUMENTS />} ></Route>
       <Route path="/employees/" element={<P04_EMPLOYEES />} ></Route>
       <Route path="/playground/" element={<Playground />} ></Route>

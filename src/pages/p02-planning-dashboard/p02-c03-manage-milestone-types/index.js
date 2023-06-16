@@ -36,33 +36,6 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         // fetchItems();
     }, []);
 
-    const fetchItems = () => {
-        // console.log('fetching project with id: ', projectId);
-
-        axios({
-            method: 'get',
-            url: baseUrl + '/company/milestone-item-types/',
-            headers: {
-                "Authorization": token
-            }
-        })
-        .then((response => {
-            let milestoneTypes = response.data;
-            milestoneTypes.sort((a, b) => a.id - b.id);
-
-            set_milestoneTypes([...milestoneTypes]);
-
-            set_showSpinner_FetchingItems(false);
-        }))
-        .catch((error) => {
-            console.log("error: ", error);
-
-            let message = error.message + "\n" + error.response.data;
-
-            alert(message);
-        })
-    }
-
     const createNewItem = () => {
         const name = document.getElementById('name').value;
         const short_name = document.getElementById('short_name').value;

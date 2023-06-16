@@ -29,6 +29,10 @@ const P03_DOCUMENTS = () => {
         fetchDocuments();
     }, []);
 
+    const showState = () => {
+        console.log('documents: ', documents);
+    }
+
     const fetchDocuments = () => {
         axios({
             method: 'get',
@@ -70,7 +74,7 @@ const P03_DOCUMENTS = () => {
                             <tr>
                                 <th>Project</th>
                                 <th>Monument</th>
-                                <th>Certification Document</th>
+                                <th onClick={() => showState()}>Certification Document</th>
                             </tr>
                         </thead>
                     </table>
@@ -92,22 +96,21 @@ const P03_DOCUMENTS = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {documents.map((project) => {
+                            {documents.map((document) => {
                                 return <tr key={Math.random() * 100000}>
                                     {/* <td><input type='checkbox' checked={project.displayed} onChange={() => checkboxChanged(project)} /></td> */}
-                                    <td>{project.project_number[0]}</td>
-                                    <td>{project.project_name[0]}</td>
-                                    <td>{project.monument_numbers}</td>
-                                    <td>{project.monument_names}</td>
-                                    <td>{project.number}</td>
-                                    <td>{project.name}</td>
-                                    <td>{project.revision}</td>
-                                    <td>{project.status}</td>
-                                    <td>{project.last_change}</td>
-                                    <td>{project.deadline}</td>
-                                    <td>{project.responsible}</td>
-                                    <td>{project.comment}</td>
-                                    
+                                    <td>{document.project_number[0]}</td>
+                                    <td>{document.project_name[0]}</td>
+                                    <td>{document.monument_numbers}</td>
+                                    <td>{document.monument_names}</td>
+                                    <td>{document.number}</td>
+                                    <td>{document.name}</td>
+                                    <td>{document.revision}</td>
+                                    <td>{document.status}</td>
+                                    <td>{document.last_change}</td>
+                                    <td>{document.deadline}</td>
+                                    <td>{document.responsible}</td>
+                                    <td>{document.comment}</td>
                                 </tr>
                             })}
                         </tbody>
