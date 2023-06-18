@@ -345,6 +345,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         }
         {tasks.map((task, index) => {
             if (tasksDisplayed && milestoneTag_visibility) {
+            // if (tasksDisplayed) {
                 return <P02_C02_C01_TASK_TAG 
                     key={Math.random() * 100000}
                     milestoneItem = {props.milestoneItem}

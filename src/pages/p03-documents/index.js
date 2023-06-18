@@ -6,6 +6,7 @@ import './index.scss';
 import C01_NAVBAR from '../../components/c01-nav-bar';
 import C02_SIDEBAR from '../../components/c02-side-bar';
 import axios from 'axios';
+import moment from 'moment';
 
 const tempBackend = require('./data');
 
@@ -42,13 +43,29 @@ const P03_DOCUMENTS = () => {
             }
         })
         .then((response => {
-            console.log("documents loadded sucessfully", response.data);
+            console.log("fetched documents: ", response.data);
     
             // let newProject = {...response.data, displayed: true};
     
             // let updatedProjects = [...projects, newProject];
+
+            let newDocuments = [...response.data];
+
+            newDocuments.sort((a, b) => {
+                let aDeadline = a.deadline;
+                let bDeadline = b.deadline;
+
+                if (aDeadline === null) aDeadline = '2999-01-01';
+                if (bDeadline === null) bDeadline = '2999-01-01';
+                
+                return moment(aDeadline).diff(moment(bDeadline), 'days');
+            });
     
-            set_documents(response.data);
+            console.log("sorted documents: ", newDocuments);
+
+            console.log("test moments: ", moment('2023-06-18').diff(moment('2023-07-18'), 'days'));
+
+            set_documents(newDocuments);
     
             // props.set_projects(updatedProjects);
     
@@ -107,8 +124,8 @@ const P03_DOCUMENTS = () => {
                                     <td>{document.name}</td>
                                     <td>{document.revision}</td>
                                     <td>{document.status}</td>
-                                    <td>{document.last_change}</td>
-                                    <td>{document.deadline}</td>
+                                    <td>{moment(document.last_change).format("D MMM YYYY")}</td>
+                                    <td>{document.deadline === null ? "not set" : moment(document.deadline).format("D MMM YYYY")}</td>
                                     <td>{document.responsible}</td>
                                     <td>{document.comment}</td>
                                 </tr>
