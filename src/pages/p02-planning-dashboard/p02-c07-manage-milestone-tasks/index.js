@@ -96,7 +96,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                 status: status,
                 users: users,
                 certification_document: certification_document,
-                deadline: deadline
+                task_deadline: deadline
             }
         })
         .then((response => {
@@ -263,7 +263,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                 status: status,
                 users: users,
                 certification_document: certification_document,
-                deadline: deadline
+                task_deadline: deadline
             }
         })
         .then((response => {
