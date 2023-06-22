@@ -179,7 +179,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const fetchDocuments = () => {
         axios({
             method: 'get', 
-            url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
+            url: baseUrl + `/company/get-documents-for-project-dashboard/?project=${props.activeProject.id}`,
             headers: {
                 "Authorization": token
             }
@@ -188,8 +188,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             let new_documents = [...response.data];
 
             new_documents.sort((a, b) => {
-                let aDeadline = a.deadline;
-                let bDeadline = b.deadline;
+                let aDeadline = a.document_deadline;
+                let bDeadline = b.document_deadline;
 
                 if (aDeadline === null) aDeadline = '2999-01-01';
                 if (bDeadline === null) bDeadline = '2999-01-01';
@@ -381,12 +381,16 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                         <tr>
                             <th>id</th>
                             <th>name</th>
-                            <th>doc. nr.</th>
+                            <th>nr.</th>
                             <th>rev.</th>
                             <th>deadline</th>
                             <th>status</th>
-                            <th>last status update</th>
+                            <th>last status change</th>
                             <th>comment</th>
+                            <th>author</th>
+                            <th>milestone</th>
+                            <th>mil. deadline</th>
+                            <th>status [%]</th>
                             <th>action</th>
                         </tr>
                     </thead>
@@ -394,14 +398,18 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                         {/* TODO:  */}
                         {documents.map((document, index) => {
                             return <tr key={Math.random() * 100000}>
-                                <td>{document.id}</td>
-                                <td>{document.name}</td>
-                                <td>{document.number}</td>
-                                <td>{document.revision}</td>
-                                <td>{moment(document.deadline).format("DD-MMM-YYYY")}</td>
-                                <td>{document.acceptance_status}</td>
-                                <td>{document.last_status_update}</td>
-                                <td>{document.comment}</td>
+                                <td>{document.document_id}</td>
+                                <td>{document.document_name}</td>
+                                <td>{document.document_number}</td>
+                                <td>{document.document_revision}</td>
+                                <td>{document.document_deadline != null ? moment(document.document_deadline).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{document.document_acceptance_status}</td>
+                                <td>{document.document_last_status_update != null ? moment(document.document_last_status_update).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{document.document_comment}</td>
+                                <td>{document.document_author_username}</td>
+                                <td>{document.document_cmit_short_name}</td>
+                                <td>{document.document_cmi_deadline != null ? moment(document.document_cmi_deadline).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{`${document.document_status}%`}</td>
                                 <td>
                                     { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_document" ) !== -1 ? 
                                         <img 
