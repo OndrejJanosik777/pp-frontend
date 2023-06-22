@@ -185,15 +185,22 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             }
         })
         .then((response => {
-            // let newProjects = [];
+            let new_documents = [...response.data];
 
-            // response.data.map((item) => {
-            //     newProjects.push({...item, displayed: true})
-            // })
+            new_documents.sort((a, b) => {
+                let aDeadline = a.deadline;
+                let bDeadline = b.deadline;
 
-            // console.log('documents: ', response.data);
+                if (aDeadline === null) aDeadline = '2999-01-01';
+                if (bDeadline === null) bDeadline = '2999-01-01';
+                
+                return moment(aDeadline).diff(moment(bDeadline), 'days');
+            });
 
-            set_documents(response.data);
+            // let filtered_documents = new_documents.filter(elem => elem.acceptance_status !== "accepted")
+
+            set_documents([...new_documents]);
+            // set_documents([...filtered_documents]);
 
             set_showSpinner_FetchingDocuments(false);
 
@@ -391,7 +398,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 <td>{document.name}</td>
                                 <td>{document.number}</td>
                                 <td>{document.revision}</td>
-                                <td>{document.deadline}</td>
+                                <td>{moment(document.deadline).format("DD-MMM-YYYY")}</td>
                                 <td>{document.acceptance_status}</td>
                                 <td>{document.last_status_update}</td>
                                 <td>{document.comment}</td>
