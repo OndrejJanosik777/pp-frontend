@@ -213,7 +213,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 "Authorization": token
             },
             data: {
-                deadline: updatedTasks[index].task_deadline,
+                task_deadline: updatedTasks[index].task_deadline,
             }
         })
         .then((response => {
