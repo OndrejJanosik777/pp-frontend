@@ -179,7 +179,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const fetchDocuments = () => {
         axios({
             method: 'get', 
-            url: baseUrl + `/company/get-documents-for-project-dashboard/?project=${props.activeProject.id}`,
+            url: baseUrl + `/company/get-documents-for-project-dashboard/?project_id=${props.activeProject.id}`,
             headers: {
                 "Authorization": token
             }
