@@ -223,16 +223,16 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         console.log('item: ', item);
         console.log('index: ', index);
 
-        document.getElementById('name').value = item.name;
-        document.getElementById('number').value = item.number;
-        document.getElementById('revision').value = item.revision;
-        document.getElementById('deadline').value = item.deadline;
-        document.getElementById('acceptance_status').value = item.acceptance_status;
-        document.getElementById('comment').value = item.comment;
+        document.getElementById('name').value = item.document_name;
+        document.getElementById('number').value = item.document_number;
+        document.getElementById('revision').value = item.document_revision;
+        document.getElementById('deadline').value = item.document_deadline;
+        document.getElementById('acceptance_status').value = item.document_acceptance_status;
+        document.getElementById('comment').value = item.document_comment;
 
         let updatedMonuments = [...monuments];
 
-        item.monuments.map((monumentId) => {
+        item.document_monuments.map((monumentId) => {
             let monument = updatedMonuments.find(elem => elem.id === monumentId);
 
             if (monument !== undefined) {
@@ -282,7 +282,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
         axios({
             method: 'patch',
-            url: baseUrl + `/company/certification-documents/${item.id}/`,
+            url: baseUrl + `/company/certification-documents/${item.document_id}/`,
             headers: {
                 "Authorization": token
             },
