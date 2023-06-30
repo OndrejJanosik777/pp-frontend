@@ -254,12 +254,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const updateItem = (item, index) => {
         console.log('updateItem function');
 
-        const name = document.getElementById('name').value;
-        const number = document.getElementById('number').value;
-        const revision = document.getElementById('revision').value;
-        let deadline = document.getElementById('deadline').value;
-        const acceptance_status = document.getElementById('acceptance_status').value;
-        const comment = document.getElementById('comment').value;
+        item.document_name = document.getElementById('name').value;
+        item.document_number = document.getElementById('number').value;
+        item.document_revision = document.getElementById('revision').value;
+        item.document_deadline = document.getElementById('deadline').value;
+        item.document_acceptance_status = document.getElementById('acceptance_status').value;
+        item.document_comment = document.getElementById('comment').value;
         const selectedMonuments = [];
 
         monuments.map((monument) => {
@@ -268,14 +268,14 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             }
         })
 
-        if (name === "") return alert('missing input');
-        if (number === "") return alert('missing input');
-        if (revision === "") return alert('missing input');
-        if (deadline === "") {
-            deadline = null;
+        if (document.getElementById('name').value === "") return alert('missing input');
+        if (document.getElementById('number').value === "") return alert('missing input');
+        if (document.getElementById('revision').value === "") return alert('missing input');
+        if (document.getElementById('deadline').value === "") {
+            item.document_deadline = null;
         }
-        if (acceptance_status === "") return alert('missing input');
-        if (comment === "") return alert('missing input');
+        if (document.getElementById('acceptance_status').value === "") return alert('missing input');
+        if (document.getElementById('comment').value === "") return alert('missing input');
         if (selectedMonuments.length === 0) return alert('missing input');
 
         set_showSpinner_CreateUpdateItem(true);
@@ -287,12 +287,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 "Authorization": token
             },
             data: {
-                name: name,
-                number: number,
-                revision: revision,
-                deadline: deadline,
-                acceptance_status: acceptance_status,
-                comment: comment,
+                name: item.document_name,
+                number: item.document_number,
+                revision: item.document_revision,
+                deadline: item.document_deadline,
+                acceptance_status: item.document_acceptance_status,
+                comment: item.document_comment,
                 monuments: selectedMonuments,
                 project: props.activeProject.id,
             }
@@ -304,9 +304,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
             let updatedDocuments = [...documents];
 
-            updatedDocuments.splice(index, 1, response.data)
+            updatedDocuments.splice(index, 1, item)
 
             set_documents([...updatedDocuments]);
+
+            set_monuments([...monuments]);
 
             set_showSpinner_CreateUpdateItem(false);
         }))
