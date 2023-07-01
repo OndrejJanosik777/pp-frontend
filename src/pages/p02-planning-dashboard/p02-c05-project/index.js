@@ -263,6 +263,9 @@ const P02_C05_PROJECT = (props) => {
         <div className='p02-c05-left-container'>
             <div>{`#${props.project.id} : ${props.project.number}`}</div>
             <div>{props.project.short_name}</div>
+            <div>{`CVE: ${props.project.cve_lead_id}`}</div>
+            <div>{`ENVIRO: ${props.project.enviromental_lead_id}`}</div>
+            <div>{`STRESS: ${props.project.stress_lead_id}`}</div>
             <div>
                 <img
                     className='plane-icons'
@@ -324,7 +327,8 @@ const P02_C05_PROJECT = (props) => {
                 return < P02_C05_C01_MILESTONE_TAG
                     key={Math.random() * 100000}
                     dateOffset={props.dateOffset}
-                    topOffset={(index - 1) * 30}  // offset in px from top
+                    milestone_offsetTop={index * 30}  // offset in px from top
+                    milestone_offsetLeft={moment().diff(moment(milestoneItem.date), 'days') + props.dateOffset - 1}
                     project={props.project}
                     milestoneItem={milestoneItem}
                     displayLimit={props.displayedDays}
@@ -333,8 +337,6 @@ const P02_C05_PROJECT = (props) => {
                     updateMilestoneItem={updateMilestoneItem}
                     updateTaskDeadline={updateTaskDeadline}
                     display_modal_createNewTask={display_modal_createNewTask}
-                    // popUpCreateTaskModal={setCreateTask_toogle(!createTask_toogle)}
-                    // updateMilestoneItem={() => createEditMilestone_toogle(project, milestoneItem)}
                     deleteMilestoneItem={() => props.display_modal_warning_deleteMilestoneItem(props.project, milestoneItem)}
                     set_manageMilestoneTasks_modalToogle={props.set_manageMilestoneTasks_modalToogle}
                     set_manageMilestones_modalToogle={props.set_manageMilestones_modalToogle}

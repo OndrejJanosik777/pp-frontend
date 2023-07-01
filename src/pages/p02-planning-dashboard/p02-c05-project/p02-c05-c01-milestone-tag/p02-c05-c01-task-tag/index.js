@@ -13,13 +13,17 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [taskIsMoving, set_taskIsMoving] = useState(false);   
     const [index, set_index] = useState(props.index);
     const [task, set_task] = useState(props.task);
+    const [taskDisplayed, set_taskDisplayed] = useState(true)
     const [initialClickDistance, set_initialClickDistance] = useState(10);
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     const showState = () => {
         console.log('props: ', props);
-        console.log('offsetTask: ', offsetTask);
-        console.log('initialClickDistance: ', initialClickDistance);
+        console.log('offsetTask: ', offsetTask / 8);
+        console.log('difference: ', difference);
+        console.log('leftOffsetMilestone: ', leftOffsetMilestone);
+        console.log('taskWidth: ', taskWidth);
+        // console.log('initialClickDistance: ', initialClickDistance);
     }
 
     useEffect(() => {
@@ -35,7 +39,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
     }, []);
 
     const handleTaskTagMove = useRef((event) => {
-        console.log('initialClickDistance: ', initialClickDistance);
+        // console.log('initialClickDistance: ', initialClickDistance);
 
         let newOffsetTask = event.clientX - leftOffsetMilestone - (50 + 8*16) - initialClickDistance; 
         // 50 + 8*16 => distance screen left edge to beginning project center section
@@ -69,7 +73,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
             let distance = event.clientX - leftOffsetMilestone - (50 + 8*16);
     
-            console.log('event.clientX - leftOffsetMilestone: ', distance);
+            // console.log('event.clientX - leftOffsetMilestone: ', distance);
     
             set_taskIsMoving(!taskIsMoving);
         }
@@ -78,6 +82,10 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const TaskTag = {
         marginLeft: `${leftOffsetMilestone + offsetTask}px`,
         marginTop: `${10 * index}px`,
+    }
+
+    const TaskTagHidden = {
+        display: "none",
     }
 
     const TaskBar = {
@@ -89,10 +97,10 @@ const P02_C02_C01_TASK_TAG = (props) => {
     }
 
     return ( <div 
-        style={TaskTag}
+        style={ taskDisplayed ? TaskTag : TaskTagHidden }
         className='p02-c05-c01-task-tag'
         onClick={(e) => taskClicked(e)}
-        // title={props.milestoneItem.milestone_item_type.name + '\n' + props.milestoneItem.date}
+        // onClick={() => showState()}
         title={`task deadline: \n${task.task_deadline} \n(${task.task_status_percentage}%)`}
     >
         <div 
@@ -109,7 +117,8 @@ const P02_C02_C01_TASK_TAG = (props) => {
             className='p02-c05-c01-task-label'
         >
             {task.document_number === null ?
-                task.task_comment :
+                `${task.task_comment}` :
+                // "" :
                 `${task.document_number} : ${task.document_name}`
             }
         </div>
