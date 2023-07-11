@@ -144,6 +144,10 @@ const P02_PLANNING_DASHBOARD = () => {
                 newProjects.push({...item, displayed: true})
             })
 
+            newProjects.sort((a, b) => {
+                return parseInt(a.number.slice(-4)) - parseInt(b.number.slice(-4));
+            })
+
             // console.log('projects: ', newProjects);
 
             set_showSpinner_FetchingProjects(false);
