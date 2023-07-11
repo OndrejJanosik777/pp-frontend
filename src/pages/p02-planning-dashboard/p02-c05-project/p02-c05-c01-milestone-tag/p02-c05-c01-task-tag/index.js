@@ -90,10 +90,21 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
     const TaskBar = {
         width: `${taskWidth}rem`,
+        borderWidth: `2px`,
+        borderColor: 'black',
+        borderStyle: `solid`,
     }
 
     const BarProgress = {
         width: `${task.task_status_percentage}%`,
+    }
+
+    const TaskLabel = {
+        color: 'black',
+        backgroundColor: props.milestoneItem.color,
+        height: '100%',
+        marginLeft: '4px',
+        lineHeight: '9px',
     }
 
     return ( <div 
@@ -115,6 +126,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
         <div
             // onClick={() => showState()}
             className='p02-c05-c01-task-label'
+            style={TaskLabel}
         >
             {task.document_number === null ?
                 `${task.task_comment}` :

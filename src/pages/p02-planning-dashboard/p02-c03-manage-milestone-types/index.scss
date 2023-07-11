@@ -38,6 +38,7 @@
             .p02-c03-nav-bar-left {
                 
             }
+
             .p02-c03-nav-bar-right {
                 display: flex;
                 justify-content: center;
@@ -103,7 +104,12 @@
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 5%  20% 60% 15%;
+                        grid-template-columns: 
+                        5%      // id   
+                        20%     // short name
+                        55%     // name
+                        10%     // color
+                        10%;    // actions
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
@@ -210,6 +216,27 @@
 
                     .p02-c03-textbox-container {
                         height: 20px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 0 5px;
+                        
+                        &:hover {
+                            cursor: pointer;
+                        }
+                
+                        .p02-c03-textbox {
+                            width: 500px;
+                            height: 20px;
+                        }
+                
+                        .c1-img {
+                            // height: 25px;
+                        }
+                    }
+
+                    .p02-c03-color-container {
+                        height: 30px;
                         display: flex;
                         justify-content: center;
                         align-items: center;

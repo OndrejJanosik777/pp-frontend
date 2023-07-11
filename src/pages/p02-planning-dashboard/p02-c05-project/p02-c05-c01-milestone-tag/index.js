@@ -80,7 +80,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         }
 
         set_leftOffset_milestone(difference * 16);
-        
+
     }, [props.dateOffset]);
 
     const handleMilestoneTagMove = useRef((event) => {
@@ -246,7 +246,11 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         position: 'absolute',
         marginLeft: `${leftOffset_milestone - 18}px`,
         marginTop: `${-32}px`,
-        backgroundColor: `lightgreen`,
+        backgroundColor: props.milestoneItem.color,
+        // backgroundColor: `lightgreen`,
+        borderWidth: `1px`,
+        borderColor: `grey`,
+        borderStyle: `solid`,
         width: `20px`,
         height: `20px`,
         borderRadius: `50%`,
@@ -254,6 +258,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         display: `flex`,
         justifyContent: `center`,
         alignItems: `center`,
+        color: 'grey',
     }
 
     const MilestoneTagStyle = {

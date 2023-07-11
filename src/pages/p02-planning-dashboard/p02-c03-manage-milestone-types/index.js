@@ -29,8 +29,27 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
-    const [selectedItem, set_selectedItem] = useState(undefined);
+    const [selectedItem, set_selectedItem] = useState({
+        id: undefined,
+        name: undefined,
+        short_name: undefined,
+        color: undefined,
+    });
+    const [color, set_color] = useState("#ffffff");
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
+    // const [colors, set_colors] = useState("#e66465")
+    const [colors, set_colors] = useState(() => {
+        let new_colors = [];
+
+        props.milestoneTypes.map((item, index) => {
+            new_colors.push(item.color);
+
+        })
+
+        console.log('new colors pushed: ', new_colors);
+
+        return [...new_colors];
+    })
 
     useEffect(() => {
         // fetchItems();
@@ -165,6 +184,8 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         set_updateMode(true);
         set_selectedItem(item);
 
+        console.log('selectedItem: ', item);
+
         document.getElementById('short_name').value = item.short_name;
         document.getElementById('name').value = item.name;
     }
@@ -226,16 +247,34 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                             <th>id</th>
                             <th>short name</th>
                             <th>name</th>
+                            <th>color</th>
                             <th>actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {/* TODO:  */}
-                        {props.milestoneTypes.map((item) => {
+                        {props.milestoneTypes.map((item, index) => {
                             return <tr key={Math.random() * 100000}>
                                 <td>{item.id}</td>
                                 <td>{item.short_name}</td>
                                 <td>{item.name}</td>
+                                <td>
+                                    <input 
+                                        type="color" 
+                                        id={'milestone_type_color_' + index}
+                                        name="milestone_type"
+                                        value={colors[index]}
+                                        // onChange = {e => {
+                                        //     let new_colors = [...colors];
+
+                                        //     new_colors[index] = e.target.value;
+
+                                        //     set_colors([...new_colors])}
+                                        // }
+                                        disabled={true}
+                                        // onAbort={console.log('aborted...')}
+                                    />
+                                </td>
                                 <td>
                                     {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ?
                                         <img 
@@ -271,7 +310,15 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 className='p02-c03-textbox' 
                                 type='text' 
                                 id='short_name' 
-                                placeholder='...' 
+                                placeholder='enter milestone type short name' 
+                                value={createMode ? "" : selectedItem.short_name}
+                                onChange={(e) => {
+                                    let newSelectedItem = [...selectedItem];
+
+                                    newSelectedItem.short_name = e.target.value;
+
+                                    set_selectedItem(...newSelectedItem);
+                                }}
                             />
                         </div>
                     </div>
@@ -284,7 +331,37 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 type='text' 
                                 className='p02-c03-textbox' 
                                 id='name' 
-                                placeholder='...' 
+                                placeholder='enter milestone type name' 
+                                value={createMode ? "" : selectedItem.name}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className='p02-c03-footer-row1'>
+                    <div className='p02-c03-row1-col1'>color</div>
+                    <div className='p02-c03-row1-col2'>
+                        <div className='p02-c03-color-container'>
+                            <input 
+                                type='color' 
+                                className='p02-c03-color' 
+                                id='color' 
+                                // placeholder='...' 
+                                value={color}
+                                onChange={(e) => {
+                                    // let new_colors = [...colors];
+
+                                    // let index = props.milestoneTypes.findIndex(elem => elem.id === selectedItem.id);
+
+                                    // new_colors[index] = e.target.value;
+
+                                    // let newSelectedItem = [...selectedItem];
+                                    
+                                    // newSelectedItem.color = e.target.value;
+
+                                    set_color(e.target.value);
+
+                                    // set_colors([...new_colors]);
+                                }}
                             />
                         </div>
                     </div>
