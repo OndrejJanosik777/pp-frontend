@@ -1,12 +1,14 @@
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchUser } from '../../features/auth/authSlice';
 import axios from 'axios';
 import './index.scss';
 
 const LandingPage = () => {
     const navigate = useNavigate();
-    // const axios = require('axios');
+    const dispatch = useDispatch();
 
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -41,9 +43,11 @@ const LandingPage = () => {
         })
             .then((response => {
                 // alert('account created succesfully');
-                console.log(response.data);
+                // console.log(response.data);
                 localStorage.setItem('PP-token', response.data.access);
                 setShowSpinnerLogin(false);
+
+                // dispatch(fetchUser(response.data.access));
 
                 navigate('/dashboard/');
             }))

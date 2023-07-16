@@ -107,15 +107,15 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             data: {
                 name: name,
                 number: number,
-                short_name: short_name,
-                milestone_items: [],
-                monuments: []
+                short_name: short_name
+                // milestone_items: [],
+                // monuments: []
             }
         })
         .then((response => {
             console.log("projects created sucessfully");
 
-            let newProject = {...response.data, displayed: true};
+            let newProject = {...response.data, displayed: true, milestone_items: [], monuments: [] };
 
             let updatedProjects = [...projects, newProject];
 
@@ -166,7 +166,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             data: {
                 name: updateProject.name,
                 number: updateProject.number,
-                short_name: updateProject.short_name,
+                short_name: updateProject.short_name
                 // milestone_items: [],
                 // monuments: []
             }
@@ -178,7 +178,12 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
 
             let updatedProjects = [...projects];
 
-            updatedProjects[index] = {...response.data, displayed: updateProject.displayed};
+            updatedProjects[index] = {
+                ...response.data, 
+                displayed: updateProject.displayed, 
+                milestone_items: [...updateProject.milestone_items],
+                monuments: [...updateProject.monuments]
+            };
 
             set_projects(updatedProjects);
 
