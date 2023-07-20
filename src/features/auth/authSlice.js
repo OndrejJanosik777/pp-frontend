@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import axios from 'axios';
+// import axios from 'axios';
 
 export const authSlice = createSlice({
   name: 'counter',
@@ -8,30 +8,32 @@ export const authSlice = createSlice({
   },
   reducers: {
     fetchUser: (state, action) => {
-        let baseUrl = 'https://pp--backend.herokuapp.com';
+        // let baseUrl = 'https://pp--backend.herokuapp.com';
 
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') 
-            baseUrl = 'http://127.0.0.1:8000';
+        // if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') 
+        //     baseUrl = 'http://127.0.0.1:8000';
 
-        axios({
-            method: 'get',
-            url: baseUrl + '/company/my-profile/',
-            headers: {
-                "Authorization": action.payload
-            }
-        })
-        .then((response => {
-            // console.log('user data fetched: ', response.data)
+        // axios({
+        //     method: 'get',
+        //     url: baseUrl + '/company/my-profile/',
+        //     headers: {
+        //         "Authorization": action.payload
+        //     }
+        // })
+        // .then((response => {
+        //     // console.log('user data fetched: ', response.data)
 
-            // set_loggedUser(response.data)
+        //     // set_loggedUser(response.data)
 
-            state.userProfile = response.data
-        }))
-        .catch((error) => {
-            console.log(error);
+        //     state.userProfile = response.data
+        // }))
+        // .catch((error) => {
+        //     console.log(error);
 
-            alert('problem with fetching user data..');
-        })
+        //     alert('problem with fetching user data..');
+        // })
+
+        console.log("fetching function in reducer")
     }
   },
 })

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import logo from './assets/logo.png';
 import arrow_down from './assets/arrow_down.png';
@@ -8,6 +9,7 @@ import small_arrow_down from './assets/small_arrow_down.png';
 import './index.scss';
 
 const C01_NAVBAR = () => {
+    const count = useSelector(state => state.counter.value);
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
