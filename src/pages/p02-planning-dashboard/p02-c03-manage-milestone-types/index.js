@@ -38,18 +38,18 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     const [color, set_color] = useState("#ffffff");
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     // const [colors, set_colors] = useState("#e66465")
-    const [colors, set_colors] = useState(() => {
-        let new_colors = [];
+    // const [colors, set_colors] = useState(() => {
+    //     let new_colors = [];
 
-        props.milestoneTypes.map((item, index) => {
-            new_colors.push(item.color);
+    //     props.milestoneTypes.map((item, index) => {
+    //         new_colors.push(item.color);
 
-        })
+    //     })
 
-        console.log('new colors pushed: ', new_colors);
+    //     console.log('new colors pushed: ', new_colors);
 
-        return [...new_colors];
-    })
+    //     return [...new_colors];
+    // })
 
     const showState = () => {
         // console.log('milestoneTypes: ', props.milestoneTypes)
@@ -63,6 +63,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     const createNewItem = () => {
         const name = document.getElementById('name').value;
         const short_name = document.getElementById('short_name').value;
+        let color = document.getElementById('color').value;
 
         set_showSpinner_CreateUpdateItem(true);
 
@@ -77,7 +78,8 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
             },
             data: {
                 name: name,
-                short_name: short_name
+                short_name: short_name,
+                color: color,
             }
         })
         .then((response => {
