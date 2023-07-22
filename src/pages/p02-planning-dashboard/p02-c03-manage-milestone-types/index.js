@@ -51,6 +51,11 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         return [...new_colors];
     })
 
+    const showState = () => {
+        // console.log('milestoneTypes: ', props.milestoneTypes)
+        console.log('selectedItem: ', selectedItem);
+    }
+
     useEffect(() => {
         // fetchItems();
     }, []);
@@ -133,6 +138,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
 
         let name = document.getElementById('name').value;
         let short_name = document.getElementById('short_name').value;
+        let color = document.getElementById('color').value;
 
         if (name === "" && short_name === "")
         return alert('missing input');
@@ -143,6 +149,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         updatedMilestoneType.id = item.id;
         updatedMilestoneType.name = name;
         updatedMilestoneType.short_name = short_name;
+        updatedMilestoneType.color = color;
 
         let updatedMilestoneTypes = [...props.milestoneTypes];
         updatedMilestoneTypes.splice(index, 1, updatedMilestoneType);
@@ -160,24 +167,25 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                 id: updatedMilestoneType.id,
                 name: updatedMilestoneType.name,
                 short_name: updatedMilestoneType.short_name,
+                color: updatedMilestoneType.color,
             }
         })
-            .then((response => {
-                set_showSpinner_CreateUpdateItem(false);
+        .then((response => {
+            set_showSpinner_CreateUpdateItem(false);
 
-                document.getElementById('name').value = "";
+            document.getElementById('name').value = "";
 
-                document.getElementById('short_name').value = "";
+            document.getElementById('short_name').value = "";
 
-                set_updateMode(false);
-            }))
-            .catch((error) => {
-                console.log("error: ", error);
+            set_updateMode(false);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
 
-                let message = error.message + "\n" + error.response.data;
-    
-                alert(message);
-            })
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
     }
 
     const switchToUpdateMode = (item) => {
@@ -188,10 +196,6 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
 
         document.getElementById('short_name').value = item.short_name;
         document.getElementById('name').value = item.name;
-    }
-
-    const showState = () => {
-        console.log('milestoneTypes: ', props.milestoneTypes)
     }
 
     return (<div className='p02-c03-manage-milestone-types'>
@@ -220,10 +224,10 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                             type='text' 
                             placeholder='Search ...' 
                         />
-                        <img className='p02-c03-img' src={magnifier} alt='' />
+                        <img className='p02-c03-img' src={magnifier} alt=''/>
                     </div>
                     <img className='p02-c03-icons' src={edit_panels} alt='' />
-                    <img className='p02-c03-icons' src={questionmark_blue} alt='' />
+                    <img className='p02-c03-icons' src={questionmark_blue} alt='' onClick={() => showState()} />
                     <input 
                         type='button' 
                         className='p02-c03-button' 
@@ -263,16 +267,8 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                         type="color" 
                                         id={'milestone_type_color_' + index}
                                         name="milestone_type"
-                                        value={colors[index]}
-                                        // onChange = {e => {
-                                        //     let new_colors = [...colors];
-
-                                        //     new_colors[index] = e.target.value;
-
-                                        //     set_colors([...new_colors])}
-                                        // }
+                                        value={item.color}
                                         disabled={true}
-                                        // onAbort={console.log('aborted...')}
                                     />
                                 </td>
                                 <td>
@@ -345,22 +341,9 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 type='color' 
                                 className='p02-c03-color' 
                                 id='color' 
-                                // placeholder='...' 
                                 value={color}
                                 onChange={(e) => {
-                                    // let new_colors = [...colors];
-
-                                    // let index = props.milestoneTypes.findIndex(elem => elem.id === selectedItem.id);
-
-                                    // new_colors[index] = e.target.value;
-
-                                    // let newSelectedItem = [...selectedItem];
-                                    
-                                    // newSelectedItem.color = e.target.value;
-
                                     set_color(e.target.value);
-
-                                    // set_colors([...new_colors]);
                                 }}
                             />
                         </div>

@@ -9,7 +9,7 @@ import P02_PLANNING_DASHBOARD from './pages/p02-planning-dashboard';
 import P03_DOCUMENTS from './pages/p03-documents';
 import P04_EMPLOYEES from './pages/p04-employees';
 import reportWebVitals from './reportWebVitals';
-import store from './app/store';
+import store from './app/store/store';
 import { Provider } from 'react-redux';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

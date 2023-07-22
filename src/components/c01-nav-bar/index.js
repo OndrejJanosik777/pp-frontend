@@ -85,5 +85,4 @@ const C01_NAVBAR = () => {
     </div> );
 }
  
-export default C01_NAVBAR;<div>
-this is nav bar</div>
+export default C01_NAVBAR;
