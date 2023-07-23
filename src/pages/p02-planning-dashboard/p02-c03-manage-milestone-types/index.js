@@ -299,14 +299,6 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 type='text' 
                                 id='short_name' 
                                 placeholder='enter milestone type short name' 
-                                // value={createMode ? "" : selectedItem.short_name}
-                                // onChange={(e) => {
-                                //     let newSelectedItem = [...selectedItem];
-
-                                //     newSelectedItem.short_name = e.target.value;
-
-                                //     set_selectedItem(...newSelectedItem);
-                                // }}
                             />
                         </div>
                     </div>
@@ -320,7 +312,6 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 className='p02-c03-textbox' 
                                 id='name' 
                                 placeholder='enter milestone type name' 
-                                // value={createMode ? "" : selectedItem.name}
                             />
                         </div>
                     </div>
@@ -334,10 +325,6 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 className='p02-c03-color' 
                                 id='color' 
                                 defaultValue={"#ffffff"}
-                                // value={color}
-                                // onChange={(e) => {
-                                //     set_color(e.target.value);
-                                // }}
                             />
                         </div>
                     </div>

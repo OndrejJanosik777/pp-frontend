@@ -159,7 +159,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/certification-documents/${item.id}/`,
+            url: baseUrl + `/company/certification-documents/${item.document_id}/`,
             headers: {
                 "Authorization": token
             }
@@ -555,7 +555,10 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             type='button' 
                             className='p02-c09-button' 
                             value={updateMode ? 'Update' : 'Create'} 
-                            onClick={updateMode ? () => updateItem(selectedItem, selectedItemIndex) : createNewItem} 
+                            onClick={updateMode ? 
+                                () => updateItem(selectedItem, selectedItemIndex) 
+                                : 
+                                createNewItem} 
                         />
                         }
                     </div>
