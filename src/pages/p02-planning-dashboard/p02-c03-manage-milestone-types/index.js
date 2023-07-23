@@ -35,21 +35,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         short_name: undefined,
         color: undefined,
     });
-    const [color, set_color] = useState("#ffffff");
     const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
-    // const [colors, set_colors] = useState("#e66465")
-    // const [colors, set_colors] = useState(() => {
-    //     let new_colors = [];
-
-    //     props.milestoneTypes.map((item, index) => {
-    //         new_colors.push(item.color);
-
-    //     })
-
-    //     console.log('new colors pushed: ', new_colors);
-
-    //     return [...new_colors];
-    // })
 
     const showState = () => {
         // console.log('milestoneTypes: ', props.milestoneTypes)
@@ -137,7 +123,6 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     }
 
     const updateItem = (item) => {
-
         let name = document.getElementById('name').value;
         let short_name = document.getElementById('short_name').value;
         let color = document.getElementById('color').value;
@@ -191,13 +176,18 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     }
 
     const switchToUpdateMode = (item) => {
+        /* function triggers after user clicked update button for 
+        certain milestone type. It will populate the values in footer like
+        short name, name and color. It will also save item as selectedItem to component
+        state. */
         set_updateMode(true);
         set_selectedItem(item);
 
-        console.log('selectedItem: ', item);
+        // console.log('selectedItem: ', item);
 
         document.getElementById('short_name').value = item.short_name;
         document.getElementById('name').value = item.name;
+        document.getElementById('color').value = item.color;
     }
 
     return (<div className='p02-c03-manage-milestone-types'>
@@ -309,14 +299,14 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 type='text' 
                                 id='short_name' 
                                 placeholder='enter milestone type short name' 
-                                value={createMode ? "" : selectedItem.short_name}
-                                onChange={(e) => {
-                                    let newSelectedItem = [...selectedItem];
+                                // value={createMode ? "" : selectedItem.short_name}
+                                // onChange={(e) => {
+                                //     let newSelectedItem = [...selectedItem];
 
-                                    newSelectedItem.short_name = e.target.value;
+                                //     newSelectedItem.short_name = e.target.value;
 
-                                    set_selectedItem(...newSelectedItem);
-                                }}
+                                //     set_selectedItem(...newSelectedItem);
+                                // }}
                             />
                         </div>
                     </div>
@@ -330,7 +320,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 className='p02-c03-textbox' 
                                 id='name' 
                                 placeholder='enter milestone type name' 
-                                value={createMode ? "" : selectedItem.name}
+                                // value={createMode ? "" : selectedItem.name}
                             />
                         </div>
                     </div>
@@ -343,10 +333,11 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                 type='color' 
                                 className='p02-c03-color' 
                                 id='color' 
-                                value={color}
-                                onChange={(e) => {
-                                    set_color(e.target.value);
-                                }}
+                                defaultValue={"#ffffff"}
+                                // value={color}
+                                // onChange={(e) => {
+                                //     set_color(e.target.value);
+                                // }}
                             />
                         </div>
                     </div>
