@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchUser } from '../../features/auth/authSlice';
 import axios from 'axios';
 import './index.scss';
 
