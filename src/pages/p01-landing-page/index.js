@@ -1,9 +1,14 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
+import { set_BaseUrl, fetchUserProfile } from '../../app/features/api/apiSlice';
 import axios from 'axios';
 import './index.scss';
+
+// landing page - with textboxes for username, password
+// load baseUrl to store
+// load userProfile to store
 
 const LandingPage = () => {
     const navigate = useNavigate();
@@ -24,6 +29,13 @@ const LandingPage = () => {
     const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [showSpinnerLogin, setShowSpinnerLogin] = useState(false);
 
+    // hook to run while loading component
+    useEffect(() => {
+        console.log('p01-landing-page loaded...');
+
+        dispatch(set_BaseUrl());
+    }, []);
+
     const showState = () => {
         console.log('username: ', username);
         console.log('password: ', password);
@@ -40,21 +52,23 @@ const LandingPage = () => {
                 password: password
             }
         })
-            .then((response => {
-                // alert('account created succesfully');
-                // console.log(response.data);
-                localStorage.setItem('PP-token', response.data.access);
-                setShowSpinnerLogin(false);
+        .then((response => {
+            // alert('account created succesfully');
+            // console.log(response.data);
+            localStorage.setItem('PP-token', response.data.access);
+            setShowSpinnerLogin(false);
 
-                // dispatch(fetchUser(response.data.access));
+            dispatch(fetchUserProfile());
 
-                navigate('/dashboard/');
-            }))
-            .catch((error) => {
-                alert('problem getting token: /api/token/');
+            navigate('/dashboard/');
+        }))
+        .catch((error) => {
+            alert('problem getting token: /api/token/');
 
-                console.log(error);
-            })
+            console.log(error);
+
+            setShowSpinnerLogin(false);
+        })
     }
 
     return (<div className='p01-landing-page'>

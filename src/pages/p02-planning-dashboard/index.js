@@ -37,25 +37,10 @@ const P02_PLANNING_DASHBOARD = () => {
         }
     }
 
-    // 
+    // local state of component
     const [projects, set_projects] = useState([]);
     const [milestoneTypes, set_milestoneTypes] = useState([]);
     const [taskTypes, set_taskTypes] = useState([]);
-    const [loggedUser, set_loggedUser] = useState({
-        id: 0,
-        password: "",
-        last_login: "",
-        is_superuser: false,
-        username: "",
-        first_name: "",
-        last_name: "",
-        email: "",
-        is_staff: "",
-        is_active: "",
-        date_joined: "",
-        groups: [],
-        user_permissions: [],
-    })
     const [userPermissions, set_userPermissions] = useState([]);
     // 
     const [dateOffset, set_dateOffset] = useState(0);    // offset from today...
@@ -103,8 +88,6 @@ const P02_PLANNING_DASHBOARD = () => {
 
         window.addEventListener('resize', handleResize.current);
 
-        fetchUserData();
-
         fetchProjects();
 
         fetchMilestoneTypes();
@@ -115,7 +98,6 @@ const P02_PLANNING_DASHBOARD = () => {
     const showState = () => {
         console.log('state of p02-planning-dashboard: ');
         console.log('projects: ', projects);
-        console.log('loggedUser: ', loggedUser);
         console.log('userPermissions: ', userPermissions);
     }
 
@@ -154,37 +136,6 @@ const P02_PLANNING_DASHBOARD = () => {
 
             // set_projects(response.data);
             set_projects(newProjects);
-        }))
-        .catch((error) => {
-            console.log("error: ", error);
-
-            let message = error.message + "\n" + error.response.data;
-
-            alert(message);
-        })
-    }
-
-    const fetchUserData = () => {
-
-        axios({
-            method: 'get',
-            url: baseUrl + '/company/my-profile/',
-            headers: {
-                "Authorization": token
-            }
-        })
-        .then((response => {
-            // console.log('user data fetched: ', response.data)
-
-            let newPermissions = [];
-
-            response.data.groups.map((group) => {
-                newPermissions.push(group.name);
-            })
-
-            set_loggedUser(response.data);
-
-            set_userPermissions([...newPermissions]);
         }))
         .catch((error) => {
             console.log("error: ", error);

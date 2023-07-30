@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
     increment, 
@@ -6,14 +7,25 @@ import {
     incrementByAmount
 } from '../../app/features/counter/counterSlice';
 import {
-    fetchUserProfile
-} from '../../app/features/auth/authSlice';
+    fetchUserProfile,
+    set_BaseUrl
+} from '../../app/features/api/apiSlice';
 import './index.scss'
+
+// playground component
+// 
 
 const Playground = () => {
     // const count = useSelector(selectCount);
     const count = useSelector(state => state.counter.value);
     const dispatch = useDispatch()
+
+    // hook to run while loading component
+    useEffect(() => {
+        console.log('p01-landing-page loaded...');
+
+        dispatch(set_BaseUrl());
+    }, []);
 
     return ( <div className='p00-playground'>
         <div className='p00-nav-bar'>
@@ -36,10 +48,10 @@ const Playground = () => {
         </div>
         <div className='p00-main-body'>
             <div>counter.value: {count}</div>
-            <div>username: {useSelector(state => state.auth.userProfile.username)}</div>
-            <div>first_name: {useSelector(state => state.auth.userProfile.first_name)}</div>
-            <div>last_name: {useSelector(state => state.auth.userProfile.last_name)}</div>
-            <div>email: {useSelector(state => state.auth.userProfile.email)}</div>
+            <div>username: {useSelector(state => state.api.userProfile.username)}</div>
+            <div>first_name: {useSelector(state => state.api.userProfile.first_name)}</div>
+            <div>last_name: {useSelector(state => state.api.userProfile.last_name)}</div>
+            <div>email: {useSelector(state => state.api.userProfile.email)}</div>
             <div className='p00-small-footer'>
                 <button 
                     className='p00-button'
