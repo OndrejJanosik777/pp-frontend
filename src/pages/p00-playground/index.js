@@ -18,7 +18,7 @@ import './index.scss'
 const Playground = () => {
     // const count = useSelector(selectCount);
     const count = useSelector(state => state.counter.value);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     // hook to run while loading component
     useEffect(() => {

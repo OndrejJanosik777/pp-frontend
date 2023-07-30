@@ -23,10 +23,19 @@ import P02_C07_MANAGE_MILESTONE_TASKS from './p02-c07-manage-milestone-tasks';
 import P02_C08_MANAGE_MONUMENTS from './p02-c08-manage-monuments';
 import P02_C09_MANAGE_DOCUMENTS from './p02-c09-manage-documents';
 import P02_C10_MANAGE_PROJECT_TASKS from './p02-c10-manage-project-tasks';
+import { useSelector, useDispatch } from 'react-redux';
 // styles
 import './index.scss';
+import { 
+    fetch_taskTypes,
+    fetch_milestoneTypes,
+    fetchUserProfile,
+    set_BaseUrl,
+} from '../../app/features/api/apiSlice';
 
 const P02_PLANNING_DASHBOARD = () => {
+    const dispatch = useDispatch();
+
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -93,6 +102,11 @@ const P02_PLANNING_DASHBOARD = () => {
         fetchMilestoneTypes();
 
         fetchTaskTypes();
+
+        dispatch(set_BaseUrl());
+        dispatch(fetchUserProfile());
+        dispatch(fetch_taskTypes());
+        dispatch(fetch_milestoneTypes());
     }, []);
 
     const showState = () => {
