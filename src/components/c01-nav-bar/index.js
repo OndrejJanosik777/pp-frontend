@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import logo from './assets/logo.png';
 import arrow_down from './assets/arrow_down.png';
 import magnifier from './assets/magnifier.png';

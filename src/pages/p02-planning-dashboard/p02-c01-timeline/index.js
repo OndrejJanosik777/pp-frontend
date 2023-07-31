@@ -20,19 +20,27 @@ const P02_C01_TIMELINE = (props) => {
     return (<div>
         <DaysTimeLine
             startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
-            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
+            endDate={moment().add(
+                useSelector(state => state.dashboard.dateOffset) + 
+                useSelector(state => state.dashboard.displayedDays) - 1, 'days')}
         />
         <WeeksTimeLine
             startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
-            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
+            endDate={moment().add(
+                useSelector(state => state.dashboard.dateOffset) + 
+                useSelector(state => state.dashboard.displayedDays) - 1, 'days')}
         />
         <MonthTimeLine
             startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
-            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
+            endDate={moment().add(
+                useSelector(state => state.dashboard.dateOffset) + 
+                useSelector(state => state.dashboard.displayedDays) - 1, 'days')}
         />
         <YearsTimeLine
             startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
-            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
+            endDate={moment().add(
+                useSelector(state => state.dashboard.dateOffset) + 
+                useSelector(state => state.dashboard.displayedDays) - 1, 'days')}
         />
     </div>);
 }

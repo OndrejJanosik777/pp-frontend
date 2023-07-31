@@ -86,6 +86,7 @@ const P02_PLANNING_DASHBOARD = () => {
         let daysToDisplay = parseInt(availableWidth / 16);
         // console.log('daysToDisplay: ', daysToDisplay);
         set_displayedDays(daysToDisplay);
+        dispatch(dashboardActions.set_displayedDays(daysToDisplay));
     })
     // hook to run while loading component
     useEffect(() => {
@@ -104,6 +105,9 @@ const P02_PLANNING_DASHBOARD = () => {
         dispatch(apiActions.fetch_taskTypes());
         dispatch(apiActions.fetch_milestoneTypes());
         dispatch(apiActions.fetch_projects());
+        dispatch(dashboardActions.set_displayedDays(
+            parseInt((window.innerWidth - 8 * 16 - 0 * 16 - 4 * 16) / 16)
+        ));
     }, []);
 
     const showState = () => {
@@ -486,11 +490,7 @@ const P02_PLANNING_DASHBOARD = () => {
                                 onClick={() => dispatch(dashboardActions.set_dateOffset(-30))}
                             >- 30 DAYS</div>
                         </div>
-                        <P02_C01_TIMELINE
-                            dateOffset={dateOffset}
-                            displayLimit={displayedDays}
-                            // displayLimit={100}
-                        />
+                        <P02_C01_TIMELINE />
                         <div className='p02-timeline-controls-right'>
                             <div 
                                 className='p02-cell-footer clicable starting' 
