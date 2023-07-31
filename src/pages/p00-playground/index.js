@@ -7,7 +7,7 @@ import {
     incrementByAmount
 } from '../../app/features/counter/counterSlice';
 import {
-    fetchUserProfile,
+    fetch_userProfile,
     set_BaseUrl
 } from '../../app/features/api/apiSlice';
 import './index.scss'
@@ -56,7 +56,7 @@ const Playground = () => {
                 <button 
                     className='p00-button'
                     // after clicking button dispatching function (action from Slice) to middleware...
-                    onClick={() => dispatch(fetchUserProfile())}
+                    onClick={() => dispatch(fetch_userProfile())}
                 >Fetch User</button>
             </div>
         </div>

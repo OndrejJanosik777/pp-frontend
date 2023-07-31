@@ -26,12 +26,8 @@ import P02_C10_MANAGE_PROJECT_TASKS from './p02-c10-manage-project-tasks';
 import { useSelector, useDispatch } from 'react-redux';
 // styles
 import './index.scss';
-import { 
-    fetch_taskTypes,
-    fetch_milestoneTypes,
-    fetchUserProfile,
-    set_BaseUrl,
-} from '../../app/features/api/apiSlice';
+import * as apiActions from '../../app/features/api/apiSlice';
+import * as dashboardActions from '../../app/features/dashboardSlice';
 
 const P02_PLANNING_DASHBOARD = () => {
     const dispatch = useDispatch();
@@ -103,10 +99,11 @@ const P02_PLANNING_DASHBOARD = () => {
 
         fetchTaskTypes();
 
-        dispatch(set_BaseUrl());
-        dispatch(fetchUserProfile());
-        dispatch(fetch_taskTypes());
-        dispatch(fetch_milestoneTypes());
+        dispatch(apiActions.set_BaseUrl());
+        dispatch(apiActions.fetch_userProfile());
+        dispatch(apiActions.fetch_taskTypes());
+        dispatch(apiActions.fetch_milestoneTypes());
+        dispatch(apiActions.fetch_projects());
     }, []);
 
     const showState = () => {
@@ -124,7 +121,7 @@ const P02_PLANNING_DASHBOARD = () => {
     }
 
     const fetchProjects = () => {
-        set_showSpinner_FetchingProjects(true);
+        // set_showSpinner_FetchingProjects(true);
 
         axios({
             method: 'get',
@@ -146,7 +143,7 @@ const P02_PLANNING_DASHBOARD = () => {
 
             // console.log('projects: ', newProjects);
 
-            set_showSpinner_FetchingProjects(false);
+            // set_showSpinner_FetchingProjects(false);
 
             // set_projects(response.data);
             set_projects(newProjects);
@@ -375,7 +372,8 @@ const P02_PLANNING_DASHBOARD = () => {
                             <div className='p02-item'>|</div>
                             <div 
                                 className='p02-item'
-                                onClick={() => set_dateOffset(0)}
+                                // onClick={() => set_dateOffset(0)}
+                                onClick={() => dispatch(dashboardActions.set_dateOffset(0))}
                             >Today</div>
                             <div className='p02-item'>|</div>
                             <div 
@@ -383,7 +381,8 @@ const P02_PLANNING_DASHBOARD = () => {
                                 onClick={() => fetchProjects()}
                             >Refresh Projects</div>
                             <div className={
-                                showSpinner_FetchingProjects ?
+                                // showSpinner_FetchingProjects ?
+                                useSelector(state => state.dashboard.spinnerFetchingProjects) ?
                                 'p02-fetching-displayed' :
                                 'p02-fetching-hidden'
                                 }>
@@ -473,15 +472,18 @@ const P02_PLANNING_DASHBOARD = () => {
                         <div className='p02-timeline-controls-left'>
                             <div 
                                 className='p02-cell-footer clicable starting' 
-                                onClick={() => set_dateOffset(dateOffset - 1)}
+                                // onClick={() => set_dateOffset(dateOffset - 1)}
+                                onClick={() => dispatch(dashboardActions.set_dateOffset(-1))}
                             >- 1 DAY</div>
                             <div 
                                 className='p02-cell-footer clicable starting' 
-                                onClick={() => set_dateOffset(dateOffset - 7)}
+                                // onClick={() => set_dateOffset(dateOffset - 7)}
+                                onClick={() => dispatch(dashboardActions.set_dateOffset(-7))}
                             >- 7 DAYS</div>
                             <div 
                                 className='p02-cell-footer clicable starting' 
-                                onClick={() => set_dateOffset(dateOffset - 30)}
+                                // onClick={() => set_dateOffset(dateOffset - 30)}
+                                onClick={() => dispatch(dashboardActions.set_dateOffset(-30))}
                             >- 30 DAYS</div>
                         </div>
                         <P02_C01_TIMELINE
@@ -492,15 +494,18 @@ const P02_PLANNING_DASHBOARD = () => {
                         <div className='p02-timeline-controls-right'>
                             <div 
                                 className='p02-cell-footer clicable starting' 
-                                onClick={() => set_dateOffset(dateOffset + 1)}
+                                // onClick={() => set_dateOffset(dateOffset + 1)}
+                                onClick={() => dispatch(dashboardActions.set_dateOffset(1))}
                             >+ 1 DAY</div>
                             <div 
                                 className='p02-cell-footer clicable starting' 
-                                onClick={() => set_dateOffset(dateOffset + 7)}
+                                // onClick={() => set_dateOffset(dateOffset + 7)}
+                                onClick={() => dispatch(dashboardActions.set_dateOffset(7))}
                             >+ 7 DAYS</div>
                             <div 
                                 className='p02-cell-footer clicable starting' 
-                                onClick={() => set_dateOffset(dateOffset + 30)}
+                                // onClick={() => set_dateOffset(dateOffset + 30)}
+                                onClick={() => dispatch(dashboardActions.set_dateOffset(30))}
                             >+ 30 DAYS</div>
                         </div>
                     </footer>

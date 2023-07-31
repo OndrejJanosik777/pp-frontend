@@ -4,8 +4,11 @@ import axios from 'axios';
 import './index.scss';
 import moment from 'moment';
 import P02_C02_C01_TASK_TAG from './p02-c05-c01-task-tag';
+import { useSelector, useDispatch } from 'react-redux';
 
 const P02_C05_C01_MILESTONE_TAG = (props) => {
+
+
     const getStartPosition = () => {
         if (document.getElementById('milestone-tag') === null) {
             return 0;
@@ -27,6 +30,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
     const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
+    const [dateOffset, set_dateOffset] = useState(useSelector(state => state.dashboard.dateOffset));
     // const [loaded, setLoaded] = useState([]);
     const [leftOffset_milestone, set_leftOffset_milestone] = useState(0);     // distance from beginning of left center edge to milestone in px
     const [leftOffsetTasks, set_leftOffsetTasks] = useState([]);            // relative offset vs. milestone item per task
@@ -63,7 +67,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
     useEffect(() => {
         // console.log('props.dateOffset: ', props.dateOffset);
-        let date_now = moment().add(props.dateOffset, 'days');
+        let date_now = moment().add(dateOffset, 'days');
         let eventDate = moment(props.milestoneItem.date);
         let difference = eventDate.diff(date_now, "days");
         // console.log('difference: ', difference);
@@ -81,7 +85,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
         set_leftOffset_milestone(difference * 16);
 
-    }, [props.dateOffset]);
+    }, [dateOffset]);
 
     const handleMilestoneTagMove = useRef((event) => {
         // let newLeftOffset = event.clientX - 9 * 16;

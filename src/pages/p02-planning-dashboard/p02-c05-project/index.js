@@ -4,9 +4,12 @@ import axios from 'axios';
 import moment from 'moment';
 import planeSVG from './assets/airplane.svg';
 import P02_C05_C01_MILESTONE_TAG from './p02-c05-c01-milestone-tag';
+import { useSelector, useDispatch } from 'react-redux';
 import './index.scss';
  
 const P02_C05_PROJECT = (props) => {
+    const dispatch = useDispatch();
+
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -215,7 +218,7 @@ const P02_C05_PROJECT = (props) => {
         height: '100%',
         backgroundColor: 'greenyellow',
         position: 'absolute',
-        left: `${props.dateOffset * -1}rem`,
+        left: `${useSelector(state => state.dashboard.dateOffset) * -1}rem`,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

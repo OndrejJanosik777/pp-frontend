@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
-import { set_BaseUrl, fetchUserProfile } from '../../app/features/api/apiSlice';
+import { set_BaseUrl, fetch_userProfile } from '../../app/features/api/apiSlice';
 import axios from 'axios';
 import './index.scss';
 
@@ -58,7 +58,7 @@ const LandingPage = () => {
             localStorage.setItem('PP-token', response.data.access);
             setShowSpinnerLogin(false);
 
-            dispatch(fetchUserProfile());
+            dispatch(fetch_userProfile());
 
             navigate('/dashboard/');
         }))

@@ -1,99 +1,109 @@
 import axios from "axios";
-import { 
-  fetchUserProfile_onSuccess,
-  fetchTaskTypes_onSuccess,
-  fetchMilestoneTypes_onSuccess
-} from "../../features/api/apiSlice";
+import * as apiActions from "../../features/api/apiSlice";
+import * as dashboardActions from "../../features/dashboardSlice";
 
 // async middleware function
+// call backend api and dispatch data to store
 const apiMiddleware = storeAPI => next => async action => {
     console.log('API MIDDLEWARE');
     console.log('action: ', action);
 
+    let baseUrl = storeAPI.getState().api.baseUrl;
+
     // checking the type of action
-    if (action.type == "api/fetchUserProfile") {
-      // console.log('fetching user data ... ');
-      // console.log('storeAPI: ', storeAPI.getState());
+    switch (action.type) {
+      case "api/fetch_userProfile":
+        try {
+          const response = await axios.request({
+            method: 'get',
+              url: baseUrl + '/company/my-profile/',
+              headers: {
+                  "Authorization": "Bearer " + localStorage.getItem('PP-token')
+              }
+          })
+  
+          // console.log('fetch succesfull ... ', response.data);
+          // dispatching action:type fetchUserProfile_onSuccess with action:payload
+          // response data ...
+          storeAPI.dispatch(apiActions.update_userProfile({...response.data}));
+        }
+        catch(error) {
+          console.log('error while fetching data...', error);
+        }
 
-      let baseUrl = storeAPI.getState().api.baseUrl;
+        break;
+      case "api/fetch_taskTypes":
+        try {
+          const response = await axios.request({
+            method: 'get',
+              url: baseUrl + '/company/task-types/',
+              headers: {
+                  "Authorization": "Bearer " + localStorage.getItem('PP-token')
+              }
+          })
 
-      // console.log('baseUrl: ', baseUrl);
+          let tasksTypes = response.data;
 
-      try {
-        const response = await axios.request({
-          method: 'get',
-            url: baseUrl + '/company/my-profile/',
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem('PP-token')
-            }
-        })
+          tasksTypes.sort((a, b) => a.id - b.id);
 
-        // console.log('fetch succesfull ... ', response.data);
-        // dispatching action:type fetchUserProfile_onSuccess with action:payload
-        // response data ...
-        storeAPI.dispatch(fetchUserProfile_onSuccess({...response.data}));
-      }
-      catch(error) {
-        console.log('error while fetching data...', error);
-      }
-    }
-    else if (action.type == "api/fetch_taskTypes") {
-      // console.log('fetching TaskTypes');
+          // dispatching action with payload to the store
+          storeAPI.dispatch(apiActions.update_TaskTypes([...tasksTypes]));
+        }
+        catch(error) {
+          console.log('error while fetching task types...', error);
+        }
+        break;
+      case "api/fetch_milestoneTypes":
+        try {
+          const response = await axios.request({
+            method: 'get',
+              url: baseUrl + '/company/milestone-item-types/',
+              headers: {
+                  "Authorization": "Bearer " + localStorage.getItem('PP-token')
+              }
+          })
+  
+          let milestoneTypes = response.data;
+  
+          milestoneTypes.sort((a, b) => a.id - b.id);
+  
+          // dispatching action with payload to the store
+          storeAPI.dispatch(apiActions.update_milestoneTypes([...milestoneTypes]));
+        }
+        catch(error) {
+          console.log('error while fetching task types...', error);
+        }
+        break;
+      case "api/fetch_projects":
+        try {
+          const response = await axios.request({
+            method: 'get',
+              url: baseUrl + '/company/get-projects-for-dashboard/',
+              headers: {
+                  "Authorization": "Bearer " + localStorage.getItem('PP-token')
+              }
+          })
+  
+          let projects = [];
 
-      let baseUrl = storeAPI.getState().api.baseUrl;
+          response.data.map((item) => {
+              projects.push({...item, displayed: true})
+          })
 
-      try {
-        const response = await axios.request({
-          method: 'get',
-            url: baseUrl + '/company/task-types/',
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem('PP-token')
-            }
-        })
-
-        let tasksTypes = response.data;
-
-        tasksTypes.sort((a, b) => a.id - b.id);
-
-        // dispatching action with payload to the store
-        storeAPI.dispatch(fetchTaskTypes_onSuccess([...tasksTypes]));
-      }
-      catch(error) {
-        console.log('error while fetching task types...', error);
-      }
-
-      // next(action);
-    }
-    else if (action.type == "api/fetch_milestoneTypes") {
-      console.log('fetching MilestoneTypes');
-
-      let baseUrl = storeAPI.getState().api.baseUrl;
-
-      try {
-        const response = await axios.request({
-          method: 'get',
-            url: baseUrl + '/company/milestone-item-types/',
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem('PP-token')
-            }
-        })
-
-        let milestoneTypes = response.data;
-
-        milestoneTypes.sort((a, b) => a.id - b.id);
-
-        // dispatching action with payload to the store
-        storeAPI.dispatch(fetchMilestoneTypes_onSuccess([...milestoneTypes]));
-      }
-      catch(error) {
-        console.log('error while fetching task types...', error);
-      }
-
-      // next(action);
-    }
-    else {
-      // this middleware is consuming "fetchUserProfile" action
-      next(action);
+          projects.sort((a, b) => {
+              return parseInt(a.number.slice(-4)) - parseInt(b.number.slice(-4));
+          })
+  
+          // dispatching action with payload to the store
+          storeAPI.dispatch(apiActions.update_projects([...projects]));
+          storeAPI.dispatch(dashboardActions.set_spinnerFetchingProjects(false));
+        }
+        catch(error) {
+          console.log('error while fetching task types...', error);
+        }
+        break;
+      default:
+        next(action);
     }
 }
 

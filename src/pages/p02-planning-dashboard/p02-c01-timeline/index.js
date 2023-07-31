@@ -5,6 +5,7 @@ import YearsTimeLine from './years-timeline';
 import MonthTimeLine from './months-timeline';
 import WeeksTimeLine from './weeks-timeline';
 import DaysTimeLine from './days-timeline';
+import { useSelector, useDispatch } from 'react-redux';
 import './index.scss';
 
 //dateOffset, displayLimit
@@ -18,20 +19,20 @@ const P02_C01_TIMELINE = (props) => {
 
     return (<div>
         <DaysTimeLine
-            startDate={moment().add(props.dateOffset, 'days')}
-            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+            startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
+            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
         />
         <WeeksTimeLine
-            startDate={moment().add(props.dateOffset, 'days')}
-            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+            startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
+            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
         />
         <MonthTimeLine
-            startDate={moment().add(props.dateOffset, 'days')}
-            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+            startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
+            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
         />
         <YearsTimeLine
-            startDate={moment().add(props.dateOffset, 'days')}
-            endDate={moment().add(props.dateOffset + props.displayLimit - 1, 'days')}
+            startDate={moment().add(useSelector(state => state.dashboard.dateOffset), 'days')}
+            endDate={moment().add(useSelector(state => state.dashboard.dateOffset) + props.displayLimit - 1, 'days')}
         />
     </div>);
 }
