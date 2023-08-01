@@ -99,6 +99,8 @@
 
             table {
                 width: 100%;
+                // height: 100%;
+
                 thead, tbody {
                     width: 100%;
                     tr {
@@ -322,7 +324,9 @@
         }
 
         .p02-c03-win-footer-hidden {
-            visibility: collapse;
+            // visibility: collapse;
+            // visibility: hidden;
+            display: none;
         }
     }
 }

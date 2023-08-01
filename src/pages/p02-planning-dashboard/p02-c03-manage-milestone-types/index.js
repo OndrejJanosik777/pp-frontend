@@ -9,22 +9,20 @@ import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { update_milestoneTypes } from '../../../app/features/api/apiSlice';
 import './index.scss';
 
 const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    const dispatch = useDispatch();
 
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    // pick the data from the redux store
+    let milestoneTypes = useSelector(state => state.api.milestoneTypes);
+    let userPermissions = useSelector(state => state.api.userProfile.groups);
+    let baseUrl = useSelector(state => state.api.baseUrl);
+
+    // local component state
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [milestoneTypes, set_milestoneTypes] = useState([]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
     const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
@@ -35,18 +33,22 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         short_name: undefined,
         color: undefined,
     });
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     const showState = () => {
-        // console.log('milestoneTypes: ', props.milestoneTypes)
         console.log('selectedItem: ', selectedItem);
+        console.log('uP: ', userPermissions);
     }
 
     useEffect(() => {
         // fetchItems();
+        // let milestoneTypes = useSelector(state => state.api.milestoneTypes);
+        console.log('MANAGE MILESTONES DISPLAYED...', milestoneTypes);
+
+        // set_milestoneTypes([...milestoneTypes]);
     }, []);
 
     const createNewItem = () => {
+        // function will create new item in redux state and backend database
         const name = document.getElementById('name').value;
         const short_name = document.getElementById('short_name').value;
         let color = document.getElementById('color').value;
@@ -69,9 +71,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
             }
         })
         .then((response => {
-            const newMilestoneItem = response.data;
-
-            props.set_milestoneTypes([...props.milestoneTypes, newMilestoneItem]);
+            dispatch(update_milestoneTypes([...milestoneTypes, response.data]));
 
             set_showSpinner_CreateUpdateItem(false);
         }))
@@ -81,24 +81,22 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
             let message = error.message + "\n" + error.response.data;
 
             alert(message);
-
-            let updatedMilestoneItems = [...props.milestoneTypes];
-
-            updatedMilestoneItems.pop();
-
-            props.set_milestoneTypes([...updatedMilestoneItems]);
         })
     }
 
     const deleteItem = (item) => {
-        const index = props.milestoneTypes.findIndex(elem => elem.id === item.id)
+        // function will delete item from redux state and backend database
+        const index = milestoneTypes.findIndex(elem => elem.id === item.id)
         let deletedMilestoneType = milestoneTypes[index];
+        let originalItems = [...milestoneTypes];
 
-        let updatedMilestoneTypes = [...props.milestoneTypes];
-        updatedMilestoneTypes.splice(index, 1);
+        let updatedItems = [...milestoneTypes];
+        updatedItems.splice(index, 1);
 
-        props.set_milestoneTypes([...updatedMilestoneTypes]);
+        // update in redux state
+        dispatch(update_milestoneTypes(updatedItems));
 
+        // update in backend
         axios({
             method: 'delete',
             url: baseUrl + `/company/milestone-item-types/${item.id}/`,
@@ -106,23 +104,22 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                 "Authorization": token
             }
         })
-            .then((response => {
-                
-            }))
-            .catch((error) => {
-                console.log("error: ", error);
+        .then((response => {
+            
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
 
-                let message = error.message + "\n" + error.response.data;
-    
-                alert(message);
+            let message = error.message + "\n" + error.response.data;
 
-                let updatedMilestoneTypes = [...props.milestoneTypes];
+            alert(message);
 
-                props.set_milestoneTypes([...updatedMilestoneTypes]);
-            })
+            dispatch(update_milestoneTypes(updatedItems));
+        })
     }
 
     const updateItem = (item) => {
+        // function will update item in state and database
         let name = document.getElementById('name').value;
         let short_name = document.getElementById('short_name').value;
         let color = document.getElementById('color').value;
@@ -130,19 +127,20 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         if (name === "" && short_name === "")
         return alert('missing input');
 
-        const index = props.milestoneTypes.findIndex(elem => elem.id === item.id)
-        let updatedMilestoneType = props.milestoneTypes[index];
+        const index = milestoneTypes.findIndex(elem => elem.id === item.id)
 
-        updatedMilestoneType.id = item.id;
-        updatedMilestoneType.name = name;
-        updatedMilestoneType.short_name = short_name;
-        updatedMilestoneType.color = color;
+        let updatedItem = {
+            id: item.id,
+            name: name,
+            short_name: short_name,
+            color: color,
+        };
 
-        let updatedMilestoneTypes = [...props.milestoneTypes];
-        updatedMilestoneTypes.splice(index, 1, updatedMilestoneType);
+        let updatedItems = [...milestoneTypes];
+        updatedItems.splice(index, 1, updatedItem);
 
-        props.set_milestoneTypes([...updatedMilestoneTypes]);
         set_showSpinner_CreateUpdateItem(true);
+
 
         axios({
             method: 'put',
@@ -151,20 +149,28 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                 "Authorization": token
             },
             data: {
-                id: updatedMilestoneType.id,
-                name: updatedMilestoneType.name,
-                short_name: updatedMilestoneType.short_name,
-                color: updatedMilestoneType.color,
+                id: updatedItem.id,
+                name: updatedItem.name,
+                short_name: updatedItem.short_name,
+                color: updatedItem.color,
             }
         })
         .then((response => {
             set_showSpinner_CreateUpdateItem(false);
 
             document.getElementById('name').value = "";
-
             document.getElementById('short_name').value = "";
 
+            dispatch(update_milestoneTypes([...updatedItems]));
+
             set_updateMode(false);
+
+            set_selectedItem({
+                id: undefined,
+                name: undefined,
+                short_name: undefined,
+                color: undefined,
+            });
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -177,7 +183,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
 
     const switchToUpdateMode = (item) => {
         /* function triggers after user clicked update button for 
-        certain milestone type. It will populate the values in footer like
+        certain milestone type. It will populate the values in footer 
         short name, name and color. It will also save item as selectedItem to component
         state. */
         set_updateMode(true);
@@ -200,7 +206,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                         src={delete_cross} 
                         alt=''
                     /> */}
-                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ?
+                    {userPermissions.findIndex(elem => elem.name === "all_permissions") !== -1 ?
                         <img 
                             className='p02-c03-icons' 
                             src={create_new} alt='' 
@@ -249,7 +255,8 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                     </thead>
                     <tbody>
                         {/* TODO:  */}
-                        {props.milestoneTypes.map((item, index) => {
+                        {/* {props.milestoneTypes.map((item, index) => { */}
+                        {milestoneTypes.map((item, index) => {
                             return <tr key={Math.random() * 100000}>
                                 <td>{item.id}</td>
                                 <td>{item.short_name}</td>
@@ -264,7 +271,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                     />
                                 </td>
                                 <td>
-                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ?
+                                    {userPermissions.findIndex(elem => elem.name === "all_permissions") !== -1 ?
                                         <img 
                                             className='p02-c03-icons' 
                                             src={pencil_edit} 
@@ -273,7 +280,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                                         /> :
                                         <div></div>
                                     }
-                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ? 
+                                    {userPermissions.findIndex(elem => elem.name === "all_permissions") !== -1 ? 
                                         <img 
                                             className='p02-c03-icons' 
                                             src={delete_cross} 
@@ -349,7 +356,18 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                             type='button' 
                             className='p02-c03-button' 
                             value={updateMode ? 'Cancel' : 'Close'} 
-                            onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
+                            onClick={updateMode ? 
+                                () => {
+                                    set_selectedItem({
+                                        id: undefined,
+                                        name: undefined,
+                                        short_name: undefined,
+                                        color: undefined,
+                                    });
+                                    set_updateMode(false);
+                                } 
+                                : 
+                                () => set_createMode(false)} 
                         />
                     </div>
                 </div>

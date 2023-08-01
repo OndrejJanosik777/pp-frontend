@@ -278,9 +278,9 @@ const P02_PLANNING_DASHBOARD = () => {
                     : ""}
                     {manageMilestoneTypes_modalToogle ?
                     <P02_C03_MANAGE_MILESTONE_TYPES
-                        milestoneTypes={milestoneTypes}
-                        set_milestoneTypes={set_milestoneTypes}
-                        userPermissions={userPermissions}
+                        // milestoneTypes={milestoneTypes}
+                        // set_milestoneTypes={set_milestoneTypes}
+                        // userPermissions={userPermissions}
                         toogleVisibility={set_manageMilestoneTypes_modalToogle}
                     />
                     :
