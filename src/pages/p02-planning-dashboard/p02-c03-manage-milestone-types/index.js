@@ -58,6 +58,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         if (name === "" && short_name === "")
             return alert('missing input');
 
+        // update in backend database and after success in redux state
         axios({
             method: 'post',
             url: baseUrl + '/company/milestone-item-types/',
@@ -87,10 +88,9 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
     const deleteItem = (item) => {
         // function will delete item from redux state and backend database
         const index = milestoneTypes.findIndex(elem => elem.id === item.id)
-        let deletedMilestoneType = milestoneTypes[index];
         let originalItems = [...milestoneTypes];
-
         let updatedItems = [...milestoneTypes];
+
         updatedItems.splice(index, 1);
 
         // update in redux state
@@ -114,7 +114,8 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
 
             alert(message);
 
-            dispatch(update_milestoneTypes(updatedItems));
+            // in case of failure restore originalItem in Redux store
+            dispatch(update_milestoneTypes(originalItems));
         })
     }
 
@@ -141,7 +142,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
 
         set_showSpinner_CreateUpdateItem(true);
 
-
+        // update item in database and in redux store
         axios({
             method: 'put',
             url: baseUrl + `/company/milestone-item-types/${item.id}/`,

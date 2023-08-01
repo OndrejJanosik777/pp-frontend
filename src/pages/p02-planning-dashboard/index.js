@@ -100,6 +100,7 @@ const P02_PLANNING_DASHBOARD = () => {
 
         fetchTaskTypes();
 
+        // fetching data from backend database to redux store
         dispatch(apiActions.set_BaseUrl());
         dispatch(apiActions.fetch_userProfile());
         dispatch(apiActions.fetch_taskTypes());
@@ -259,7 +260,10 @@ const P02_PLANNING_DASHBOARD = () => {
     return (
         <div className='p02-dashboard'>
             <C01_NAVBAR />
-            <C02_SIDEBAR extendedSideBar={extendedSideBar} set_extendedSideBar={set_extendedSideBar} /> 
+            <C02_SIDEBAR 
+                extendedSideBar={extendedSideBar} 
+                set_extendedSideBar={set_extendedSideBar} 
+            /> 
             <div className='p02-center-section'>
                 <img className='p02-img-home' src={home} alt='' />
                 <button className='p02-button-container'>
@@ -278,9 +282,6 @@ const P02_PLANNING_DASHBOARD = () => {
                     : ""}
                     {manageMilestoneTypes_modalToogle ?
                     <P02_C03_MANAGE_MILESTONE_TYPES
-                        // milestoneTypes={milestoneTypes}
-                        // set_milestoneTypes={set_milestoneTypes}
-                        // userPermissions={userPermissions}
                         toogleVisibility={set_manageMilestoneTypes_modalToogle}
                     />
                     :
@@ -377,12 +378,15 @@ const P02_PLANNING_DASHBOARD = () => {
                             <div 
                                 className='p02-item'
                                 // onClick={() => set_dateOffset(0)}
-                                onClick={() => dispatch(dashboardActions.set_dateOffset(0))}
-                            >Today</div>
+                                onClick={() => dispatch(dashboardActions.reset_dateOffset())}
+                            >Reset timeline</div>
                             <div className='p02-item'>|</div>
                             <div 
                                 className='p02-item'
-                                onClick={() => fetchProjects()}
+                                onClick={() => {
+                                    dispatch(dashboardActions.set_spinnerFetchingProjects(true));
+                                    dispatch(apiActions.fetch_projects());
+                                }}
                             >Refresh Projects</div>
                             <div className={
                                 // showSpinner_FetchingProjects ?

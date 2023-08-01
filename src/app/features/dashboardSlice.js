@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const dashboardSlice = createSlice({
     name: 'dashboard',
     initialState: {
-        dateOffset: 0,
+        dateOffset: -7,
         displayedDays: 0,
         spinnerFetchingProjects: true,
     },
@@ -14,6 +14,9 @@ export const dashboardSlice = createSlice({
         },
         set_dateOffset: (state, action) => {
             state.dateOffset += action.payload;
+        },
+        reset_dateOffset: (state, action) => {
+            state.dateOffset = -7;
         },
         set_displayedDays: (state, action) => {
             state.displayedDays = action.payload;
@@ -25,6 +28,7 @@ export const dashboardSlice = createSlice({
 export const { 
     set_spinnerFetchingProjects,
     set_dateOffset,
+    reset_dateOffset,
     set_displayedDays,
 } = dashboardSlice.actions
 

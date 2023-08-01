@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import editSVG from './assets/pencil-square.svg';
 import deleteSVG from './assets/trash3.svg';
 import create_new from './assets/create_new.png';
@@ -10,27 +11,27 @@ import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import axios from 'axios';
 import './index.scss'; 
+import { update_TaskTypes } from '../../../app/features/api/apiSlice';
 
 const P02_C04_MANAGE_TASK_TYPES = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    const dispatch = useDispatch();
 
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    // pick the data from the redux store
+    let taskTypes = useSelector(state => state.api.taskTypes);
+    let userPermissions = useSelector(state => state.api.userProfile.groups);
+    let baseUrl = useSelector(state => state.api.baseUrl);
+
+    // local component state
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [taskTypes, set_taskTypes] = useState([...props.taskTypes]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
     const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(props.taskTypes.length === 0);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
-    const [selectedItem, set_selectedItem] = useState(undefined);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
+    const [selectedItem, set_selectedItem] = useState({
+        id: undefined,
+        name: undefined,
+        description: undefined,
+    });
 
     useEffect(() => {
         if (taskTypes.length === 0) fetchItems();
@@ -39,34 +40,35 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
     const fetchItems = () => {
         // console.log('fetching project with id: ', projectId);
 
-        axios({
-            method: 'get',
-            url: baseUrl + '/company/task-types/',
-            headers: {
-                "Authorization": token
-            }
-        })
-        .then((response => {
-            console.log('fetch tasks types: ', response.data);
+        // axios({
+        //     method: 'get',
+        //     url: baseUrl + '/company/task-types/',
+        //     headers: {
+        //         "Authorization": token
+        //     }
+        // })
+        // .then((response => {
+        //     console.log('fetch tasks types: ', response.data);
 
-            let tasksTypes = response.data;
+        //     let tasksTypes = response.data;
 
-            tasksTypes.sort((a, b) => a.id - b.id);
+        //     tasksTypes.sort((a, b) => a.id - b.id);
 
-            set_taskTypes([...tasksTypes]);
+        //     set_taskTypes([...tasksTypes]);
 
-            set_showSpinner_FetchingItems(false);
-        }))
-        .catch((error) => {
-            console.log("error: ", error);
+        //     set_showSpinner_FetchingItems(false);
+        // }))
+        // .catch((error) => {
+        //     console.log("error: ", error);
 
-            let message = error.message + "\n" + error.response.data;
+        //     let message = error.message + "\n" + error.response.data;
 
-            alert(message);
-        })
+        //     alert(message);
+        // })
     }
 
     const createNewItem = () => {
+        // function will create new item in redux state and database
         const name = document.getElementById('name').value;
         const description = document.getElementById('description').value;
 
@@ -75,6 +77,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
         if (name === "" && description === "")
             return alert('missing input');
 
+        // update in database and after success in redux state
         axios({
             method: 'post',
             url: baseUrl + '/company/task-types/',
@@ -87,10 +90,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
             }
         })
         .then((response => {
-            const newItem = response.data;
-
-            set_taskTypes([...taskTypes, newItem]);
-            props.set_taskTypes([...taskTypes, newItem]);
+            dispatch(update_TaskTypes([...taskTypes, response.data]));
 
             set_showSpinner_CreateUpdateItem(false);
         }))
@@ -100,23 +100,19 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
             let message = error.message + "\n" + error.response.data;
 
             alert(message);
-
-            let updatedItem = [...taskTypes];
-
-            updatedItem.pop();
-
-            set_taskTypes([...updatedItem]);
         })
     }
 
     const deleteItem = (item) => {
+        // function will delete item from redux state and database
         const index = taskTypes.findIndex(elem => elem.id === item.id)
-
+        let originalItems = [...taskTypes];
         let updatedItems = [...taskTypes];
 
         updatedItems.splice(index, 1);
 
-        set_taskTypes([...updatedItems]);
+        // update in redux state
+        dispatch(update_TaskTypes(updatedItems));
 
         axios({
             method: 'delete',
@@ -125,24 +121,23 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                 "Authorization": token
             }
         })
-            .then((response => {
-                
-            }))
-            .catch((error) => {
-                console.log("error: ", error);
+        .then((response => {
+            
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
 
-                let message = error.message + "\n" + error.response.data;
-    
-                alert(message);
+            let message = error.message + "\n" + error.response.data;
 
-                let updatedItems = [...taskTypes];
+            alert(message);
 
-                set_taskTypes([...updatedItems]);
-            })
+            // in case of failure restore originalItem in Redux store
+            dispatch(update_TaskTypes(originalItems));
+        })
     }
 
     const updateItem = (item) => {
-
+        // function will update item in state and database
         let name = document.getElementById('name').value;
         let description = document.getElementById('description').value;
 
@@ -150,19 +145,19 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
         return alert('missing input');
 
         const index = taskTypes.findIndex(elem => elem.id === item.id)
-        let updatedItem = taskTypes[index];
 
-        updatedItem.id = item.id;
-        updatedItem.name = name;
-        updatedItem.description = description;
+        let updatedItem = {
+            id: item.id,
+            name: name,
+            description: description,
+        };
 
         let updatedItems = [...taskTypes];
         updatedItems.splice(index, 1, updatedItem);
 
-        set_taskTypes([...updatedItems]);
-        props.set_taskTypes([...updatedItems]);
         set_showSpinner_CreateUpdateItem(true);
 
+        // update item in database and in redux store
         axios({
             method: 'put',
             url: baseUrl + `/company/task-types/${item.id}/`,
@@ -175,22 +170,29 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                 description: updatedItem.description,
             }
         })
-            .then((response => {
-                set_showSpinner_CreateUpdateItem(false);
+        .then((response => {
+            set_showSpinner_CreateUpdateItem(false);
 
-                document.getElementById('name').value = "";
+            document.getElementById('name').value = "";
+            document.getElementById('description').value = "";
 
-                document.getElementById('description').value = "";
+            dispatch(update_TaskTypes(updatedItems));
 
-                set_updateMode(false);
-            }))
-            .catch((error) => {
-                console.log("error: ", error);
+            set_updateMode(false);
 
-                let message = error.message + "\n" + error.response.data;
+            set_selectedItem({
+                id: undefined,
+                name: undefined,
+                description: undefined,
+            });
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
 
-                alert(message);
-            })
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
     }
 
     const switchToUpdateMode = (item) => {
@@ -211,7 +213,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                         src={delete_cross} 
                         alt=''
                     /> */}
-                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ?
+                    {userPermissions.findIndex(elem => elem.name === "all_permissions") !== -1 ?
                         <img 
                             className='p02-c04-icons' 
                             src={create_new} alt='' 
@@ -265,7 +267,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                                 <td>{item.name}</td>
                                 <td>{item.description}</td>
                                 <td>
-                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ? 
+                                    {userPermissions.findIndex(elem => elem.name === "all_permissions") !== -1 ? 
                                         <img 
                                             className='p02-c04-icons' 
                                             src={pencil_edit} 
@@ -274,7 +276,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                                         /> :
                                         <div></div>
                                     }
-                                    {userPermissions.findIndex(elem => elem === "all_permissions") !== -1 ? 
+                                    {userPermissions.findIndex(elem => elem.name === "all_permissions") !== -1 ? 
                                         <img 
                                             className='p02-c04-icons' 
                                             src={delete_cross} 
