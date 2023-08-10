@@ -1,78 +1,73 @@
 import React, { Component } from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import create_new from './assets/create_new.png';
 import edit_panels from './assets/edit_panels.png';
 import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
+import * as apiActions from '../../../app/features/api/apiSlice';
 import './index.scss';
 import axios from 'axios'; 
 
 const P02_C02_MANAGE_PROJECTS = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    const dispatch = useDispatch();
 
-    const [baseUrl, set_baseUrl] = useState(getBaseUrl());
+    // pick the data from the redux store
+    let projects = useSelector(state => state.api.projects);
+    let userPermissions = useSelector(state => state.api.userProfile.groups);
+    let baseUrl = useSelector(state => state.api.baseUrl);
+
+    // const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
-    const [projects, set_projects] = useState([]);
+    // const [projects, set_projects] = useState([]);
     const [showSpinner_CreateUpdateProject, set_showSpinner_CreateUpdateProject] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState({});
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions])
+    // const [userPermissions, set_userPermissions] = useState([...props.userPermissions])
     
-
     useEffect(() => {
-        console.log('props.projects: ', props.projects);
+        // console.log('props.projects: ', props.projects);
 
-        set_projects(props.projects);
+        // set_projects(props.projects);
     }, []);
 
     const showState = () => {
         console.log('userPermissions: ', userPermissions);
     }
 
-    const checkboxChanged = (project) => {
-        console.log('checkbox checked...', project);
+    const checkboxChanged = (item) => {
+        let updatedItem = { ...item };
 
-        let updatedProjects = [...projects];
+        updatedItem.displayed = !updatedItem.displayed;
 
-        let index = updatedProjects.findIndex((elem) => elem.id === project.id);
-
-        updatedProjects[index].displayed = !updatedProjects[index].displayed;
-
-        set_projects(updatedProjects);
+        dispatch(apiActions.update_project(updatedItem));
     }
 
-    const deleteProject = (project) => {
+    const deleteItem = (item) => {
+        let index = projects.findIndex(elem => elem.id === item.id)
+        let originalItems = [...projects];
+        let updatedItems = [...projects];
 
-        let index = projects.findIndex(elem => elem.id === project.id)
+        updatedItems.splice(index, 1);
 
-        let updatedProjects = [...projects];
+        // set_projects(updatedProjects);
 
-        updatedProjects.splice(index, 1);
+        dispatch(apiActions.update_projects(updatedItems));
 
-        set_projects(updatedProjects);
-
-        props.set_projects(updatedProjects);
+        // props.set_projects(updatedProjects);
 
         axios({
             method: 'delete',
-            url: baseUrl + `/company/projects/${project.id}/`,
+            url: baseUrl + `/company/projects/${item.id}/`,
             headers: {
                 "Authorization": token
             }
         })
         .then((response => {
-            console.log("projects deleted sucessfully");
+            // console.log("projects deleted sucessfully");
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -80,17 +75,16 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             let message = error.message + "\n" + error.response.data;
 
             alert(message);
+
+            dispatch(apiActions.update_projects(originalItems));
         })
     }
 
-    const createNewProject = () => {
+    const createItem = () => {
+        // function will create new item in redux state and backend database
         let name = document.getElementById('name').value;
         let number = document.getElementById('number').value;
         let short_name = document.getElementById('short_name').value;
-
-        console.log('name: ', name);
-        console.log('number: ', number);
-        console.log('short_name: ', short_name);
 
         if (name == "" || short_name == "" || number == "")  {
             return alert('Missing input: name, number or short name')
@@ -98,6 +92,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
 
         set_showSpinner_CreateUpdateProject(true);
 
+        // update in backend database and after success in redux state
         axios({
             method: 'post',
             url: baseUrl + '/company/projects/',
@@ -108,8 +103,6 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                 name: name,
                 number: number,
                 short_name: short_name
-                // milestone_items: [],
-                // monuments: []
             }
         })
         .then((response => {
@@ -119,9 +112,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
 
             let updatedProjects = [...projects, newProject];
 
-            set_projects(updatedProjects);
-
-            props.set_projects(updatedProjects);
+            dispatch(apiActions.update_projects(updatedProjects))
 
             set_showSpinner_CreateUpdateProject(false);
         }))
@@ -134,18 +125,19 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         })
     }
 
-    const switchToUpdateMode = (project) => {
+    const switchToUpdateMode = (item) => {
         set_updateMode(true);
-        set_selectedItem(project);
+        set_selectedItem(item);
 
-        document.getElementById('name').value = project.name;
-        document.getElementById('number').value = project.number;
-        document.getElementById('short_name').value = project.short_name;
+        document.getElementById('name').value = item.name;
+        document.getElementById('number').value = item.number;
+        document.getElementById('short_name').value = item.short_name;
 
     }
 
-    const updateProject = () => {
-        let updateProject = {...selectedItem};
+    const updateItem = (item) => {
+        // function will update item in state and database
+        let updateProject = {...item};
 
         updateProject.name = document.getElementById('name').value;
         updateProject.number = document.getElementById('number').value;
@@ -155,8 +147,11 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             return alert('Missing input: name, number or short name')
         }
 
+        const index = projects.findIndex(elem => elem.id === item.id);
+
         set_showSpinner_CreateUpdateProject(true);
 
+        // update item in database and in redux store
         axios({
             method: 'put',
             url: baseUrl + `/company/projects/${updateProject.id}/`,
@@ -174,20 +169,20 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         .then((response => {
             console.log("projects updated sucessfully");
 
-            let index = projects.findIndex(elem => elem.id === response.data.id);
+            // let index = projects.findIndex(elem => elem.id === response.data.id);
 
-            let updatedProjects = [...projects];
+            let updatedItems = [...projects];
 
-            updatedProjects[index] = {
+            updatedItems[index] = {
                 ...response.data, 
                 displayed: updateProject.displayed, 
                 milestone_items: [...updateProject.milestone_items],
                 monuments: [...updateProject.monuments]
             };
 
-            set_projects(updatedProjects);
+            dispatch(apiActions.update_projects(updatedItems));
 
-            props.set_projects(updatedProjects);
+            // set_updateMode(false);
 
             set_showSpinner_CreateUpdateProject(false);
         }))
@@ -206,7 +201,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             <div className='p02-c02-nav-bar'>
                 <div className='p02-c02-nav-bar-left'>
                     {/* <img className='p02-c02-icons' src={delete_cross} alt='' /> */}
-                    {userPermissions.findIndex(elem => elem === "create_project" || elem ===  "all_permissions") !== -1 ?
+                    {userPermissions.findIndex(elem => elem.name === "create_project" || elem.name ===  "all_permissions") !== -1 ?
                     <img className='p02-c02-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
                     :
                     <div></div>
@@ -239,20 +234,20 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {projects.map((project) => {
+                        {projects.map((item) => {
                             return <tr key={Math.random() * 100000}>
-                                <td><input type='checkbox' checked={project.displayed} onChange={() => checkboxChanged(project)} /></td>
-                                <td>{project.name}</td>
-                                <td>{project.number}</td>
-                                <td>{project.short_name}</td>
+                                <td><input type='checkbox' checked={item.displayed} onChange={() => checkboxChanged(item)} /></td>
+                                <td>{item.name}</td>
+                                <td>{item.number}</td>
+                                <td>{item.short_name}</td>
                                 <td>
-                                    {userPermissions.find(elem => elem === "edit_project"  || elem ===  "all_permissions") ?
-                                        <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(project)} />
+                                    {userPermissions.find(elem => elem.name === "edit_project"  || elem.name ===  "all_permissions") ?
+                                        <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(item)} />
                                         :
                                         <div></div>
                                     }
-                                    {userPermissions.find(elem => elem === "delete_project"  || elem ===  "all_permissions") ? 
-                                        <img className='p02-c02-icons' src={delete_cross} alt='' onClick={() => deleteProject(project)} />
+                                    {userPermissions.find(elem => elem.name === "delete_project"  || elem.name ===  "all_permissions") ? 
+                                        <img className='p02-c02-icons' src={delete_cross} alt='' onClick={() => deleteItem(item)} />
                                         :
                                         <div></div>
                                     }
@@ -298,7 +293,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                     type='button' 
                                     className='button' 
                                     value={updateMode ? 'Update' : 'Create'} 
-                                    onClick={updateMode ? updateProject : createNewProject} 
+                                    onClick={updateMode ? () => updateItem(selectedItem) : createItem} 
                                 />
                             }
                         </div>

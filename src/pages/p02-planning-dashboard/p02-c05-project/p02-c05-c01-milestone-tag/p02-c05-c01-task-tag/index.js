@@ -1,10 +1,16 @@
 import React, { Component, useCallback, useRef } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import './index.scss';
 import moment from 'moment';
 
 const P02_C02_C01_TASK_TAG = (props) => {
+    const dispatch = useDispatch();
+
+    // pick the data from the redux store
+    let userPermissions = useSelector(state => state.api.userProfile.groups);
+
     const [leftOffsetMilestone, set_leftOffsetMilestone] = useState(props.leftOffsetMilestone);
     const [offsetTask, set_offsetTask] = useState(0);   // task offset in px from milestone
     const [initialOffsetTask, set_initialOffsetTask] = useState(0);   // task offset in px from milestone
@@ -15,7 +21,6 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [task, set_task] = useState(props.task);
     const [taskDisplayed, set_taskDisplayed] = useState(true)
     const [initialClickDistance, set_initialClickDistance] = useState(10);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     const showState = () => {
         console.log('props: ', props);
@@ -69,7 +74,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
     }, [taskIsMoving])
 
     const taskClicked = (event) => {
-        if (userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_task" ) !== -1) {
+        if (userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_task" ) !== -1) {
 
             let distance = event.clientX - leftOffsetMilestone - (50 + 8*16);
     

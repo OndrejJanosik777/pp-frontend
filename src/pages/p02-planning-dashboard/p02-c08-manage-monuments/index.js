@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 // assets
@@ -11,22 +12,18 @@ import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
+// actions to dispatch
+import * as apiActions from '../../../app/features/api/apiSlice';
 // styles
 import './index.scss';
 
 const P02_C08_MANAGE_MONUMENTS = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    const dispatch = useDispatch();
 
-    // 
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    // pick the data from the redux store
+    let userPermissions = useSelector(state => state.api.userProfile.groups);
+    let baseUrl = useSelector(state => state.api.baseUrl);
+
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     // 
     const [monuments, set_monuments] = useState([...props.activeProject.monuments]);
@@ -36,7 +33,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     const [selectedItem, set_selectedItem] = useState(undefined);
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
+    // const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
         console.log('(modal) component ManageMonuments loaded: ... ');
@@ -44,11 +41,14 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     }, []);
     
     const showState = () => {
-        console.log('props: ', props);
+        console.log('props.activeProject: ', props.activeProject);
         console.log('monuments: ', monuments);
     }
 
     const createNewItem = () => {
+        // 1 - create new item in database
+        // 2 - create new item in redux store (...dispatch updated project to redux store)
+        // 3 - create new item in local component state
         const part_number = document.getElementById('part_number').value;
         const name = document.getElementById('name').value;
         const hours_D = document.getElementById('hours_D').value;
@@ -73,6 +73,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
         if (hours_S === "") return alert('missing input');
         if (hours_Z === "") return alert('missing input');
 
+        // 1
         axios({
             method: 'post',
             url: baseUrl + `/company/monuments/`,
@@ -92,9 +93,27 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
         .then((response => {
             console.log('monument created succesfully: ', response.data);
 
-            props.updateProject(props.activeProject);
+            let newMonument = {
+                id: response.data.id,
+                name: response.data.name,
+                part_number: response.data.part_number,
+                hours_K: response.data.hours_K,
+                hours_S: response.data.hours_S,
+                hours_D: response.data.hours_D,
+                hours_Z: response.data.hours_Z,
+            }
 
-            set_monuments([...monuments, response.data]);
+            let updatedMonuments = [...monuments, newMonument];
+            updatedMonuments.sort((a,b) => a.part_number - b.part_number);
+            
+            
+            // 2
+            let updatedProject = {...props.activeProject};
+            updatedProject.monuments = [...updatedMonuments];
+            dispatch(apiActions.update_project(updatedProject));
+
+            // 3
+            set_monuments([...monuments, newMonument]);
 
             set_showSpinner_CreateUpdateItem(false);
         }))
@@ -110,14 +129,14 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     }
 
     const deleteItem = (monument, index) => {
-        // update in local state
+        // 1 - delete in database
+        // 2 - delete in local component state
+        // 3 - delete in redux state
 
         let updatedMonuments = [...monuments];
-
         updatedMonuments.splice(index, 1);
 
-        set_monuments([...updatedMonuments]);
-
+        // 1 - deleting in database
         axios({
             method: 'delete',
             url: baseUrl + `/company/monuments/${monument.id}/`,
@@ -126,7 +145,15 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
             }
         })
         .then((response => {
-            props.updateProject(props.activeProject);
+            // monument deleted succesfully
+            
+            // 2 - deleting in local component state
+            set_monuments([...updatedMonuments]);
+            
+            // 3 - deleting in redux store
+            let updatedProject = {...props.activeProject};
+            updatedProject.monuments = [...updatedMonuments];
+            dispatch(apiActions.update_project(updatedProject));
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -138,6 +165,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     }
 
     const switchToUpdateMode = (item, index) => {
+        // fill the form with values from selected monument
         document.getElementById('part_number').value = item.part_number;
         document.getElementById('name').value = item.name;
         document.getElementById('hours_D').value = item.hours_D;
@@ -153,6 +181,10 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     }
 
     const updateItem = (item, index) => {
+        // 1 - update in database
+        // 2 - update in local state
+        // 3 - update in redux store
+
         const part_number = document.getElementById('part_number').value;
         const name = document.getElementById('name').value;
         const hours_D = document.getElementById('hours_D').value;
@@ -169,6 +201,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
         if (hours_S === "") return alert('missing input');
         if (hours_Z === "") return alert('missing input');
 
+        // 1
         axios({
             method: 'put',
             url: baseUrl + `/company/monuments/${item.id}/`,
@@ -186,17 +219,29 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 project: props.activeProject.id,
             }
         })
+        // updated succesfully
         .then((response => {
-            // console.log('milestone updated succesfully: ', response.data);
+            let updatedMonument = {
+                id: response.data.id,
+                name: response.data.name,
+                part_number: response.data.part_number,
+                hours_K: response.data.hours_K,
+                hours_S: response.data.hours_S,
+                hours_D: response.data.hours_D,
+                hours_Z: response.data.hours_Z,
+            }
 
             let updatedMonuments = [...monuments];
+            updatedMonuments.splice(index, 1, updatedMonument);
 
-            updatedMonuments.splice(index, 1, response.data);
-
+            // 2 
             set_monuments([...updatedMonuments]);
-
-            props.updateProject(props.activeProject);
-
+            
+            // 3
+            let updatedProject = {...props.activeProject};
+            updatedProject.monuments = [...updatedMonuments];
+            dispatch(apiActions.update_project(updatedProject));
+            
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
@@ -219,13 +264,13 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                         alt=''
                         onClick={showState}
                     /> */}
-                    {userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_monument" ) !== -1 ? 
-                        <img 
-                            className='p02-c08-icons' 
-                            src={create_new} alt='' 
-                            onClick={() => set_createMode(!createMode)} 
-                        /> :
-                        <div></div>
+                    {userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "create_monument" ) !== -1 ? 
+                    <img 
+                        className='p02-c08-icons' 
+                        src={create_new} alt='' 
+                        onClick={() => set_createMode(!createMode)} 
+                    /> :
+                    <div></div>
                     }
                 </div>
                 <div className='p02-c08-nav-bar-right'>
@@ -278,7 +323,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                                 <td>{monument.hours_S}</td>
                                 <td>{monument.hours_Z}</td>
                                 <td>
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_monument" ) !== -1 ? 
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_monument" ) !== -1 ? 
                                         <img 
                                             className='p02-c08-icons' 
                                             src={pencil_edit} 
@@ -287,7 +332,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                                         /> :
                                         <div></div>
                                     }
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_monument" ) !== -1 ?
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "delete_monument" ) !== -1 ?
                                         <img 
                                             className='p02-c08-icons' 
                                             src={delete_cross} 

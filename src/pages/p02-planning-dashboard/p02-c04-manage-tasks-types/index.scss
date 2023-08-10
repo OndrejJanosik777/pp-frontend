@@ -296,7 +296,8 @@
         }
 
         .p02-c04-win-footer-hidden {
-            visibility: collapse;
+            // visibility: collapse;
+            display: none;
         }
     }
 }

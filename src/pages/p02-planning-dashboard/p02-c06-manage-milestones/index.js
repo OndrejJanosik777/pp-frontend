@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 // assets
@@ -11,44 +12,90 @@ import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
+// actions to dispatch
+import * as apiActions from '../../../app/features/api/apiSlice';
 // styles
 import './index.scss';
 
 const P02_C06_MANAGE_MILESTONES = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    const dispatch = useDispatch();
 
+    // pick the data from the redux store
+    const userPermissions = useSelector(state => state.api.userProfile.groups);
+    const baseUrl = useSelector(state => state.api.baseUrl);
+    const milestoneTypes = useSelector(state => state.api.milestoneTypes);
     // 
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    // 
-    const [milestones, set_milestones] = useState([...props.activeProject.milestone_items]);
+    // array to store milestones in project format
+    const [milestones_reduxFormat, set_milestones_reduxFormat] = useState([{
+        id: null,
+        name: null,
+        milestone_item_type: {
+            id: null,
+            name: null,
+            short_name: null,
+            color: null
+        },
+        date: null,
+        comment: null,
+        color: null,
+        tasks: []
+    }]);
+    // array to store milestones in local state format (not all attributes are shown )
+    const [milestones_localStateFormat ,set_milestones_localStateFormat] = useState([{
+        milestone_id: null,
+        milestone_type: {
+            id: null,
+            name: null,
+            short_name: null,
+            color: null
+        },
+        milestone_name: null,
+        milestone_date: null,
+        milestone_comment: null,
+    }]);
+    // object represents project, where milestone belongs
+    const [activeProject, set_activeProject] = useState({...props.activeProject});
     // 
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
 
     useEffect(() => {
-        console.log('component ManageMilestones loaded: ... ');
-        console.log('props.activeProject: ', props.activeProject);
+        // 
+        set_milestones_reduxFormat([...props.activeProject.milestone_items]);
+
+        //
+        let extractedMilestones = [];
+
+        props.activeProject.milestone_items.map((item) => {
+            let newMilestone = {
+                milestone_id: item.id,
+                milestone_type: {...item.milestone_item_type},
+                milestone_name: item.name,
+                milestone_date: item.date,
+                milestone_comment: item.comment
+            };
+
+            extractedMilestones.push({...newMilestone});
+        })
+
+        console.log('updatedMilestones: ', extractedMilestones);
+
+        set_milestones_localStateFormat([...extractedMilestones]);
     }, []);
     
     const showState = () => {
-        console.log('props: ', props);
-        console.log('milestones: ', milestones);
+        console.log('milestones_reduxFormat: ', milestones_reduxFormat);
+        console.log('milestone_localStateFormat: ', milestones_localStateFormat);
+        console.log('activeProject: ', activeProject);
     }
 
     const createNewItem = () => {
-        // update in local state - no
+        // 1 - create new item in database
+        // 2 - create new item in local state
+        // 3 - create new item in redux store
 
         const name = document.getElementById('name').value;
         const milestone_item_type = document.getElementById('milestone_item_type').value;
@@ -56,36 +103,36 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
         const comment = document.getElementById('comment').value;
         const tasks = [];
 
-        const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
-
-        console.log('creating new milestone...');
-        console.log('name...', name);
-        console.log('milestone_item_type...', props.milestoneTypes[milestoneTypeIndex].id);
-        console.log('date...', date);
-        console.log('comment...', comment);
-        console.log('tasks...', tasks);
-        console.log('props.activeProject.id...', props.activeProject.id);
+        const milestoneTypeIndex = milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
 
         set_showSpinner_CreateUpdateItem(true);
 
         if (name === "") return alert('missing input');
-        if (props.milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
+        if (milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
         if (date === "") return alert('missing input');
         if (comment === "") return alert('missing input');
         if (tasks === "") return alert('missing input');
-        if (props.activeProject.id === "") return alert('missing input');
+        if (activeProject.id === "") return alert('missing input');
 
-        let newMilestone = {
+        let newMilestone_reduxFormat = {
+            id: null,
             name: name,
-            milestone_item_type: {...props.milestoneTypes[milestoneTypeIndex]},
+            milestone_item_type: {...milestoneTypes[milestoneTypeIndex]},
             date: date,
             comment: comment,
+            color: milestoneTypes[milestoneTypeIndex].color,
             tasks: tasks,
-            project: props.activeProject.id
         }
 
-        // update project in backend
+        let newMilestone_localStateFormat = {
+            milestone_id: null,
+            milestone_name: name,
+            milestone_type: {...milestoneTypes[milestoneTypeIndex]},
+            milestone_date: date,
+            milestone_comment: comment,
+        }
 
+        // 1 - 
         axios({
             method: 'post',
             url: baseUrl + `/company/milestone-items/`,
@@ -93,77 +140,85 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                 "Authorization": token
             },
             data: {
-                name: name,
-                milestone_item_type: props.milestoneTypes[milestoneTypeIndex].id,
-                date: date,
-                comment: comment,
-                project: props.activeProject.id,
+                name: newMilestone_localStateFormat.milestone_name,
+                milestone_item_type: newMilestone_localStateFormat.milestone_type.id,
+                date: newMilestone_localStateFormat.milestone_date,
+                comment: newMilestone_localStateFormat.milestone_comment,
+                project: activeProject.id
             }
         })
         .then((response => {
             console.log('milestone created succesfully: ', response.data);
 
-            let updatedItem = {...props.activeProject};
+            newMilestone_reduxFormat.id = response.data.id;
+            newMilestone_localStateFormat.milestone_id = response.data.id;
 
-            let newItem = { ...response.data, tasks: [] };
+            // 2 - 
 
-            // let newItem = { ...response.data };
+            let new_milestones_localStateFormat = [...milestones_localStateFormat, newMilestone_localStateFormat];
+            new_milestones_localStateFormat.sort((a, b) => {
+                return moment(a.milestone_date) - moment(b.milestone_date);
+            });
+            set_milestones_localStateFormat([...new_milestones_localStateFormat]);
 
-            newItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
+            // 3 - 
 
-            updatedItem.milestone_items = [...milestones, newItem];
-
-            updatedItem.milestone_items.sort((a, b) => {
+            let new_milestones_reduxFormat = [...milestones_reduxFormat, newMilestone_reduxFormat];
+            new_milestones_reduxFormat.sort((a, b) => {
                 return moment(a.date) - moment(b.date);
-            })
-
-            props.updateProjectInState(updatedItem);
-
-            set_milestones([...updatedItem.milestone_items]);
+            });
+            set_milestones_reduxFormat([...new_milestones_reduxFormat]);
+            let updatedProject = {...activeProject};
+            updatedProject.milestone_items = [...new_milestones_reduxFormat];
+            dispatch(apiActions.update_project(updatedProject));
 
             set_showSpinner_CreateUpdateItem(false);
-
-            // props.toogleVisibility();
         }))
         .catch((error) => {
             console.log("error: ", error);
+
+            set_showSpinner_CreateUpdateItem(false);
 
             let message = error.message + "\n" + error.response.data;
 
             alert("Problem with creating new milestone item");
 
             alert(message);
-
-            set_showSpinner_CreateUpdateItem(false);
         })
     }
 
     const deleteItem = (milestone) => {
-        // update in local state
+        // 1 - delete item from database
+        // 2 - delete item from redux store
+        // 3 - delete item from local state
 
-        const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestone.id)
+        // 3 -
+        const index_localState = milestones_localStateFormat.findIndex(elem => elem.milestone_id === milestone.milestone_id);
+        const index_reduxStore = milestones_reduxFormat.findIndex(elem => elem.id === milestone.milestone_id);
 
-        let updatedProject = {...props.activeProject};
-        let updatedMilestones = [...milestones];
+        let updated_milestones_localStateFormat = [...milestones_localStateFormat];
+        updated_milestones_localStateFormat.splice(index_localState, 1);
+        set_milestones_localStateFormat([...updated_milestones_localStateFormat]);
 
-        updatedProject.milestone_items.splice(milestoneIndex, 1);
-        updatedMilestones.splice(milestoneIndex, 1);
+        // 2 -
+        let updated_milestones_reduxFormat = [...milestones_reduxFormat];
+        updated_milestones_reduxFormat.splice(index_reduxStore, 1);
+        set_milestones_reduxFormat([...updated_milestones_reduxFormat]);
+        let updatedProject = {...activeProject};
+        
+        updatedProject.milestone_items = [...updated_milestones_reduxFormat];
+        dispatch(apiActions.update_project(updatedProject));
 
-        props.updateProjectInState(updatedProject);
-
-        set_milestones([...updatedMilestones]);
-
-        // update in backend
-
+        // 1 -
         axios({
             method: 'delete',
-            url: baseUrl + `/company/milestone-items/${milestone.id}/`,
+            url: baseUrl + `/company/milestone-items/${milestone.milestone_id}/`,
             headers: {
                 "Authorization": token
             }
         })
         .then((response => {
-            
+            // 
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -175,26 +230,15 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
     }
 
     const switchToUpdateMode = (item, index) => {
-        console.log('function : switchToUpdateMode');
-        console.log('updating item: ', item);
-        console.log('updating index: ', index);
 
-        document.getElementById('name').value = item.name;
-        document.getElementById('comment').value = item.comment;
-        document.getElementById('date').value = item.date;
-        // document.getElementById(`milestonetypes-container`).selectedIndex = index;
-        // let containerElem = document.getElementById(`milestonetypes-container`);
+        document.getElementById('name').value = item.milestone_name;
+        document.getElementById('comment').value = item.milestone_comment;
+        document.getElementById('date').value = item.milestone_date;
+
         let firstElem = document.getElementById(`default-milestonetype`);
 
-        // containerElem.selectedIndex = 1;
-        // containerElem
-
-        firstElem.innerHTML = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
-        firstElem.value = `${item.milestone_item_type.short_name} : ${item.milestone_item_type.name}`;
-
-        // console.log('containerElem: ', containerElem);
-
-        // console.log('containerElem.selectedIndex: ', containerElem.selectedIndex);
+        firstElem.innerHTML = `${item.milestone_type.short_name} : ${item.milestone_type.name}`;
+        firstElem.value = `${item.milestone_type.short_name} : ${item.milestone_type.name}`;
 
         set_updateMode(true);
 
@@ -202,7 +246,9 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
     }
 
     const updateItem = (milestoneItem) => {
-        // console.log('function : updateItem');
+        // 1 - update in database
+        // 2 - update in local state
+        // 3 - update in redux store
 
         const name = document.getElementById('name').value;
         const milestone_item_type = document.getElementById('milestone_item_type').value;
@@ -210,67 +256,77 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
         const comment = document.getElementById('comment').value;
         const tasks = milestoneItem.tasks;
 
-        // console.log('milestone_item_type: ', milestone_item_type);
+        // 
 
-        const milestoneTypeIndex = props.milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
-        const milestoneIndex = props.activeProject.milestone_items.findIndex(elem => elem.id === milestoneItem.id)
+        const milestoneTypeIndex = milestoneTypes.findIndex(elem => `${elem.short_name} : ${elem.name}` === milestone_item_type)
+        const milestoneIndex = milestones_localStateFormat.findIndex(elem => elem.id === milestoneItem.milestone_id)
 
-        // console.log('index: ', index);
-
-        // console.log('creating new milestone...');
-        // console.log('name...', name);
-        // console.log('milestone_item_type...', props.milestoneTypes[index].id);
-        // console.log('date...', date);
-        // console.log('comment...', comment);
-        // console.log('tasks...', tasks);
-        // console.log('props.activeProject.id...', props.activeProject.id);
+        // 
 
         set_showSpinner_CreateUpdateItem(true);
 
         if (name === "") return alert('missing input');
-        if (props.milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
+        if (milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
         if (date === "") return alert('missing input');
         if (comment === "") return alert('missing input');
         if (tasks === "") return alert('missing input');
-        if (props.activeProject.id === "") return alert('missing input');
+        if (activeProject.id === "") return alert('missing input');
 
-        // update in backend
-
+        // 1 - 
         axios({
             method: 'put',
-            url: baseUrl + `/company/milestone-items/${milestoneItem.id}/`,
+            url: baseUrl + `/company/milestone-items/${milestoneItem.milestone_id}/`,
             headers: {
                 "Authorization": token
             },
             data: {
                 name: name,
-                milestone_item_type: props.milestoneTypes[milestoneTypeIndex].id,
+                milestone_item_type: milestoneTypes[milestoneTypeIndex].id,
                 date: date,
                 comment: comment,
-                project: props.activeProject.id,
+                project: activeProject.id,
             }
         })
         .then((response => {
-            // console.log('milestone updated succesfully: ', response.data);
+            // 2 -
+            let index_localStateFormat = milestones_localStateFormat.findIndex(elem => elem.milestone_id === milestoneItem.milestone_id);
 
-            let updatedProject = {...props.activeProject};
+            let updated_milestones_localStateFormat = [...milestones_localStateFormat];
 
-            let updatedItem = { ...response.data, tasks: tasks };
+            updated_milestones_localStateFormat[index_localStateFormat] = {
+                milestone_id: milestoneItem.milestone_id,
+                milestone_type: {...milestoneTypes[milestoneTypeIndex]},
+                milestone_name: name,
+                milestone_date: date,
+                milestone_comment: comment,
+            }
 
-            updatedItem.milestone_item_type = {...props.milestoneTypes[milestoneTypeIndex]};
+            set_milestones_localStateFormat([...updated_milestones_localStateFormat]);
 
-            updatedProject.milestone_items.splice(milestoneIndex, 1, updatedItem);
+            // 3 - 
+            let index_reduxStoreFormat = milestones_reduxFormat.findIndex(elem => elem.id === milestoneItem.milestone_id);
 
-            updatedProject.milestone_items.sort((a, b) => {
-                return moment(a.date) - moment(b.date);
-            });
+            let updated_milestones_reduxFormat = [...milestones_reduxFormat];
 
-            props.updateProjectInState(updatedProject);
+            updated_milestones_reduxFormat[index_reduxStoreFormat] = {
+                id: updated_milestones_reduxFormat[index_reduxStoreFormat].id,
+                name: name,
+                milestone_item_type: {...milestoneTypes[milestoneTypeIndex]},
+                date: date,
+                comment: comment,
+                color: updated_milestones_reduxFormat[index_reduxStoreFormat].color,
+                tasks: [...updated_milestones_reduxFormat[index_reduxStoreFormat].tasks]
+            }
 
-            set_milestones([...updatedProject.milestone_items]);
+            set_milestones_reduxFormat([...updated_milestones_reduxFormat]);
 
-            // console.log('milestone updated succesfully: ', updatedItem);
+            let updated_project = {...activeProject};
 
+            updated_project.milestone_items = [...updated_milestones_reduxFormat];
+
+            dispatch(apiActions.update_project(updated_project));
+
+            // - 
             set_showSpinner_CreateUpdateItem(false);
         }))
         .catch((error) => {
@@ -293,7 +349,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                         alt=''
                         onClick={showState}
                     /> */}
-                    {  userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_milestone_item" ) !== -1 ?
+                    {  userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "create_milestone_item" ) !== -1 ?
                         <img 
                             className='p02-c06-icons' 
                             src={create_new} alt='' 
@@ -312,7 +368,12 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                         <img className='p02-c06-img' src={magnifier} alt='' />
                     </div>
                     <img className='p02-c06-icons' src={edit_panels} alt='' />
-                    <img className='p02-c06-icons' src={questionmark_blue} alt='' />
+                    <img 
+                        className='p02-c06-icons' 
+                        src={questionmark_blue} 
+                        alt='' 
+                        onClick={() => showState()}
+                    />
                     <input 
                         type='button' 
                         className='p02-c06-button' 
@@ -335,15 +396,15 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                     </thead>
                     <tbody>
                         {/* TODO:  */}
-                        {milestones.map((milestone, index) => {
+                        {milestones_localStateFormat.map((milestone, index) => {
                             return <tr key={Math.random() * 100000}>
-                                <td>{milestone.id}</td>
-                                <td>{milestone.milestone_item_type.short_name}</td>
-                                <td>{milestone.name}</td>
-                                <td>{milestone.date}</td>
-                                <td>{milestone.comment}</td>
+                                <td>{milestone.milestone_id}</td>
+                                <td>{milestone.milestone_type.short_name}</td>
+                                <td>{milestone.milestone_name}</td>
+                                <td>{milestone.milestone_date}</td>
+                                <td>{milestone.milestone_comment}</td>
                                 <td>
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ? 
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_milestone_item" ) !== -1 ? 
                                         <img 
                                             className='p02-c06-icons' 
                                             src={pencil_edit} 
@@ -352,7 +413,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                                         /> :
                                         <div></div>
                                     }
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_milestone_item" ) !== -1 ?
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "delete_milestone_item" ) !== -1 ?
                                         <img 
                                             className='p02-c06-icons' 
                                             src={delete_cross} 
@@ -421,7 +482,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                                 // onChange={document.getElementById(`${item.short_name} : ${item.name}`).selected = true}
                             >
                                 <option value="" id='default-milestonetype'>--Please choose an option--</option>
-                                {props.milestoneTypes.map((item) => {
+                                {milestoneTypes.map((item) => {
                                     return <option 
                                         key={Math.random() * 100000} 
                                         id={`${item.short_name} : ${item.name}`} 

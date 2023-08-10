@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 // assets
@@ -11,26 +12,52 @@ import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
+// actions to dispatch
+import * as apiActions from '../../../app/features/api/apiSlice';
 // styles
 import './index.scss';
 
 const P02_C09_MANAGE_DOCUMENTS = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    const dispatch = useDispatch();
 
-    // 
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    // pick the data from the redux store
+    let userPermissions = useSelector(state => state.api.userProfile.groups);
+    let baseUrl = useSelector(state => state.api.baseUrl);
+
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
-    // 
-    const [documents, set_documents] = useState([]);
-    const [monuments, set_monuments] = useState([]);
+    // local state of array of document to be displayed in component
+    const [documents_localStateFormat, set_documents_localStateFormat] = useState([{
+        document_id: null,
+        document_name: null,
+        document_number: null,
+        document_revision: null,
+        document_deadline: null,
+        document_acceptance_status: null,
+        document_last_status_update: null,
+        document_comment: null,
+        document_author_username: null,
+        document_cmit_short_name: null,
+        document_cmi_deadline: null,
+        document_status: null,
+        document_monuments: []
+    }]);
+    // local state of array of documents to dispatch to project in redux store 
+    const [documents_reduxStateFormat, set_documents_reduxStateFormat] = useState([{
+        id: null,
+        acceptance_status: null,
+        project_id: null,
+    }])
+    // local state of array of documents to be displayed in component, extended with isSelected
+    const [monuments, set_monuments] = useState([{
+        id: null,
+        name: null,
+        part_number: null,
+        hours_D: 0,
+        hours_K: 0,
+        hours_S: 0,
+        hours_Z: 0,
+        isSelected: false
+    }]);
     // 
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
@@ -38,12 +65,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
     const [showSpinner_FetchingDocuments, set_showSpinner_FetchingDocuments] = useState(true);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
-        // console.log('(modal) component ManageMonuments loaded: ... ');
-
-        // console.log('props: ', props);
+        set_documents_reduxStateFormat([...props.activeProject.documents]);
 
         fetchDocuments();
 
@@ -60,8 +84,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     
     const showState = () => {
         console.log('props: ', props);
-        console.log('documents: ', documents);
+        console.log('documents: ', documents_localStateFormat);
         console.log('monuments: ', monuments);
+        console.log('showSpinner_CreateUpdateItem: ', showSpinner_CreateUpdateItem);
     }
 
     const clearForm = () => {
@@ -82,7 +107,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     }
 
     const createNewItem = () => {
-        // console.log('createNewItem function');
+        // 1 - create new item in database
+        // 2 - create new item in local state
+        // 3 - create new item in redux store (...update project)
 
         const name = document.getElementById('name').value;
         const number = document.getElementById('number').value;
@@ -110,6 +137,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
         set_showSpinner_CreateUpdateItem(true);
 
+        // 1 - 
         axios({
             method: 'post',
             url: baseUrl + `/company/certification-documents/`,
@@ -129,11 +157,39 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             }
         })
         .then((response => {
-            // console.log('document created succesfully: ', response.data);
+            // new item created succesfully
+            let newDocument_localStateFormat = {
+                document_id: response.data.id,
+                document_name: name,
+                document_number: number,
+                document_revision: revision,
+                document_deadline: deadline,
+                document_acceptance_status: acceptance_status,
+                document_last_status_update: moment().format('YYYY-MM-DD'),
+                document_comment: comment,
+                document_author_username: response.data.author,
+                document_cmit_short_name: null,
+                document_cmi_deadline: null,
+                document_status: null,
+                document_monuments: selectedMonuments
+            }
 
-            props.updateProject(props.activeProject);
+            let newDocument_reduxProjectFormat = {
+                id: response.data.id,
+                acceptance_status: response.data.acceptance_status,
+                project_id: response.data.project
+            }
 
-            set_documents([...documents, response.data]);
+            // 2 - 
+            let updatedDocuments_localStateFormat = [...documents_localStateFormat, newDocument_localStateFormat];
+            set_documents_localStateFormat([...updatedDocuments_localStateFormat]);
+
+            // 3 -
+            let updatedProject = {...props.activeProject};
+            let newDocuments_reduxProjectFormat = [...documents_reduxStateFormat, newDocument_reduxProjectFormat];
+            updatedProject.documents = [...newDocuments_reduxProjectFormat];
+            dispatch(apiActions.update_project(updatedProject));
+            set_documents_reduxStateFormat([...newDocuments_reduxProjectFormat]);
 
             set_showSpinner_CreateUpdateItem(false);
         }))
@@ -149,14 +205,22 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     }
 
     const deleteItem = (item, index) => {
-        // update in local state
+        // 1 - delete item in database
+        // 2 - delete item in local state
+        // 3 - delete item in redux store
 
-        let updatedItems = [...documents];
+        let updatedItems = [...documents_localStateFormat];
+        let originalItems = [...documents_localStateFormat];
 
         updatedItems.splice(index, 1);
 
-        set_documents([...updatedItems]);
+        // 2 - 
+        set_documents_localStateFormat([...updatedItems]);
 
+        // 3 - 
+
+
+        // 1 -
         axios({
             method: 'delete',
             url: baseUrl + `/company/certification-documents/${item.document_id}/`,
@@ -164,8 +228,18 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 "Authorization": token
             }
         })
+        // delete succesfull
         .then((response => {
-            props.updateProject(props.activeProject);
+            // 3 - 
+            let updatedProject = {...props.activeProject};
+            let updateDocuments_inReduxState = [...updatedProject.documents];
+            let index = updateDocuments_inReduxState.findIndex(elem => elem.id === item.document_id);
+
+            updateDocuments_inReduxState.splice(index, 1);
+
+            updatedProject.documents = [...updateDocuments_inReduxState];
+
+            dispatch(apiActions.update_project(updatedProject));
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -173,10 +247,13 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             let message = error.message + "\n" + error.response.data;
 
             alert(message);
+            // 2 - in case update in database fails
+            set_documents_localStateFormat([...originalItems]);
         })
     }
 
     const fetchDocuments = () => {
+        // fetch documents to local state of component
         axios({
             method: 'get', 
             url: baseUrl + `/company/get-documents-for-project-dashboard/?project_id=${props.activeProject.id}`,
@@ -199,7 +276,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
             // let filtered_documents = new_documents.filter(elem => elem.acceptance_status !== "accepted")
 
-            set_documents([...new_documents]);
+            set_documents_localStateFormat([...new_documents]);
             // set_documents([...filtered_documents]);
 
             set_showSpinner_FetchingDocuments(false);
@@ -252,6 +329,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     }
 
     const updateItem = (item, index) => {
+        // 1 - update item in backend 
+        // 2 - update item in local state
+        // 3 - update item in redux store
         console.log('updateItem function');
 
         item.document_name = document.getElementById('name').value;
@@ -280,6 +360,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
         set_showSpinner_CreateUpdateItem(true);
 
+        // 1 - 
         axios({
             method: 'patch',
             url: baseUrl + `/company/certification-documents/${item.document_id}/`,
@@ -298,17 +379,29 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             }
         })
         .then((response => {
-            // console.log('document updated succesfully: ', response.data);
-
-            // props.updateProject(props.activeProject);
-
-            let updatedDocuments = [...documents];
-
+            // 2 - 
+            let updatedDocuments = [...documents_localStateFormat];
             updatedDocuments.splice(index, 1, item)
+            set_documents_localStateFormat([...updatedDocuments]);
 
-            set_documents([...updatedDocuments]);
+            // 3 - 
+            let updateDocument_inReduxState = {
+                id: response.data.id,
+                acceptance_status: response.data.acceptance_status,
+                project_id: response.data.project
+            }
 
-            set_monuments([...monuments]);
+            let updatedProject = {...props.activeProject};
+            let updateDocuments_inReduxState = [...updatedProject.documents];
+            let index_inReduxState = updateDocuments_inReduxState.findIndex(elem => elem.id === item.document_id);
+
+            updateDocuments_inReduxState.splice(index_inReduxState, 1, updateDocument_inReduxState);
+
+            updatedProject.documents = [...updateDocuments_inReduxState];
+
+            dispatch(apiActions.update_project(updatedProject));
+
+            // set_monuments([...monuments]);
 
             set_showSpinner_CreateUpdateItem(false);
         }))
@@ -334,7 +427,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                         alt=''
                         onClick={showState}
                     /> */}
-                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_document" ) !== -1 ?
+                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "create_document" ) !== -1 ?
                         <img 
                             className='p02-c09-icons' 
                             src={create_new} alt='' 
@@ -398,7 +491,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </thead>
                     <tbody>
                         {/* TODO:  */}
-                        {documents.map((document, index) => {
+                        {documents_localStateFormat.map((document, index) => {
                             return <tr key={Math.random() * 100000}>
                                 <td>{document.document_id}</td>
                                 <td>{document.document_name}</td>
@@ -413,7 +506,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 <td>{document.document_cmi_deadline != null ? moment(document.document_cmi_deadline).format("DD-MMM-YYYY") : 'not set'}</td>
                                 <td>{`${document.document_status}%`}</td>
                                 <td>
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_document" ) !== -1 ? 
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_document" ) !== -1 ? 
                                         <img 
                                             className='p02-c09-icons' 
                                             src={pencil_edit} 
@@ -426,7 +519,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                         /> : 
                                         <div></div>
                                     }
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_document" ) !== -1 ? 
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "delete_document" ) !== -1 ? 
                                         <img 
                                             className='p02-c09-icons' 
                                             src={delete_cross} 

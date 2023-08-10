@@ -125,10 +125,11 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
         let short_name = document.getElementById('short_name').value;
         let color = document.getElementById('color').value;
 
-        if (name === "" && short_name === "")
-        return alert('missing input');
+        if (name === "" && short_name === "") {
+            return alert('missing input');
+        }
 
-        const index = milestoneTypes.findIndex(elem => elem.id === item.id)
+        const index = milestoneTypes.findIndex(elem => elem.id === item.id);
 
         let updatedItem = {
             id: item.id,

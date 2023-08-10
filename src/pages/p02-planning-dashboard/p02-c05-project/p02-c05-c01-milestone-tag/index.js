@@ -1,34 +1,18 @@
 import React, { Component, useCallback, useRef } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import './index.scss';
 import moment from 'moment';
 import P02_C02_C01_TASK_TAG from './p02-c05-c01-task-tag';
-import { useSelector, useDispatch } from 'react-redux';
 
 const P02_C05_C01_MILESTONE_TAG = (props) => {
+    const dispatch = useDispatch();
 
+    // pick the data from the redux store
+    let baseUrl = useSelector(state => state.api.baseUrl);
+    const userPermissions = useSelector(state => state.api.userProfile.groups);
 
-    const getStartPosition = () => {
-        if (document.getElementById('milestone-tag') === null) {
-            return 0;
-        }
-        else {
-            return document.getElementById('milestone-tag').getBoundingClientRect().left - leftOffset_milestone;
-        }
-    }
-
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
-
-    const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [dateOffset, set_dateOffset] = useState(useSelector(state => state.dashboard.dateOffset));
     // const [loaded, setLoaded] = useState([]);
@@ -39,7 +23,6 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const [milestoneIsMoving, set_milestoneIsMoving] = useState(false);     
     const [milestoneTag_visibility, set_milestoneTag_visibility] = useState(false);
     const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [tasks, set_tasks] = useState([]);
     const [tasksDisplayed, set_tasksDisplayed] = useState(true);
 
@@ -66,7 +49,6 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     }, [])
 
     useEffect(() => {
-        // console.log('props.dateOffset: ', props.dateOffset);
         let date_now = moment().add(dateOffset, 'days');
         let eventDate = moment(props.milestoneItem.date);
         let difference = eventDate.diff(date_now, "days");
@@ -76,9 +58,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             difference = difference + 1;
         }
 
-        // if (difference >= 0 && difference < props.displayLimit - 1) {
         if (difference >= -1) {
-            // if (difference < props.displayLimit - 1) {
             set_milestoneTag_visibility(true);
             set_initialLeftOffset(difference * 16);
         }
@@ -129,7 +109,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                     taskToUpdate.push(task.task_id);
                 })
 
-                props.updateMilestoneItemDeadlineWithTasks(props.milestoneItem, deltaDays, [...taskToUpdate]);
+                updateMilestoneItemDeadlineWithTasks(milestoneItem, deltaDays, [...taskToUpdate]);
             }
         }
     }, [milestoneIsMoving])
@@ -239,6 +219,32 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         });
     }
 
+    const updateMilestoneItemDeadlineWithTasks = (milestoneItem, deltaDays, tasks) => {
+        axios({
+            method: 'patch',
+            url: baseUrl + '/company/update-milestone-with-tasks/' + milestoneItem.id + "/",
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                tasks: tasks,
+                delta_days: parseInt(deltaDays)
+            }
+        })
+        .then((response => {
+            // console.log('milestone deadline updated in database: ', response.data);
+
+            props.updateProject(props.project);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
+    }
+
     const ContextMenuStyle = {
         position: 'absolute',
         marginLeft: `${leftOffset_milestone}px`,
@@ -279,13 +285,13 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             <div style={MilestoneTagStyle}>
                 <button
                     type="button"
-                    className={ userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ?
+                    className={ userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_milestone_item" ) !== -1 ?
                         "p02-c05-c01-dragable" :
                         "p02-c05-c01-not-dragable"
                     }
                     title={props.milestoneItem.milestone_item_type.name + '\n' + props.milestoneItem.date}
                     onContextMenu={(e) => contextMenuClicked(e)}
-                    onClick={ userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ? 
+                    onClick={ userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_milestone_item" ) !== -1 ? 
                     (e) => mouseOverMilestoneClicked(e) :
                     () => console.log('no permission to edit milestone') }
                 >
@@ -303,7 +309,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                     className='p02-c05-c01-context-container' 
                     onMouseLeave={() => set_contextMenu_visibility(!contextMenu_visibility)}
                 >
-                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_milestone_item" ) !== -1 ?
+                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_milestone_item" ) !== -1 ?
                         <li className='p02-c05-c01-context-item'>
                             <span
                                 className="p02-c05-c01-badge"
@@ -315,7 +321,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                         </li> :
                         <div></div>
                     }
-                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_milestone_item" ) !== -1 ?
+                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "delete_milestone_item" ) !== -1 ?
                         <li className='p02-c05-c01-context-item'>
                             <span
                                 className="p02-c05-c01-badge"

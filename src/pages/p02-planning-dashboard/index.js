@@ -32,24 +32,17 @@ import * as dashboardActions from '../../app/features/dashboardSlice';
 const P02_PLANNING_DASHBOARD = () => {
     const dispatch = useDispatch();
 
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    // pick the data from the redux store
+    let baseUrl = useSelector(state => state.api.baseUrl);
+    let projects = useSelector(state => state.api.projects);
 
     // local state of component
-    const [projects, set_projects] = useState([]);
+    // const [projects, set_projects] = useState([]);
     const [milestoneTypes, set_milestoneTypes] = useState([]);
     const [taskTypes, set_taskTypes] = useState([]);
     const [userPermissions, set_userPermissions] = useState([]);
     // 
     const [dateOffset, set_dateOffset] = useState(0);    // offset from today...
-    const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [displayedDays, set_displayedDays] = useState(parseInt((window.innerWidth - 8 * 16 - 0 * 16 - 4 * 16) / 16));
     // modal toogles
@@ -94,11 +87,11 @@ const P02_PLANNING_DASHBOARD = () => {
 
         window.addEventListener('resize', handleResize.current);
 
-        fetchProjects();
+        // fetchProjects();
 
-        fetchMilestoneTypes();
+        // fetchMilestoneTypes();
 
-        fetchTaskTypes();
+        // fetchTaskTypes();
 
         // fetching data from backend database to redux store
         dispatch(apiActions.set_BaseUrl());
@@ -151,7 +144,7 @@ const P02_PLANNING_DASHBOARD = () => {
             // set_showSpinner_FetchingProjects(false);
 
             // set_projects(response.data);
-            set_projects(newProjects);
+            // set_projects(newProjects);
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -223,11 +216,12 @@ const P02_PLANNING_DASHBOARD = () => {
         let index = projects.findIndex(element => element.id === project.id);
         let newProjects = [...projects];
         newProjects[index] = { ...project };
-        set_projects([...newProjects]);
+        // set_projects([...newProjects]);
         // set_createProject_toogle(!createProject_toogle);
     }
 
     const updateProject = (project) => {
+        // function fetch project from database and update 
         let isDisplayed = project.displayed;
 
         axios({
@@ -246,7 +240,7 @@ const P02_PLANNING_DASHBOARD = () => {
 
             console.log('project is updated: ', newArray);
 
-            set_projects([...newArray]);
+            // set_projects([...newArray]);
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -274,9 +268,6 @@ const P02_PLANNING_DASHBOARD = () => {
                     {/* MODAL COMPONENTS IN MAIN SECTION */}
                     {manageProjects_modalToogle ?
                     <P02_C02_MANAGE_PROJECTS 
-                        projects={projects}
-                        set_projects={set_projects}
-                        userPermissions={userPermissions}
                         toogleVisibility={set_manageProjects_modalToogle} 
                     />
                     : ""}
@@ -288,9 +279,6 @@ const P02_PLANNING_DASHBOARD = () => {
                     ""}
                     {manageTasksTypes_modalToogle ?
                     <P02_C04_MANAGE_TASK_TYPES
-                        taskTypes={taskTypes}
-                        set_taskTypes={set_taskTypes}
-                        userPermissions={userPermissions}
                         toogleVisibility={set_manageTasksTypes_modalToogle}
                     />
                     :
@@ -298,10 +286,6 @@ const P02_PLANNING_DASHBOARD = () => {
                     {manageMilestones_modalToogle ?
                     <P02_C06_MANAGE_MILESTONES
                         activeProject={activeProject}
-                        updateProject={updateProject}
-                        updateProjectInState={updateProjectInState}
-                        milestoneTypes={milestoneTypes}
-                        userPermissions={userPermissions}
                         toogleVisibility={set_manageMilestones_modalToogle}
                     />
                     :
@@ -322,12 +306,6 @@ const P02_PLANNING_DASHBOARD = () => {
                     {manageMonuments_modalToogle ?
                     <P02_C08_MANAGE_MONUMENTS
                         activeProject={activeProject}
-                        // activeMilestoneItem={activeMilestoneItem}
-                        updateProject={updateProject}
-                        // updateProjectInState={updateProjectInState}
-                        // milestoneTypes={milestoneTypes}
-                        // taskTypes={taskTypes}
-                        userPermissions={userPermissions}
                         toogleVisibility={set_manageMonuments_modalToogle}
                     />
                     :
@@ -335,12 +313,6 @@ const P02_PLANNING_DASHBOARD = () => {
                     {manageDocuments_modalToogle ?
                     <P02_C09_MANAGE_DOCUMENTS
                         activeProject={activeProject}
-                        // activeMilestoneItem={activeMilestoneItem}
-                        updateProject={updateProject}
-                        // updateProjectInState={updateProjectInState}
-                        // milestoneTypes={milestoneTypes}
-                        // taskTypes={taskTypes}
-                        userPermissions={userPermissions}
                         toogleVisibility={set_manageDocuments_modalToogle}
                     />
                     :
@@ -412,17 +384,6 @@ const P02_PLANNING_DASHBOARD = () => {
                     <main className='p02-main'>
                     {
                         projects.map((project) => {
-                            project.milestone_items.sort((a, b) => {
-                                return moment(a.date) - moment(b.date);
-                            })
-
-                            let achievedMilestones = project.milestone_items.filter(elem => {
-                                let now = moment();
-                                let m_date = moment(elem.date);
-
-                                return m_date.diff(now, 'days') < 0;
-                            })
-
                             let totalTasks = 0;
                             let completedTasks = 0;
 
@@ -459,7 +420,7 @@ const P02_PLANNING_DASHBOARD = () => {
                                     editMilestone_toogle={editMilestone_toogle}
                                     project={project} 
                                     projects={projects}
-                                    set_projects={set_projects}
+                                    // set_projects={set_projects}
                                     set_activeProject={set_activeProject}
                                     set_activeMilestoneItem={set_activeMilestoneItem}
                                     set_editMilestone_toogle={set_editMilestone_toogle}
@@ -469,7 +430,6 @@ const P02_PLANNING_DASHBOARD = () => {
                                     set_manageMonuments_modalToogle={set_manageMonuments_modalToogle}
                                     set_manageDocuments_modalToogle={set_manageDocuments_modalToogle}
                                     set_manageProjectTasks_modalToogle={set_manageProjectTasks_modalToogle}
-                                    userPermissions={userPermissions}
                                     updateProject={updateProject}
                                 />
                             }

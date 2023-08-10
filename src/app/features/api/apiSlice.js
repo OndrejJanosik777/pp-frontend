@@ -43,6 +43,12 @@ export const apiSlice = createSlice({
         update_projects: (state, action) => {
             state.projects = [...action.payload];
         },
+        update_project: (state, action) => {
+            let index = state.projects.findIndex(elem => elem.id === action.payload.id);
+            let updatedProjects = [...state.projects];
+            updatedProjects[index] = {...action.payload};
+            state.projects = [...updatedProjects];
+        },
         set_BaseUrl: (state, action) => {
             if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
               state.baseUrl = 'http://127.0.0.1:8000';
@@ -63,6 +69,7 @@ export const {
   update_milestoneTypes,
   fetch_projects,
   update_projects,
+  update_project,
   set_BaseUrl,
 } = apiSlice.actions
 

@@ -24,7 +24,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
     // local component state
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
-    const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(props.taskTypes.length === 0);
+    const [showSpinner_FetchingItems, set_showSpinner_FetchingItems] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState({
@@ -34,7 +34,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
     });
 
     useEffect(() => {
-        if (taskTypes.length === 0) fetchItems();
+        // if (taskTypes.length === 0) fetchItems();
     }, []);
 
     const fetchItems = () => {

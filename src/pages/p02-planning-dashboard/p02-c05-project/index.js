@@ -1,38 +1,27 @@
 import React, { Component } from 'react';
 import { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import planeSVG from './assets/airplane.svg';
 import P02_C05_C01_MILESTONE_TAG from './p02-c05-c01-milestone-tag';
-import { useSelector, useDispatch } from 'react-redux';
 import './index.scss';
  
 const P02_C05_PROJECT = (props) => {
     const dispatch = useDispatch();
 
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    // pick the data from the redux store
+    const baseUrl = useSelector(state => state.api.baseUrl);
+    const userPermissions = useSelector(state => state.api.userProfile.groups);
+    const dateOffset = useSelector(state => state.dashboard.dateOffset);
 
-    const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [achievedMilestones, set_achievedMilestones] = useState({});
     const [completedTasks, set_completedTasks] = useState(0);
     const [totalTasks, set_totalTasks] = useState(0);
     const [documents, set_documents] = useState([]);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
 
     useEffect(() => {
-        props.project.milestone_items.sort((a, b) => {
-            return moment(a.date) - moment(b.date);
-        })
-
         let achievedMilestones = props.project.milestone_items.filter(elem => {
             let now = moment();
             let m_date = moment(elem.date);
@@ -68,7 +57,7 @@ const P02_C05_PROJECT = (props) => {
     }
 
     const display_modal_createNewTask = (project, milestoneItem) => {
-        console.log(`creating new Task for milestone ${milestoneItem.id} within project ${project.id}`);
+        // console.log(`creating new Task for milestone ${milestoneItem.id} within project ${project.id}`);
 
         props.set_activeProject(project);
         props.set_activeMilestoneItem(milestoneItem);
@@ -83,32 +72,6 @@ const P02_C05_PROJECT = (props) => {
         props.set_activeMilestoneItem(milestoneItem);
 
         props.set_editMilestone_toogle(!props.editMilestone_toogle);
-    }
-
-    const updateMilestoneItemDeadlineWithTasks = (milestoneItem, deltaDays, tasks) => {
-        axios({
-            method: 'patch',
-            url: baseUrl + '/company/update-milestone-with-tasks/' + milestoneItem.id + "/",
-            headers: {
-                "Authorization": token
-            },
-            data: {
-                tasks: tasks,
-                delta_days: parseInt(deltaDays)
-            }
-        })
-        .then((response => {
-            // console.log('milestone deadline updated in database: ', response.data);
-
-            props.updateProject(props.project);
-        }))
-        .catch((error) => {
-            console.log("error: ", error);
-
-            let message = error.message + "\n" + error.response.data;
-
-            alert(message);
-        })
     }
 
     const updateMilestoneItemDeadline = (days, project, milestoneItem) => {
@@ -159,7 +122,7 @@ const P02_C05_PROJECT = (props) => {
 
             alert(message);
 
-            props.set_projects([...originalProjects]);
+            // props.set_projects([...originalProjects]);
         })
     }
 
@@ -261,7 +224,6 @@ const P02_C05_PROJECT = (props) => {
 
     }
 
-
     return ( <div className='p02-c05-project'>
         <div className='p02-c05-left-container'>
             <div>{`#${props.project.id} : ${props.project.number}`}</div>
@@ -329,23 +291,16 @@ const P02_C05_PROJECT = (props) => {
 
                 return < P02_C05_C01_MILESTONE_TAG
                     key={Math.random() * 100000}
-                    dateOffset={props.dateOffset}
                     milestone_offsetTop={index * 30}  // offset in px from top
-                    milestone_offsetLeft={moment().diff(moment(milestoneItem.date), 'days') + props.dateOffset - 1}
+                    milestone_offsetLeft={moment().diff(moment(milestoneItem.date), 'days') + dateOffset - 1}
                     project={props.project}
                     milestoneItem={milestoneItem}
-                    displayLimit={props.displayedDays}
-                    updateMilestoneItemDeadline={updateMilestoneItemDeadline}
-                    updateMilestoneItemDeadlineWithTasks={updateMilestoneItemDeadlineWithTasks}
-                    updateMilestoneItem={updateMilestoneItem}
                     updateTaskDeadline={updateTaskDeadline}
                     display_modal_createNewTask={display_modal_createNewTask}
-                    deleteMilestoneItem={() => props.display_modal_warning_deleteMilestoneItem(props.project, milestoneItem)}
                     set_manageMilestoneTasks_modalToogle={props.set_manageMilestoneTasks_modalToogle}
                     set_manageMilestones_modalToogle={props.set_manageMilestones_modalToogle}
                     set_activeMilestoneItem={props.set_activeMilestoneItem}
                     set_activeProject={props.set_activeProject}
-                    userPermissions={userPermissions}
                 />
             })
             }

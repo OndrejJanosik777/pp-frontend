@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 // assets
@@ -15,33 +16,32 @@ import magnifier from './assets/magnifier.png';
 import './index.scss';
 
 const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
-    const getBaseUrl = () => {
-        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            // dev code
-            return 'http://127.0.0.1:8000';
-        } else {
-            // production code
-            return 'https://pp--backend.herokuapp.com';
-        }
-    }
+    const dispatch = useDispatch();
 
-    // 
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    // pick the data from the redux store
+    const baseUrl = useSelector(state => state.api.baseUrl);
+    const userPermissions = useSelector(state => state.api.userProfile.groups);
+    const taskTypes = useSelector(state => state.api.taskTypes);
+
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     //
     const [tasks, set_tasks] = useState([...props.activeMilestoneItem.tasks]);
-    const [taskTypes, set_taskTypes] = useState([...props.taskTypes]);
     const [certificationDocuments, set_certificationDocuments] = useState([]);
     const [certificationDocumentsNoTask, set_certificationDocumentsNoTask] = useState([]);
     // 
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
 
+    const showState = () => {
+        console.log('props: ', props);
+        console.log('tasks: ', tasks);
+        console.log('selectedItem: ', selectedItem);
+    }
+
     useEffect(() => {
-        console.log('component ManageTasks loaded: ... ');
+        // console.log('component ManageTasks loaded: ... ');
         // console.log('props: ', props);
 
         fetchProjectDocuments();
@@ -49,15 +49,10 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         fetchTasks(props.activeMilestoneItem);
     }, []);
 
-    const showState = () => {
-        console.log('tasks: ', tasks);
-        console.log('selectedItem: ', selectedItem);
-    }
-
     const createNewItem = () => {
         // update in local state - no
         // console.log('creating new task')
-        const task_type = props.taskTypes.find(
+        const task_type = taskTypes.find(
             elem => elem.name === document.getElementById('task_type').value).id;
         const estimated_hours = document.getElementById('estimated_hours').value;
         const booked_hours = document.getElementById('booked_hours').value;
@@ -302,7 +297,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                         alt=''
                         onClick={showState}
                     /> */}
-                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "create_task" ) !== -1 ?
+                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "create_task" ) !== -1 ?
                         <img 
                             className='p02-c07-icons' 
                             src={create_new} alt='' 
@@ -393,7 +388,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 <td>{task.document_acceptance_status}</td>
                                 <td>{task.document_last_status_update}</td>
                                 <td>
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_task" ) !== -1 ?
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_task" ) !== -1 ?
                                         <img 
                                             className='p02-c07-icons' 
                                             src={pencil_edit} 
@@ -402,7 +397,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                         /> :
                                         <div></div>
                                     } 
-                                    { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "delete_task" ) !== -1 ?
+                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "delete_task" ) !== -1 ?
                                         <img 
                                             className='p02-c07-icons' 
                                             src={delete_cross} 
