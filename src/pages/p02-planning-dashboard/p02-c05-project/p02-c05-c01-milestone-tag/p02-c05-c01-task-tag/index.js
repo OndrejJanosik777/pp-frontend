@@ -9,8 +9,10 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const dispatch = useDispatch();
 
     // pick the data from the redux store
+    let baseUrl = useSelector(state => state.api.baseUrl);
     let userPermissions = useSelector(state => state.api.userProfile.groups);
 
+    const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [leftOffsetMilestone, set_leftOffsetMilestone] = useState(props.leftOffsetMilestone);
     const [offsetTask, set_offsetTask] = useState(0);   // task offset in px from milestone
     const [initialOffsetTask, set_initialOffsetTask] = useState(0);   // task offset in px from milestone
@@ -33,7 +35,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
     useEffect(() => {
         let taskDeadline = moment(props.task.task_deadline);
-        let milestoneDeadline = moment(props.milestoneItem.date);
+        let milestoneDeadline = moment(props.milestone_item.date);
         let difference = taskDeadline.diff(milestoneDeadline, "days");
         let taskWidth = Math.ceil(props.task.task_estimated_hours / 8);
 
@@ -68,10 +70,47 @@ const P02_C02_C01_TASK_TAG = (props) => {
             // console.log('deltaDays: ', deltaDays) // second day from dateOffset
 
             if (deltaDays !== 0) {
-                props.updateTaskDeadline(task, deltaDays);
+                updateTaskDeadline(deltaDays);
+
+                console.log('task moved...');
+                console.log('props.project: ', props.project);
+                console.log('props.milestone_item: ', props.milestone_item);
+                console.log('props.task: ', props.task);
             }
         }
     }, [taskIsMoving])
+
+    const updateTaskDeadline = (deltaDays) => {
+        let new_task_deadline = moment(task.task_deadline).add(deltaDays, 'days').format("YYYY-MM-DD");
+
+        // 1 - update in redux ... TODO:
+        // 2 - update in database ...
+
+
+        // 2 - 
+        axios({
+            method: 'patch',
+            url: baseUrl + '/company/tasks/' + props.task.task_id + '/',
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                task_deadline: new_task_deadline,
+            }
+        })
+        .then((response => {
+            // console.log('tasks deadline updated in database: ', response.data);
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+
+            // set_tasks([...backupTasks]);
+        });
+    }
 
     const taskClicked = (event) => {
         if (userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_task" ) !== -1) {
@@ -106,7 +145,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
     const TaskLabel = {
         color: 'black',
-        backgroundColor: props.milestoneItem.color,
+        backgroundColor: props.milestone_item.color,
         height: '100%',
         marginLeft: '4px',
         lineHeight: '9px',

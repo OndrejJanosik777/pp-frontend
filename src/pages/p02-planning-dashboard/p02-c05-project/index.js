@@ -286,15 +286,15 @@ const P02_C05_PROJECT = (props) => {
         </div>
         <div style={middleStyle}>
             {
-            props.project.milestone_items.map((milestoneItem, index) => {
+            props.project.milestone_items.map((milestone_item, index) => {
                 // console.log('drawing milestone items: ', index)
 
                 return < P02_C05_C01_MILESTONE_TAG
                     key={Math.random() * 100000}
-                    milestone_offsetTop={index * 30}  // offset in px from top
-                    milestone_offsetLeft={moment().diff(moment(milestoneItem.date), 'days') + dateOffset - 1}
                     project={props.project}
-                    milestoneItem={milestoneItem}
+                    milestone_item={milestone_item}
+                    milestone_offsetTop={index * 30}  // offset in px from top
+                    milestone_offsetLeft={moment().diff(moment(milestone_item.date), 'days') + dateOffset - 1}
                     updateTaskDeadline={updateTaskDeadline}
                     display_modal_createNewTask={display_modal_createNewTask}
                     set_manageMilestoneTasks_modalToogle={props.set_manageMilestoneTasks_modalToogle}

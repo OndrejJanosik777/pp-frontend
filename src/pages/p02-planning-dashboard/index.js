@@ -413,12 +413,13 @@ const P02_PLANNING_DASHBOARD = () => {
                             if (project.displayed) {
                                 return <P02_C05_PROJECT 
                                     key={Math.random() * 100000}
+                                    project={project} 
+                                    //
                                     createTask_toogle={createTask_toogle}
                                     dateOffset={dateOffset}
                                     displayedDays={displayedDays}
                                     display_modal_warning_deleteMilestoneItem={display_modal_warning_deleteMilestoneItem}
                                     editMilestone_toogle={editMilestone_toogle}
-                                    project={project} 
                                     projects={projects}
                                     // set_projects={set_projects}
                                     set_activeProject={set_activeProject}

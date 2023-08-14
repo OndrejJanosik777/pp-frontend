@@ -272,7 +272,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
             set_tasks([...updatedTasks]);
 
-            props.updateProject(props.activeProject);
+            // props.updateProject(props.activeProject);
 
             set_showSpinner_CreateUpdateItem(false);
         }))

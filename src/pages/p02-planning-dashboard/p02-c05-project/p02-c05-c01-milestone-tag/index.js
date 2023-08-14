@@ -19,7 +19,6 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const [leftOffset_milestone, set_leftOffset_milestone] = useState(0);     // distance from beginning of left center edge to milestone in px
     const [leftOffsetTasks, set_leftOffsetTasks] = useState([]);            // relative offset vs. milestone item per task
     const [initialLeftOffset, set_initialLeftOffset] = useState(0);         // used to calculate delta-days
-    const [milestoneItem, set_milestoneItem] = useState(props.milestoneItem);
     const [milestoneIsMoving, set_milestoneIsMoving] = useState(false);     
     const [milestoneTag_visibility, set_milestoneTag_visibility] = useState(false);
     const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
@@ -34,8 +33,8 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     }
 
     useEffect(() => {
-        if (props.milestoneItem.tasks !== undefined) {
-            let newTasks = [...props.milestoneItem.tasks];
+        if (props.milestone_item.tasks !== undefined) {
+            let newTasks = [...props.milestone_item.tasks];
 
             
             newTasks.sort((a, b) => {
@@ -50,7 +49,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
     useEffect(() => {
         let date_now = moment().add(dateOffset, 'days');
-        let eventDate = moment(props.milestoneItem.date);
+        let eventDate = moment(props.milestone_item.date);
         let difference = eventDate.diff(date_now, "days");
         // console.log('difference: ', difference);
 
@@ -101,7 +100,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             // console.log('deltaDays: ', deltaDays) // second day from dateOffset
 
             if (deltaDays !== 0) {
-                console.log('delta is not zero', deltaDays);
+                // console.log('delta is not zero', deltaDays);
 
                 let taskToUpdate = [];
 
@@ -109,7 +108,9 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                     taskToUpdate.push(task.task_id);
                 })
 
-                updateMilestoneItemDeadlineWithTasks(milestoneItem, deltaDays, [...taskToUpdate]);
+                updateMilestoneItemDeadlineWithTasks(deltaDays);
+
+                // console.log('')
             }
         }
     }, [milestoneIsMoving])
@@ -131,7 +132,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             });
 
             let newleftOffsetTasks = [];
-            let milestoneDeadline = moment(props.milestoneItem.date);
+            let milestoneDeadline = moment(props.milestone_item.date);
 
             newTasks.map((newTask, index) => {
                 let taskDeadline = moment(newTask.task_deadline);
@@ -179,30 +180,55 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         // console.log(`context menu clicked: ${event.clientX} ${event.clientY}`);
     }
 
-    const updateTaskDeadline = (task, days) => {
-        // local state update
-        let updatedTasks = [...tasks];
-        let backupTasks = [...tasks];
+    const updateMilestoneItemDeadlineWithTasks = (deltaDays) => {
+        let new_milestone_deadline = moment(props.milestone_item.date).add(deltaDays, 'days').format("YYYY-MM-DD");
 
-        let index = updatedTasks.findIndex(elem => elem.task_id === task.task_id);
+        // 1 - update in redux store ... TODO:
+        // 2 - update in database
 
-        updatedTasks[index].task_deadline = moment(task.task_deadline).add(days, 'days').format("YYYY-MM-DD");
 
-        // updatedTasks.sort((a, b) => {
-        //     return moment(a.task_deadline) - moment(b.task_deadline);
-        // });
-
-        set_tasks([...updatedTasks]);
-
-        // database update
+        // 2 - 
         axios({
             method: 'patch',
-            url: baseUrl + '/company/tasks/' + updatedTasks[index].task_id + '/',
+            url: baseUrl + '/company/milestone-items/' + props.milestone_item.id + "/",
             headers: {
                 "Authorization": token
             },
             data: {
-                task_deadline: updatedTasks[index].task_deadline,
+                // tasks: [...props.milestone_item.tasks],
+                date: new_milestone_deadline
+            }
+        })
+        .then((response => {
+            props.milestone_item.tasks.map((task, index) => {
+                updateTasks(deltaDays, task);
+            });
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
+    }
+
+    const updateTasks = (deltaDays, task) => {
+        let new_task_deadline = moment(task.task_deadline).add(deltaDays, 'days').format("YYYY-MM-DD");
+
+        // 1 - update in redux ... TODO:
+        // 2 - update in database ...
+
+
+        // 2 - 
+        axios({
+            method: 'patch',
+            url: baseUrl + '/company/tasks/' + task.task_id + '/',
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                task_deadline: new_task_deadline,
             }
         })
         .then((response => {
@@ -215,34 +241,8 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
             alert(message);
 
-            set_tasks([...backupTasks]);
+            // set_tasks([...backupTasks]);
         });
-    }
-
-    const updateMilestoneItemDeadlineWithTasks = (milestoneItem, deltaDays, tasks) => {
-        axios({
-            method: 'patch',
-            url: baseUrl + '/company/update-milestone-with-tasks/' + milestoneItem.id + "/",
-            headers: {
-                "Authorization": token
-            },
-            data: {
-                tasks: tasks,
-                delta_days: parseInt(deltaDays)
-            }
-        })
-        .then((response => {
-            // console.log('milestone deadline updated in database: ', response.data);
-
-            props.updateProject(props.project);
-        }))
-        .catch((error) => {
-            console.log("error: ", error);
-
-            let message = error.message + "\n" + error.response.data;
-
-            alert(message);
-        })
     }
 
     const ContextMenuStyle = {
@@ -256,7 +256,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         position: 'absolute',
         marginLeft: `${leftOffset_milestone - 18}px`,
         marginTop: `${-32}px`,
-        backgroundColor: props.milestoneItem.color,
+        backgroundColor: props.milestone_item.color,
         // backgroundColor: `lightgreen`,
         borderWidth: `1px`,
         borderColor: `grey`,
@@ -289,13 +289,13 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                         "p02-c05-c01-dragable" :
                         "p02-c05-c01-not-dragable"
                     }
-                    title={props.milestoneItem.milestone_item_type.name + '\n' + props.milestoneItem.date}
+                    title={props.milestone_item.milestone_item_type.name + '\n' + props.milestone_item.date}
                     onContextMenu={(e) => contextMenuClicked(e)}
                     onClick={ userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_milestone_item" ) !== -1 ? 
                     (e) => mouseOverMilestoneClicked(e) :
                     () => console.log('no permission to edit milestone') }
                 >
-                    {props.milestoneItem.milestone_item_type.short_name}
+                    {props.milestone_item.milestone_item_type.short_name}
                 </button>
             </div>
             :
@@ -313,7 +313,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                         <li className='p02-c05-c01-context-item'>
                             <span
                                 className="p02-c05-c01-badge"
-                                // onClick={() => props.updateMilestoneItem(props.project, props.milestoneItem)}
+                                // onClick={() => props.updateMilestoneItem(props.project, props.milestone_item)}
                                 // onClick={() => props.set_manageMilestones_modalToogle(true)}
                             >
                                 Edit Milestone
@@ -325,7 +325,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                         <li className='p02-c05-c01-context-item'>
                             <span
                                 className="p02-c05-c01-badge"
-                                // onClick={() => props.deleteMilestoneItem(props.project, props.milestoneItem)}
+                                // onClick={() => props.deleteMilestoneItem(props.project, props.milestone_item)}
                             >
                                 Delete Milestone
                             </span>
@@ -337,7 +337,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                             className="p02-c05-c01-badge"
                             onClick={() => {
                                 props.set_activeProject(props.project)
-                                props.set_activeMilestoneItem(props.milestoneItem)
+                                props.set_activeMilestoneItem(props.milestone_item)
                                 props.set_manageMilestoneTasks_modalToogle(true)
                             }}
                         >
@@ -361,22 +361,24 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 style={TaskNumberCircle}
                 onClick={() => showState()}
             >
-                {props.milestoneItem.tasks.length}
+                {props.milestone_item.tasks.length}
             </div>
             :
             <div></div>
         }
-        {tasks.map((task, index) => {
+        {props.milestone_item.tasks.map((task, index) => {
             // if (tasksDisplayed && milestoneTag_visibility) {
             if (tasksDisplayed) {
                 return <P02_C02_C01_TASK_TAG 
                     key={Math.random() * 100000}
-                    milestoneItem = {props.milestoneItem}
-                    index = {index}
+                    project = {props.project}
+                    milestone_item = {props.milestone_item}
                     task = {task}
+                    // 
+                    index = {index}
                     leftOffsetMilestone = {leftOffset_milestone}
                     // leftOffsetMilestone = {leftOffsetTasks}
-                    updateTaskDeadline = {updateTaskDeadline}
+                    // updateTaskDeadline = {updateTaskDeadline}
                     userPermissions = {userPermissions}
                 />
             }
