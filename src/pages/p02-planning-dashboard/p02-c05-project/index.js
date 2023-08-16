@@ -299,8 +299,9 @@ const P02_C05_PROJECT = (props) => {
                     display_modal_createNewTask={display_modal_createNewTask}
                     set_manageMilestoneTasks_modalToogle={props.set_manageMilestoneTasks_modalToogle}
                     set_manageMilestones_modalToogle={props.set_manageMilestones_modalToogle}
-                    set_activeMilestoneItem={props.set_activeMilestoneItem}
                     set_activeProject={props.set_activeProject}
+                    set_activeMilestoneItem={props.set_activeMilestoneItem}
+                    set_activeTask={props.set_activeTask}
                 />
             })
             }

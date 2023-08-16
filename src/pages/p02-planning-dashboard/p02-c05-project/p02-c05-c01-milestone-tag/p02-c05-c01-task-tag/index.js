@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import './index.scss';
 import moment from 'moment';
+import * as apiActions from '../../../../../app/features/api/apiSlice';
 
 const P02_C02_C01_TASK_TAG = (props) => {
     const dispatch = useDispatch();
@@ -83,7 +84,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const updateTaskDeadline = (deltaDays) => {
         let new_task_deadline = moment(task.task_deadline).add(deltaDays, 'days').format("YYYY-MM-DD");
 
-        // 1 - update in redux ... TODO:
+        // 1 - update in redux ...
         // 2 - update in database ...
 
 
@@ -100,6 +101,9 @@ const P02_C02_C01_TASK_TAG = (props) => {
         })
         .then((response => {
             // console.log('tasks deadline updated in database: ', response.data);
+
+            // 1 - 
+            dispatch(apiActions.fetch_projects());
         }))
         .catch((error) => {
             console.log("error: ", error);

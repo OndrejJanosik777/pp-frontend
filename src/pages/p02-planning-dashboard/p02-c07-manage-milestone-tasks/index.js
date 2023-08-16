@@ -14,6 +14,8 @@ import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 // styles
 import './index.scss';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
+import * as apiActions from '../../../app/features/api/apiSlice';
 
 const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const dispatch = useDispatch();
@@ -22,6 +24,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const baseUrl = useSelector(state => state.api.baseUrl);
     const userPermissions = useSelector(state => state.api.userProfile.groups);
     const taskTypes = useSelector(state => state.api.taskTypes);
+    const activeMilestone = useSelector(state => state.dashboard.activeMilestone);
+    const activeProject = useSelector(state => state.dashboard.activeProject);
 
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     //
@@ -50,8 +54,9 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     }, []);
 
     const createNewItem = () => {
-        // update in local state - no
-        // console.log('creating new task')
+        // 1 - create in backend
+        // 2 - create in redux state & update project ...
+
         const task_type = taskTypes.find(
             elem => elem.name === document.getElementById('task_type').value).id;
         const estimated_hours = document.getElementById('estimated_hours').value;
@@ -99,7 +104,9 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
             set_tasks([...tasks, response.data]);
 
-            props.updateProject(props.activeProject);
+            dispatch(apiActions.fetch_projects());
+
+            // props.updateProject(props.activeProject);
 
             set_showSpinner_CreateUpdateItem(false);
 
@@ -138,7 +145,9 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
             set_tasks([...updatedTasks]);
 
-            props.updateProject(props.activeProject);
+            // props.updateProject(props.activeProject);
+
+            dispatch(apiActions.fetch_projects());
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -275,6 +284,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             // props.updateProject(props.activeProject);
 
             set_showSpinner_CreateUpdateItem(false);
+
+            dispatch(apiActions.fetch_projects());
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -330,7 +341,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                         type='button' 
                         className='p02-c07-button' 
                         value={'X'} 
-                        onClick={() => props.toogleVisibility(false)} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageMilestoneTasks(false))} 
                     />
                 </div>
             </div>

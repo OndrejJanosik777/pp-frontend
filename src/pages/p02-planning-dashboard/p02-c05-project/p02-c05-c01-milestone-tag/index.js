@@ -5,6 +5,9 @@ import axios from 'axios';
 import './index.scss';
 import moment from 'moment';
 import P02_C02_C01_TASK_TAG from './p02-c05-c01-task-tag';
+import * as dashboardActions from '../../../../app/features/dashboardSlice';
+import * as apiActions from '../../../../app/features/api/apiSlice';
+// '../../app/features/dashboardSlice';
 
 const P02_C05_C01_MILESTONE_TAG = (props) => {
     const dispatch = useDispatch();
@@ -202,6 +205,8 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         .then((response => {
             props.milestone_item.tasks.map((task, index) => {
                 updateTasks(deltaDays, task);
+
+                // 1 -
             });
         }))
         .catch((error) => {
@@ -233,6 +238,8 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         })
         .then((response => {
             // console.log('tasks deadline updated in database: ', response.data);
+
+            dispatch(apiActions.fetch_projects());
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -338,7 +345,10 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                             onClick={() => {
                                 props.set_activeProject(props.project)
                                 props.set_activeMilestoneItem(props.milestone_item)
-                                props.set_manageMilestoneTasks_modalToogle(true)
+                                // props.set_manageMilestoneTasks_modalToogle(true)
+                                dispatch(dashboardActions.set_activeProject({...props.project}))
+                                dispatch(dashboardActions.set_activeMilestone({...props.milestone_item}))
+                                dispatch(dashboardActions.set_showModal_manageMilestoneTasks(true))
                             }}
                         >
                             Manage Tasks

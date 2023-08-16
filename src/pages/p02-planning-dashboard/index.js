@@ -35,6 +35,8 @@ const P02_PLANNING_DASHBOARD = () => {
     // pick the data from the redux store
     let baseUrl = useSelector(state => state.api.baseUrl);
     let projects = useSelector(state => state.api.projects);
+    // modals
+    let showModal_manageMilestoneTasks = useSelector(state => state.dashboard.showModal_manageMilestoneTasks);
 
     // local state of component
     // const [projects, set_projects] = useState([]);
@@ -66,9 +68,11 @@ const P02_PLANNING_DASHBOARD = () => {
     // rest
     const [activeProject, set_activeProject] = useState(undefined);
     const [activeMilestoneItem, set_activeMilestoneItem] = useState(undefined);
+    const [activeTask, set_activeTask] = useState(undefined);
     const [warningText, set_warningText] = useState('');
     const [showSpinner_FetchingProjects, set_showSpinner_FetchingProjects] = useState(false);
     const [extendedSideBar, set_extendedSideBar] = useState(false);
+    // 
 
     const handleResize = useRef((event) => {
         console.log('event.target.innerWidth', event.target.innerWidth);
@@ -290,7 +294,7 @@ const P02_PLANNING_DASHBOARD = () => {
                     />
                     :
                     ""}
-                    {manageMilestoneTasks_modalToogle ?
+                    {showModal_manageMilestoneTasks ?
                     <P02_C07_MANAGE_MILESTONE_TASKS
                         activeProject={activeProject}
                         activeMilestoneItem={activeMilestoneItem}
@@ -424,6 +428,7 @@ const P02_PLANNING_DASHBOARD = () => {
                                     // set_projects={set_projects}
                                     set_activeProject={set_activeProject}
                                     set_activeMilestoneItem={set_activeMilestoneItem}
+                                    set_activeTask= {set_activeTask}
                                     set_editMilestone_toogle={set_editMilestone_toogle}
                                     set_createTask_toogle={set_createTask_toogle}
                                     set_manageMilestones_modalToogle={set_manageMilestones_modalToogle}

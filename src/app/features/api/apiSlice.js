@@ -39,6 +39,7 @@ export const apiSlice = createSlice({
         update_milestoneTypes: (state, action) => {
             state.milestoneTypes = [...action.payload];
         },
+        // 
         fetch_projects: (state, action) => { },
         update_projects: (state, action) => {
             state.projects = [...action.payload];
