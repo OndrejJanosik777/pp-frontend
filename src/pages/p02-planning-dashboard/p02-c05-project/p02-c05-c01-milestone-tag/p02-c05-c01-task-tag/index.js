@@ -24,6 +24,9 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [task, set_task] = useState(props.task);
     const [taskDisplayed, set_taskDisplayed] = useState(true)
     const [initialClickDistance, set_initialClickDistance] = useState(10);
+    const [milestone_item, set_milestone_item] = useState({
+        tasks: []
+    })
 
     const showState = () => {
         console.log('props: ', props);
@@ -31,7 +34,6 @@ const P02_C02_C01_TASK_TAG = (props) => {
         console.log('difference: ', difference);
         console.log('leftOffsetMilestone: ', leftOffsetMilestone);
         console.log('taskWidth: ', taskWidth);
-        // console.log('initialClickDistance: ', initialClickDistance);
     }
 
     useEffect(() => {
@@ -44,6 +46,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
         set_initialOffsetTask((difference - taskWidth) * 16);
         set_difference(difference);
         set_taskWidth(taskWidth);
+        set_milestone_item(props.milestone_item);
     }, []);
 
     const handleTaskTagMove = useRef((event) => {
@@ -129,7 +132,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
     const TaskTag = {
         marginLeft: `${leftOffsetMilestone + offsetTask}px`,
-        marginTop: `${10 * index}px`,
+        marginTop: `${10 * index - 10 * milestone_item.tasks.length}px`,
     }
 
     const TaskTagHidden = {
@@ -156,32 +159,32 @@ const P02_C02_C01_TASK_TAG = (props) => {
     }
 
     return ( <div 
-        style={ taskDisplayed ? TaskTag : TaskTagHidden }
-        className='p02-c05-c01-task-tag'
-        onClick={(e) => taskClicked(e)}
-        // onClick={() => showState()}
-        title={`task deadline: \n${task.task_deadline} \n(${task.task_status_percentage}%)`}
-    >
-        <div 
-            className='p02-c05-c01-task-bar' 
-            style={TaskBar}
-        >
-        <div 
-            className='p02-c05-c01-bar-progress'
-            style={BarProgress}
-        ></div>
-        </div>
-        <div
-            // onClick={() => showState()}
-            className='p02-c05-c01-task-label'
-            style={TaskLabel}
-        >
-            {task.document_number === null ?
-                `${task.task_comment}` :
-                // "" :
-                `${task.document_number} : ${task.document_name}`
-            }
-        </div>
+                style={ taskDisplayed ? TaskTag : TaskTagHidden }
+                className='p02-c05-c01-task-tag'
+                onClick={(e) => taskClicked(e)}
+                // onClick={() => showState()}
+                title={`task deadline: \n${task.task_deadline} \n(${task.task_status_percentage}%)`}
+            >
+            <div 
+                className='p02-c05-c01-task-bar' 
+                style={TaskBar}
+            >
+            <div 
+                className='p02-c05-c01-bar-progress'
+                style={BarProgress}
+            ></div>
+            </div>
+            <div
+                // onClick={() => showState()}
+                className='p02-c05-c01-task-label'
+                style={TaskLabel}
+            >
+                {task.document_number === null ?
+                    `${task.task_comment}` :
+                    // "" :
+                    `${task.document_number} : ${task.document_name}`
+                }
+            </div>
     </div> );
 }
  

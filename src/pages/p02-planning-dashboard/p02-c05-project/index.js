@@ -165,7 +165,7 @@ const P02_C05_PROJECT = (props) => {
     const middleStyle = {
         display: 'flex',
         flexDirection: 'column',
-        height: `${props.project.milestone_items.length * 35 + 50}px`,
+        height: `${props.project.milestone_items.length * 35 + 10 * totalTasks}px`,
         minHeight: '100%',
         borderWidth: '1px',
         borderColor: 'black',

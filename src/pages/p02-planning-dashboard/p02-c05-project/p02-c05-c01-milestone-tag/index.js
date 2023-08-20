@@ -27,6 +27,9 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
     const [tasks, set_tasks] = useState([]);
     const [tasksDisplayed, set_tasksDisplayed] = useState(true);
+    const [milestone_item, set_milestone_item] = useState({
+        tasks: []
+    })
 
     const showState = () => {
         console.log('props: ', props);
@@ -47,6 +50,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             set_tasks([...newTasks]);
         }
 
+        set_milestone_item(props.milestone_item);
         // fetchTasks(id);
     }, [])
 
@@ -255,14 +259,14 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const ContextMenuStyle = {
         position: 'absolute',
         marginLeft: `${leftOffset_milestone}px`,
-        marginTop: `${-25}px`,
+        marginTop: `${-25 - 10 * milestone_item.tasks.length}px`,
         zIndex: `15`,
     }
 
     const TaskNumberCircle = {
         position: 'absolute',
         marginLeft: `${leftOffset_milestone - 18}px`,
-        marginTop: `${-32}px`,
+        marginTop: `${-32 - 10 * milestone_item.tasks.length}px`,
         backgroundColor: props.milestone_item.color,
         // backgroundColor: `lightgreen`,
         borderWidth: `1px`,
@@ -287,6 +291,10 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         zIndex: `10`,
     }
 
+    const MilestoneLowerMargin = {
+        marginBottom: `${10 * milestone_item.tasks.length}px`,
+    }
+
     return (<div className='p02-c05-c01-milestone-tag' id='milestone-tag'>
         {milestoneTag_visibility ?
             <div style={MilestoneTagStyle}>
@@ -304,6 +312,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 >
                     {props.milestone_item.milestone_item_type.short_name}
                 </button>
+                <div style={MilestoneLowerMargin}></div>
             </div>
             :
             <div style={{ height: '30px' }}></div>
@@ -371,12 +380,12 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 style={TaskNumberCircle}
                 onClick={() => showState()}
             >
-                {props.milestone_item.tasks.length}
+                {milestone_item.tasks.length}
             </div>
             :
             <div></div>
         }
-        {props.milestone_item.tasks.map((task, index) => {
+        {milestone_item.tasks.map((task, index) => {
             // if (tasksDisplayed && milestoneTag_visibility) {
             if (tasksDisplayed) {
                 return <P02_C02_C01_TASK_TAG 
