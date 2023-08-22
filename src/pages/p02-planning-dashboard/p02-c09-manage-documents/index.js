@@ -32,6 +32,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         document_number: null,
         document_revision: null,
         document_deadline: null,
+        document_deadline_second: null,
+        document_sended_on: null,
         document_acceptance_status: null,
         document_last_status_update: null,
         document_comment: null,
@@ -115,6 +117,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         const number = document.getElementById('number').value;
         const revision = document.getElementById('revision').value;
         let deadline = document.getElementById('deadline').value;
+        let deadline_second = document.getElementById('deadline_second').value;
+        let sended_on = document.getElementById('sended_on').value;
         const acceptance_status = document.getElementById('acceptance_status').value;
         const comment = document.getElementById('comment').value;
         const selectedMonuments = [];
@@ -128,9 +132,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         if (name === "") return alert('missing input');
         if (number === "") return alert('missing input');
         if (revision === "") return alert('missing input');
-        if (deadline === "") {
-            deadline = null;
-        }
+        if (deadline === "") deadline = null;        
+        if (deadline_second === "") deadline_second = null;        
+        if (sended_on === "") sended_on = null;        
         if (acceptance_status === "") return alert('missing input');
         if (comment === "") return alert('missing input');
         if (selectedMonuments.length === 0) return alert('missing input');
@@ -149,6 +153,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 number: number,
                 revision: revision,
                 deadline: deadline,
+                deadline_second: deadline_second,
+                sended_on: sended_on,
                 last_status_update: moment().format('YYYY-MM-DD'),
                 acceptance_status: acceptance_status,
                 comment: comment,
@@ -164,6 +170,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 document_number: number,
                 document_revision: revision,
                 document_deadline: deadline,
+                document_deadline_second: deadline_second,
+                document_sended_on: sended_on,
                 document_acceptance_status: acceptance_status,
                 document_last_status_update: moment().format('YYYY-MM-DD'),
                 document_comment: comment,
@@ -304,6 +312,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         document.getElementById('number').value = item.document_number;
         document.getElementById('revision').value = item.document_revision;
         document.getElementById('deadline').value = item.document_deadline;
+        document.getElementById('deadline_second').value = item.document_deadline_second;
+        document.getElementById('sended_on').value = item.document_sended_on;
         document.getElementById('acceptance_status').value = item.document_acceptance_status;
         document.getElementById('comment').value = item.document_comment;
 
@@ -338,6 +348,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         item.document_number = document.getElementById('number').value;
         item.document_revision = document.getElementById('revision').value;
         item.document_deadline = document.getElementById('deadline').value;
+        item.document_deadline_second = document.getElementById('deadline_second').value;
+        item.document_sended_on = document.getElementById('sended_on').value;
         item.document_acceptance_status = document.getElementById('acceptance_status').value;
         item.document_comment = document.getElementById('comment').value;
         const selectedMonuments = [];
@@ -351,9 +363,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         if (document.getElementById('name').value === "") return alert('missing input');
         if (document.getElementById('number').value === "") return alert('missing input');
         if (document.getElementById('revision').value === "") return alert('missing input');
-        if (document.getElementById('deadline').value === "") {
-            item.document_deadline = null;
-        }
+        if (document.getElementById('deadline').value === "") item.document_deadline = null;
+        if (document.getElementById('deadline_second').value === "") item.document_deadline_second = null;
+        if (document.getElementById('sended_on').value === "") item.document_sended_on = null;
         if (document.getElementById('acceptance_status').value === "") return alert('missing input');
         if (document.getElementById('comment').value === "") return alert('missing input');
         if (selectedMonuments.length === 0) return alert('missing input');
@@ -372,6 +384,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 number: item.document_number,
                 revision: item.document_revision,
                 deadline: item.document_deadline,
+                deadline_second: item.document_deadline_second,
+                sended_on: item.document_sended_on,
                 acceptance_status: item.document_acceptance_status,
                 comment: item.document_comment,
                 monuments: selectedMonuments,
@@ -478,7 +492,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             <th>name</th>
                             <th>nr.</th>
                             <th>rev.</th>
-                            <th>deadline</th>
+                            <th>deadline 1</th>
+                            <th>deadline 2</th>
+                            <th>sended on</th>
                             <th>status</th>
                             <th>last status change</th>
                             <th>comment</th>
@@ -498,6 +514,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 <td>{document.document_number}</td>
                                 <td>{document.document_revision}</td>
                                 <td>{document.document_deadline != null ? moment(document.document_deadline).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{document.document_deadline_second != null ? moment(document.document_deadline_second).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{document.document_sended_on != null ? moment(document.document_sended_on).format("DD-MMM-YYYY") : 'not set'}</td>
                                 <td>{document.document_acceptance_status}</td>
                                 <td>{document.document_last_status_update != null ? moment(document.document_last_status_update).format("DD-MMM-YYYY") : 'not set'}</td>
                                 <td>{document.document_comment}</td>
@@ -571,13 +589,35 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c09-footer-row1'>
-                    <div className='p02-c09-row1-col1'>deadline</div>
+                    <div className='p02-c09-row1-col1'>deadline 1</div>
                     <div className='p02-c09-row1-col2'>
                         <div className='p02-c09-textbox-container'>
                             <input 
                                 type='date' 
                                 className='p02-c09-date' 
                                 id='deadline' 
+                                placeholder='...' 
+                            />
+                        </div>
+                    </div>
+                    <div className='p02-c09-row1-col1'>deadline 2</div>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <input 
+                                type='date' 
+                                className='p02-c09-date' 
+                                id='deadline_second' 
+                                placeholder='...' 
+                            />
+                        </div>
+                    </div>
+                    <div className='p02-c09-row1-col1'>sended on</div>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <input 
+                                type='date' 
+                                className='p02-c09-date' 
+                                id='sended_on' 
                                 placeholder='...' 
                             />
                         </div>
