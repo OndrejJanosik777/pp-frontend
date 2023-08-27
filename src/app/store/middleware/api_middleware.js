@@ -87,7 +87,7 @@ const apiMiddleware = storeAPI => next => async action => {
           let projects = [];
 
           response.data.map((item) => {
-              projects.push({...item, displayed: true})
+              projects.push({...item, displayed: item.displayed_on_dashboard})
           })
 
           projects.sort((a, b) => {

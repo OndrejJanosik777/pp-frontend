@@ -8,6 +8,7 @@ import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import * as apiActions from '../../../app/features/api/apiSlice';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
 import './index.scss';
 import axios from 'axios'; 
 
@@ -39,11 +40,36 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
     }
 
     const checkboxChanged = (item) => {
-        let updatedItem = { ...item };
+        // let updatedItem = { ...item };
 
-        updatedItem.displayed = !updatedItem.displayed;
+        // updatedItem.displayed = !updatedItem.displayed;
 
-        dispatch(apiActions.update_project(updatedItem));
+        // dispatch(apiActions.update_project(updatedItem));
+
+        axios({
+            method: 'post',
+            url: baseUrl + `/company/update-project-visibility/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                project_id: item.id
+            }
+        })
+        .then((response => {
+            // console.log("projects updated sucessfully");
+            dispatch(dashboardActions.set_spinnerFetchingProjects(true));
+            dispatch(apiActions.fetch_projects());
+        }))
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+
+            // dispatch(apiActions.update_projects(originalItems));
+        })
     }
 
     const deleteItem = (item) => {
