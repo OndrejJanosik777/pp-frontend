@@ -112,6 +112,10 @@ const P02_PLANNING_DASHBOARD = () => {
         console.log('state of p02-planning-dashboard: ');
         console.log('projects: ', projects);
         console.log('userPermissions: ', userPermissions);
+
+        let element = document.getElementById("p02-main");
+        console.log("element: ", element);
+        element.scrollTop = 125;
     }
 
     const display_modal_warning_deleteMilestoneItem = (project, milestone) => {
@@ -385,7 +389,7 @@ const P02_PLANNING_DASHBOARD = () => {
                             />
                         </div>
                     </div>
-                    <main className='p02-main'>
+                    <main className='p02-main' id="p02-main">
                     {
                         projects.map((project) => {
                             let totalTasks = 0;

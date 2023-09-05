@@ -182,7 +182,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
                 {task.document_number === null ?
                     `${task.task_comment}` :
                     // "" :
-                    `${task.document_number} : ${task.document_name}`
+                    `${task.document_number} (${task.document_revision}) : ${task.document_name}`
                 }
             </div>
     </div> );

@@ -119,6 +119,7 @@
                 }
                 
                 tbody {
+
                     tr:nth-child(even) {
                         background-color: #F7F7F7;
 
@@ -126,6 +127,7 @@
                     
                     tr {
                         border-bottom: 1px solid #F6F6F6;
+                        // overflow-y: scroll;
 
                         td:first-child {
                             border-right: 1px solid #D0D0D0;
