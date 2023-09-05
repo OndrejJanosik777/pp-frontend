@@ -626,10 +626,46 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     <tbody>
                         {/* TODO:  */}
                         {documents_localStateFormat.map((document, index) => {
+                            let documentStyle = null;
+                            let documentDeadline = null;
+
+                            if (document.document_deadline_second !== null) 
+                                documentDeadline = document.document_deadline_second;
+                            else 
+                                documentDeadline = document.document_deadline;
+                            
+
+                            let difference = moment(documentDeadline).diff(moment(), 'days');
+                            
+                            if (difference < 14) {
+                                if ( document.document_acceptance_status !== "sended" &&
+                                    document.document_acceptance_status !== "accepted" &&
+                                    document.document_acceptance_status !== "rejected" ) {
+                                        documentStyle = { color: "orange" };
+                                    }
+                            }
+                            
+                            if (difference < 0) {
+                                if ( document.document_acceptance_status !== "sended" &&
+                                document.document_acceptance_status !== "accepted" &&
+                                document.document_acceptance_status !== "rejected" ) {
+                                    documentStyle = { color: "red" };
+                                }
+                            }
+
+                            if ( 
+                                document.document_acceptance_status !== "sended"
+                                // document.document_acceptance_status !== "accepted" ||
+                                // document.document_acceptance_status !== "rejected"
+                            ) {
+                                // documentStyle = { color: "red" };
+
+                            }
+
                             return <tr key={Math.random() * 100000}>
                                 <td>{document.document_id}</td>
                                 <td>{document.document_name}</td>
-                                <td>{document.document_number}</td>
+                                <td style={documentStyle}>{document.document_number}</td>
                                 <td>{document.document_revision}</td>
                                 <td>{document.document_deadline != null ? moment(document.document_deadline).format("DD-MMM-YYYY") : ''}</td>
                                 <td>{document.document_deadline_second != null ? moment(document.document_deadline_second).format("DD-MMM-YYYY") : ''}</td>
