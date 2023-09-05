@@ -36,6 +36,7 @@
             background-color: #F1F1F1;
             width: 100%;
             // height: 15rem;
+            
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -112,13 +113,49 @@
         .p02-c09-content {
             background-color: #FFFFFF;
             width: 100%;
-            height: 100%;
+            // height: 100%;
+            min-height: 2.5rem;
             overflow-y: scroll;
             overflow-x: hidden;
+
+            .p02-c09-icon {
+                .p02-c09-img-active {
+                    border: 1px solid black;
+                    padding: 0.05rem;
+                    height: 0.8rem;
+                    background-color: orange;
+                    border-radius: 0.10rem;
+
+                    &:hover {
+                        cursor: pointer;
+                        // background-color: lightgray;
+                    }
+                }
+
+                .p02-c09-img-inactive {
+                    border: 1px solid black;
+                    padding: 0.05rem;
+                    height: 0.8rem;
+                    // background-color: orange;
+                    border-radius: 0.10rem;
+
+                    &:hover {
+                        cursor: pointer;
+                        // background-color: lightgray;
+                    }
+                }
+            }
 
             table {
                 width: 100%;
                 // height: 100%;
+
+                thead {
+                    tr {
+                        min-height: 2.5rem;
+
+                    }
+                }
 
                 thead, tbody {
                     width: 100%;
@@ -126,21 +163,21 @@
                         width: 100%;
                         display: grid;
                         grid-template-columns: 
-                        2%      // document_id
-                        12%     // document_name
-                        5%      // document_number
-                        5%      // document_revision
-                        5%      // document_deadline
-                        5%      // document_deadline
-                        5%      // document_deadline
-                        5%      // document_acceptance_status
-                        7%      // document_last_status_update
-                        20%     // document_comment
-                        6%      // document_author_username
-                        6%      // document_cmit_short_name
-                        7%      // document_cmi_deadline
-                        5%      // document_status
-                        5%      // action
+                        2.2rem      // document_id
+                        10rem     // document_name
+                        4rem      // document_number
+                        2.2rem      // document_revision
+                        4.5rem      // document_deadline
+                        4.5rem      // document_deadline
+                        4.5rem      // document_deadline
+                        3.0rem      // document_acceptance_status
+                        4.5rem      // document_last_status_update
+                        20rem     // document_comment
+                        5rem      // document_author_username
+                        5rem      // document_cmit_short_name
+                        4.5rem      // document_cmi_deadline
+                        3rem      // document_status
+                        3rem      // action
                         ;
 
                         th {

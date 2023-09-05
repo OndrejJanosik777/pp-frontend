@@ -12,6 +12,9 @@ import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
+import filter from './assets/filter-svgrepo-com.svg';
+import arrow_up from './assets/arrow-up-svgrepo-com.svg';
+import arrow_down from './assets/arrow-down-svgrepo-com.svg';
 // actions to dispatch
 import * as apiActions from '../../../app/features/api/apiSlice';
 // styles
@@ -67,6 +70,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
     const [showSpinner_FetchingDocuments, set_showSpinner_FetchingDocuments] = useState(true);
+    const [icon_sortDeadlineAscending, set_icon_sortDeadlineAscending] = useState(false);
+    const [icon_sortDeadlineDescending, set_icon_sortDeadlineDescending] = useState(false);
+    const [icon_filterDeadline, set_icon_filterDeadline] = useState(false);
 
     useEffect(() => {
         set_documents_reduxStateFormat([...props.activeProject.documents]);
@@ -338,6 +344,64 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         set_selectedItemIndex(index);
     }
 
+    const sortDeadlineAscending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            let deadline_a = null;
+            let deadline_b = null;
+
+            a.document_deadline_second != null ? deadline_a = a.document_deadline_second : deadline_a = a.document_deadline;
+            b.document_deadline_second != null ? deadline_b = b.document_deadline_second : deadline_b = b.document_deadline;
+
+            return moment(deadline_a) - moment(deadline_b);
+            // return moment(a.document_deadline) - moment(b.document_deadline);
+        });
+
+        // 3 - 
+        set_documents_localStateFormat([...documents]);
+
+        // 4 - 
+        set_icon_sortDeadlineAscending(true);
+        set_icon_sortDeadlineDescending(false);
+    }
+
+    const sortDeadlineDescending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            let deadline_a = null;
+            let deadline_b = null;
+
+            a.document_deadline_second != null ? deadline_a = a.document_deadline_second : deadline_a = a.document_deadline;
+            b.document_deadline_second != null ? deadline_b = b.document_deadline_second : deadline_b = b.document_deadline;
+
+            return moment(deadline_b) - moment(deadline_a);
+            // return moment(a.document_deadline) - moment(b.document_deadline);
+        });
+
+        // 3 - 
+        set_documents_localStateFormat([...documents]);
+
+        // 4 - 
+        set_icon_sortDeadlineAscending(false);
+        set_icon_sortDeadlineDescending(true);
+    }
+
     const updateItem = (item, index) => {
         // 1 - update item in backend 
         // 2 - update item in local state
@@ -488,6 +552,60 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 <table>
                     <thead>
                         <tr>
+                            <th>id
+                                <div className='p02-c09-icon'>
+                                    {/* <img src={arrow_up} alt='' className='p02-c09-img-inactive' ></img> */}
+                                    {/* <img src={arrow_down} alt='' className='p02-c09-img-inactive' ></img> */}
+                                </div>
+                            </th>
+                            <th>name</th>
+                            <th>nr.</th>
+                            <th>rev.</th>
+                            <th>deadline 1
+                                <div className='p02-c09-icon'>
+                                    <img 
+                                        src={arrow_up} 
+                                        alt='' 
+                                        className={icon_sortDeadlineAscending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDeadlineAscending()}
+                                    ></img>
+                                    <img 
+                                        src={arrow_down} 
+                                        alt='' 
+                                        className={icon_sortDeadlineDescending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDeadlineDescending()}
+                                    ></img>
+                                    {/* <img 
+                                        src={filter} 
+                                        alt='' 
+                                        className={icon_filterDeadline ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                    ></img> */}
+                                </div>
+                            </th>
+                            <th>deadline 2</th>
+                            <th>sended on</th>
+                            <th>status</th>
+                            <th>last update</th>
+                            <th>comment</th>
+                            <th>author</th>
+                            <th>milestone
+                                <div className='p02-c09-icon'>
+                                    {/* <img src={arrow_up} alt='' className='p02-c09-img-inactive' ></img> */}
+                                    {/* <img src={arrow_down} alt='' className='p02-c09-img-inactive' ></img> */}
+                                    <img src={filter} alt='' className='p02-c09-img-inactive' ></img>
+                                </div>
+                            </th>
+                            <th>deadline</th>
+                            <th>status</th>
+                            <th>action</th>
+                        </tr>
+                    </thead>   
+                </table>
+            </div>
+            <div className='p02-c09-content'>
+                <table>
+                    {/* <thead>
+                        <tr>
                             <th>id</th>
                             <th>name</th>
                             <th>nr.</th>
@@ -504,7 +622,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             <th>status [%]</th>
                             <th>action</th>
                         </tr>
-                    </thead>
+                    </thead> */}
                     <tbody>
                         {/* TODO:  */}
                         {documents_localStateFormat.map((document, index) => {
@@ -513,15 +631,15 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 <td>{document.document_name}</td>
                                 <td>{document.document_number}</td>
                                 <td>{document.document_revision}</td>
-                                <td>{document.document_deadline != null ? moment(document.document_deadline).format("DD-MMM-YYYY") : 'not set'}</td>
-                                <td>{document.document_deadline_second != null ? moment(document.document_deadline_second).format("DD-MMM-YYYY") : 'not set'}</td>
-                                <td>{document.document_sended_on != null ? moment(document.document_sended_on).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{document.document_deadline != null ? moment(document.document_deadline).format("DD-MMM-YYYY") : ''}</td>
+                                <td>{document.document_deadline_second != null ? moment(document.document_deadline_second).format("DD-MMM-YYYY") : ''}</td>
+                                <td>{document.document_sended_on != null ? moment(document.document_sended_on).format("DD-MMM-YYYY") : ''}</td>
                                 <td>{document.document_acceptance_status}</td>
-                                <td>{document.document_last_status_update != null ? moment(document.document_last_status_update).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{document.document_last_status_update != null ? moment(document.document_last_status_update).format("DD-MMM-YYYY") : ''}</td>
                                 <td>{document.document_comment}</td>
                                 <td>{document.document_author_username}</td>
                                 <td>{document.document_cmit_short_name}</td>
-                                <td>{document.document_cmi_deadline != null ? moment(document.document_cmi_deadline).format("DD-MMM-YYYY") : 'not set'}</td>
+                                <td>{document.document_cmi_deadline != null ? moment(document.document_cmi_deadline).format("DD-MMM-YYYY") : ''}</td>
                                 <td>{`${document.document_status}%`}</td>
                                 <td>
                                     { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_document" ) !== -1 ? 
