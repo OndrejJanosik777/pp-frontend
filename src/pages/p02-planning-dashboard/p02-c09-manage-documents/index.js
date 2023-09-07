@@ -70,7 +70,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
     const [showSpinner_FetchingDocuments, set_showSpinner_FetchingDocuments] = useState(true);
-    const [icon_sortDeadlineAscending, set_icon_sortDeadlineAscending] = useState(false);
+    const [icon_sortDeadlineAscending, set_icon_sortDeadlineAscending] = useState(true);
     const [icon_sortDeadlineDescending, set_icon_sortDeadlineDescending] = useState(false);
     const [icon_filterDeadline, set_icon_filterDeadline] = useState(false);
 
@@ -278,19 +278,21 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         .then((response => {
             let new_documents = [...response.data];
 
-            new_documents.sort((a, b) => {
-                let aDeadline = a.document_deadline;
-                let bDeadline = b.document_deadline;
+            // new_documents.sort((a, b) => {
+            //     let aDeadline = a.document_deadline;
+            //     let bDeadline = b.document_deadline;
 
-                if (aDeadline === null) aDeadline = '2999-01-01';
-                if (bDeadline === null) bDeadline = '2999-01-01';
+            //     if (aDeadline === null) aDeadline = '2999-01-01';
+            //     if (bDeadline === null) bDeadline = '2999-01-01';
                 
-                return moment(aDeadline).diff(moment(bDeadline), 'days');
-            });
+            //     return moment(aDeadline).diff(moment(bDeadline), 'days');
+            // });
+
+            sortDeadlineAscending(new_documents);
 
             // let filtered_documents = new_documents.filter(elem => elem.acceptance_status !== "accepted")
 
-            set_documents_localStateFormat([...new_documents]);
+            // set_documents_localStateFormat([...new_documents]);
             // set_documents([...filtered_documents]);
 
             set_showSpinner_FetchingDocuments(false);
@@ -344,14 +346,14 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         set_selectedItemIndex(index);
     }
 
-    const sortDeadlineAscending = () => {
+    const sortDeadlineAscending = (originalDocuments) => {
         // 1 - get actual array of documents from local state
         // 2 - sort array 
         // 3 - update local state
         // 4 - set colors
 
         // 1 -
-        let documents = [...documents_localStateFormat];
+        let documents = [...originalDocuments];
 
         // 2 -
         documents.sort((a, b) => {
@@ -567,7 +569,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                         src={arrow_up} 
                                         alt='' 
                                         className={icon_sortDeadlineAscending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
-                                        onClick={() => sortDeadlineAscending()}
+                                        onClick={() => sortDeadlineAscending(documents_localStateFormat)}
                                     ></img>
                                     <img 
                                         src={arrow_down} 
@@ -654,11 +656,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             }
 
                             if ( 
-                                document.document_acceptance_status !== "sended"
+                                document.document_acceptance_status === "accepted"
                                 // document.document_acceptance_status !== "accepted" ||
                                 // document.document_acceptance_status !== "rejected"
                             ) {
-                                // documentStyle = { color: "red" };
+                                documentStyle = { color: "green" };
 
                             }
 
