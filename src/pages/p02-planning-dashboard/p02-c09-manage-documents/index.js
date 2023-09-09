@@ -72,7 +72,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [showSpinner_FetchingDocuments, set_showSpinner_FetchingDocuments] = useState(true);
     const [icon_sortDeadlineAscending, set_icon_sortDeadlineAscending] = useState(true);
     const [icon_sortDeadlineDescending, set_icon_sortDeadlineDescending] = useState(false);
-    const [icon_filterDeadline, set_icon_filterDeadline] = useState(false);
+    const [showFilterDeadline, set_showFilterDeadline] = useState(false);
+    const [filteredMilestones, set_filteredMilestones] = useState([]);
+    const [cmit_short_names, set_cmit_short_names] = useState([]);
 
     useEffect(() => {
         set_documents_reduxStateFormat([...props.activeProject.documents]);
@@ -94,6 +96,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         console.log('props: ', props);
         console.log('documents: ', documents_localStateFormat);
         console.log('monuments: ', monuments);
+        console.log('cmit_short_names: ', cmit_short_names);
+        console.log('filteredMilestones: ', filteredMilestones);
         console.log('showSpinner_CreateUpdateItem: ', showSpinner_CreateUpdateItem);
     }
 
@@ -278,27 +282,19 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         .then((response => {
             let new_documents = [...response.data];
 
-            // new_documents.sort((a, b) => {
-            //     let aDeadline = a.document_deadline;
-            //     let bDeadline = b.document_deadline;
+            let new_document_cmit_short_names = [];
 
-            //     if (aDeadline === null) aDeadline = '2999-01-01';
-            //     if (bDeadline === null) bDeadline = '2999-01-01';
-                
-            //     return moment(aDeadline).diff(moment(bDeadline), 'days');
-            // });
+            new_documents.map((item) => {
+                if (!new_document_cmit_short_names.includes(item.document_cmit_short_name)) {
+                    new_document_cmit_short_names.push(item.document_cmit_short_name);
+                }
+            })
 
             sortDeadlineAscending(new_documents);
 
-            // let filtered_documents = new_documents.filter(elem => elem.acceptance_status !== "accepted")
-
-            // set_documents_localStateFormat([...new_documents]);
-            // set_documents([...filtered_documents]);
 
             set_showSpinner_FetchingDocuments(false);
-
-            // set_projects(response.data);
-            // set_projects(newProjects);
+            set_cmit_short_names([...new_document_cmit_short_names]);
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -496,6 +492,32 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         })
     }
 
+    const updateFilterMilestones = (item) => {
+        if (item === 'all') {
+            if (filteredMilestones.length != cmit_short_names.length) {
+                set_filteredMilestones([...cmit_short_names]);
+            }
+            else {
+                set_filteredMilestones([]);
+            }
+        }
+        else {
+            if (filteredMilestones.includes(item)) {
+
+                let index = filteredMilestones.indexOf(item);
+
+                filteredMilestones.splice(index, 1);
+            }
+            else {
+                set_filteredMilestones([...filteredMilestones, item]);
+            }
+        }
+
+        console.log(item);
+
+        set_documents_localStateFormat([...documents_localStateFormat]);
+    }
+
     return ( <div className='p02-c09-manage-documents'>
         <div className='p02-c09-background'></div>
         <div className='p02-c09-window'>
@@ -594,8 +616,48 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 <div className='p02-c09-icon'>
                                     {/* <img src={arrow_up} alt='' className='p02-c09-img-inactive' ></img> */}
                                     {/* <img src={arrow_down} alt='' className='p02-c09-img-inactive' ></img> */}
-                                    <img src={filter} alt='' className='p02-c09-img-inactive' ></img>
+                                    <img 
+                                        src={filter} 
+                                        alt='' 
+                                        className={filteredMilestones.length != 0 ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => set_showFilterDeadline(!showFilterDeadline)}
+                                    ></img>
                                 </div>
+                                {showFilterDeadline ?
+                                    <ul 
+                                        className='p02-c09-filter-choises' 
+                                        onMouseLeave={() => set_showFilterDeadline(false)
+                                    }>
+                                        <li>
+                                            <input 
+                                                type='checkbox' 
+                                                id='all' 
+                                                name='all' 
+                                                checked={filteredMilestones.length == 0} 
+                                                
+                                                // onChange={() => console.log('changed')}
+                                                onChange={() => updateFilterMilestones('all')}
+                                            />
+                                            <label for='all'>all</label>
+                                        </li>
+                                        {cmit_short_names.map((item) => {
+                                            let isFiltered = filteredMilestones.includes(item);
+
+                                            return <li>
+                                                <input 
+                                                    type='checkbox' 
+                                                    id={item} 
+                                                    name={item} 
+                                                    checked={!isFiltered}
+                                                    onChange={() => updateFilterMilestones(item)} 
+                                                />
+                                                <label for={item}>{item}</label>
+                                            </li>
+                                        })}
+                                    </ul>
+                                    :
+                                    <div></div>
+                                }
                             </th>
                             <th>deadline</th>
                             <th>status</th>
@@ -606,25 +668,6 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             </div>
             <div className='p02-c09-content'>
                 <table>
-                    {/* <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>name</th>
-                            <th>nr.</th>
-                            <th>rev.</th>
-                            <th>deadline 1</th>
-                            <th>deadline 2</th>
-                            <th>sended on</th>
-                            <th>status</th>
-                            <th>last status change</th>
-                            <th>comment</th>
-                            <th>author</th>
-                            <th>milestone</th>
-                            <th>mil. deadline</th>
-                            <th>status [%]</th>
-                            <th>action</th>
-                        </tr>
-                    </thead> */}
                     <tbody>
                         {/* TODO:  */}
                         {documents_localStateFormat.map((document, index) => {
@@ -657,53 +700,61 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
                             if ( 
                                 document.document_acceptance_status === "accepted"
-                                // document.document_acceptance_status !== "accepted" ||
-                                // document.document_acceptance_status !== "rejected"
                             ) {
                                 documentStyle = { color: "green" };
 
                             }
 
-                            return <tr key={Math.random() * 100000}>
-                                <td>{document.document_id}</td>
-                                <td>{document.document_name}</td>
-                                <td style={documentStyle}>{document.document_number}</td>
-                                <td>{document.document_revision}</td>
-                                <td>{document.document_deadline != null ? moment(document.document_deadline).format("DD-MMM-YYYY") : ''}</td>
-                                <td>{document.document_deadline_second != null ? moment(document.document_deadline_second).format("DD-MMM-YYYY") : ''}</td>
-                                <td>{document.document_sended_on != null ? moment(document.document_sended_on).format("DD-MMM-YYYY") : ''}</td>
-                                <td>{document.document_acceptance_status}</td>
-                                <td>{document.document_last_status_update != null ? moment(document.document_last_status_update).format("DD-MMM-YYYY") : ''}</td>
-                                <td>{document.document_comment}</td>
-                                <td>{document.document_author_username}</td>
-                                <td>{document.document_cmit_short_name}</td>
-                                <td>{document.document_cmi_deadline != null ? moment(document.document_cmi_deadline).format("DD-MMM-YYYY") : ''}</td>
-                                <td>{`${document.document_status}%`}</td>
-                                <td>
-                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_document" ) !== -1 ? 
-                                        <img 
-                                            className='p02-c09-icons' 
-                                            src={pencil_edit} 
-                                            alt='' 
-                                            onClick={() => {
-                                                clearForm();
+                            let filtered = false;
 
-                                                switchToUpdateMode(document, index);
-                                            }} 
-                                        /> : 
-                                        <div></div>
-                                    }
-                                    { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "delete_document" ) !== -1 ? 
-                                        <img 
-                                            className='p02-c09-icons' 
-                                            src={delete_cross} 
-                                            alt='' 
-                                            onClick={() => deleteItem(document, index)} 
-                                        /> : 
-                                        <div></div>
-                                    }
-                                </td>
-                            </tr>
+                            // filters
+                            if (filteredMilestones.length != 0) {
+                                filtered = filteredMilestones.includes(document.document_cmit_short_name);
+                            }
+
+
+                            if (!filtered) {
+                                return <tr key={Math.random() * 100000}>
+                                    <td>{document.document_id}</td>
+                                    <td>{document.document_name}</td>
+                                    <td style={documentStyle}>{document.document_number}</td>
+                                    <td>{document.document_revision}</td>
+                                    <td>{document.document_deadline != null ? moment(document.document_deadline).format("DD-MMM-YYYY") : ''}</td>
+                                    <td>{document.document_deadline_second != null ? moment(document.document_deadline_second).format("DD-MMM-YYYY") : ''}</td>
+                                    <td>{document.document_sended_on != null ? moment(document.document_sended_on).format("DD-MMM-YYYY") : ''}</td>
+                                    <td>{document.document_acceptance_status}</td>
+                                    <td>{document.document_last_status_update != null ? moment(document.document_last_status_update).format("DD-MMM-YYYY") : ''}</td>
+                                    <td>{document.document_comment}</td>
+                                    <td>{document.document_author_username}</td>
+                                    <td>{document.document_cmit_short_name}</td>
+                                    <td>{document.document_cmi_deadline != null ? moment(document.document_cmi_deadline).format("DD-MMM-YYYY") : ''}</td>
+                                    <td>{`${document.document_status}%`}</td>
+                                    <td>
+                                        { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_document" ) !== -1 ? 
+                                            <img 
+                                                className='p02-c09-icons' 
+                                                src={pencil_edit} 
+                                                alt='' 
+                                                onClick={() => {
+                                                    clearForm();
+
+                                                    switchToUpdateMode(document, index);
+                                                }} 
+                                            /> : 
+                                            <div></div>
+                                        }
+                                        { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "delete_document" ) !== -1 ? 
+                                            <img 
+                                                className='p02-c09-icons' 
+                                                src={delete_cross} 
+                                                alt='' 
+                                                onClick={() => deleteItem(document, index)} 
+                                            /> : 
+                                            <div></div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
                         })}
                     </tbody>
                 </table>

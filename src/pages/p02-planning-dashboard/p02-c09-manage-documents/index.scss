@@ -146,6 +146,33 @@
                 }
             }
 
+            .p02-c09-filter-choises {
+                min-width: 2rem;
+                min-height: 2rem;
+                background-color: rgb(255, 230, 230);
+                position: absolute;
+                padding: 0.4rem 0.2rem;
+                list-style: none;
+                border: solid 1px black;
+                top: 0rem;
+
+                li {
+                    padding: 0.1rem;
+
+                    label {
+                        padding: 0rem 0.3rem;
+                    }
+
+                    input {
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    }
+
+                }
+            }
+
             table {
                 width: 100%;
                 // height: 100%;
