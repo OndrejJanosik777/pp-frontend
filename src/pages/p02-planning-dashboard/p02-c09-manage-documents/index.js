@@ -698,11 +698,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                 }
                             }
 
-                            if ( 
-                                document.document_acceptance_status === "accepted"
-                            ) {
+                            if ( document.document_acceptance_status === "accepted") {
                                 documentStyle = { color: "green" };
+                            }
 
+                            if ( document.document_acceptance_status === "rejected") {
+                                documentStyle = { color: "#d4d4d4" };
                             }
 
                             let filtered = false;

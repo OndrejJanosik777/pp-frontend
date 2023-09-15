@@ -27,6 +27,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [milestone_item, set_milestone_item] = useState({
         tasks: []
     })
+    const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
 
     const showState = () => {
         console.log('props: ', props);
@@ -158,33 +159,79 @@ const P02_C02_C01_TASK_TAG = (props) => {
         lineHeight: '9px',
     }
 
+    const task_contextMenuClicked = (event) => {
+        event.preventDefault();
+
+        console.log('task -> context menu clicked...');
+
+        set_contextMenu_visibility(true);
+    }
+
+    const ContextMenuTaskStyle = {
+        position: 'relative',
+        // marginLeft: `${leftOffset_milestone}px`,
+        // marginTop: `${-25 - 10 * milestone_item.tasks.length}px`,
+        // marginLeft: `${-taskWidth * 8}px`,
+        // marginTop: `60px`,
+        zIndex: `30`,
+    }
+
     return ( <div 
                 style={ taskDisplayed ? TaskTag : TaskTagHidden }
                 className='p02-c05-c01-task-tag'
-                onClick={(e) => taskClicked(e)}
+                
                 // onClick={() => showState()}
+                onContextMenu={(e) => task_contextMenuClicked(e)}
                 title={`task deadline: \n${task.task_deadline} \n(${task.task_status_percentage}%)`}
             >
-            <div 
-                className='p02-c05-c01-task-bar' 
-                style={TaskBar}
-            >
-            <div 
-                className='p02-c05-c01-bar-progress'
-                style={BarProgress}
-            ></div>
-            </div>
-            <div
-                // onClick={() => showState()}
-                className='p02-c05-c01-task-label'
-                style={TaskLabel}
-            >
-                {task.document_number === null ?
-                    `${task.task_comment}` :
-                    // "" :
-                    `${task.document_number} (${task.document_revision}) : ${task.document_name}`
+                {contextMenu_visibility ? 
+                    <div
+                        style={ContextMenuTaskStyle}
+                        onMouseLeave={() => set_contextMenu_visibility(false)}
+                    >
+                        <ul className='p02-c05-c01-context-task-container'>
+                            <li className='p02-c05-c01-context-task-item'>
+                                <span className='p02-c05-c01-task-badge'>edit task</span>
+                            </li>
+                            <li className='p02-c05-c01-context-task-item'>
+                                <span className='p02-c05-c01-task-badge'>edit document</span>
+                            </li>
+                            <li className='p02-c05-c01-context-task-item'>
+                                <span className='p02-c05-c01-task-badge'>complete task</span>
+                            </li>
+                            <li className='p02-c05-c01-context-task-item'>
+                                <span className='p02-c05-c01-task-badge'>delete task</span>
+                            </li>
+                        </ul>
+                    </div> :
+                    <div></div>
                 }
-            </div>
+                {/* <div className='box-container'>
+                    <div className='box'>box</div>
+                </div> */}
+                <div 
+                    className='p02-c05-c01-task-bar' 
+                    style={TaskBar}
+                    onClick={(e) => taskClicked(e)}
+                >
+                <div 
+                    className='p02-c05-c01-bar-progress'
+                    style={BarProgress}
+                    onClick={(e) => taskClicked(e)}
+                ></div>
+                </div>
+                <div
+                    // onClick={() => showState()}
+                    className='p02-c05-c01-task-label'
+                    style={TaskLabel}
+
+                >
+                    {task.document_number === null ?
+                        `${task.task_comment}` :
+                        // "" :
+                        `${task.document_number} (${task.document_revision}) : ${task.document_name}`
+                    }
+                </div>
     </div> );
 }
  

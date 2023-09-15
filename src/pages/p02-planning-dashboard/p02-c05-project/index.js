@@ -180,6 +180,7 @@ const P02_C05_PROJECT = (props) => {
         width: '1rem',
         height: '100%',
         backgroundColor: 'greenyellow',
+        backgroundColor: 'rgba(64, 184, 34, 0.432)',
         position: 'absolute',
         left: `${useSelector(state => state.dashboard.dateOffset) * -1}rem`,
         display: 'flex',
