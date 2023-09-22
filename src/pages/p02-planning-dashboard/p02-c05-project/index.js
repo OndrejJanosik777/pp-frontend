@@ -234,12 +234,20 @@ const P02_C05_PROJECT = (props) => {
             <div>{`STRESS: ${props.project.stress_lead_id}`}</div>
             <div>
                 <img
+                    className='logo-icons'
+                    src={baseUrl + props.project.logo}
+                    alt=''
+                    onClick={() => showState()} 
+                />
+            </div>
+            {/* <div>
+                <img
                     className='plane-icons'
                     src={planeSVG}
                     alt=''
                     onClick={() => showState()} 
                 />
-            </div>
+            </div> */}
             <div 
                 className='p02-c05-row-left'
                 onClick={
