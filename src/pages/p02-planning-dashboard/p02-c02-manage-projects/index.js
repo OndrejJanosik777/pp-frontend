@@ -37,6 +37,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
 
     const showState = () => {
         console.log('userPermissions: ', userPermissions);
+        console.log('logo: ', document.getElementById('logo').files);
     }
 
     const checkboxChanged = (item) => {
@@ -111,6 +112,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         let name = document.getElementById('name').value;
         let number = document.getElementById('number').value;
         let short_name = document.getElementById('short_name').value;
+        let logo = document.getElementById('logo');
 
         if (name == "" || short_name == "" || number == "")  {
             return alert('Missing input: name, number or short name')
@@ -123,12 +125,14 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             method: 'post',
             url: baseUrl + '/company/projects/',
             headers: {
-                "Authorization": token
+                "Authorization": token,
+                'Content-Type': 'multipart/form-data'
             },
             data: {
                 name: name,
                 number: number,
-                short_name: short_name
+                short_name: short_name,
+                logo: logo.files[0]
             }
         })
         .then((response => {
@@ -158,7 +162,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         document.getElementById('name').value = item.name;
         document.getElementById('number').value = item.number;
         document.getElementById('short_name').value = item.short_name;
-
+        // document.getElementById('logo').value = item.logo;
     }
 
     const updateItem = (item) => {
@@ -173,24 +177,35 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             return alert('Missing input: name, number or short name')
         }
 
+        let data = {
+            name: updateProject.name,
+            number: updateProject.number,
+            short_name: updateProject.short_name,
+        }
+
+        let method = 'patch';
+
+        if (document.getElementById('logo').files.length > 0) {
+            data = { ...data, logo: document.getElementById('logo').files[0] };
+            method = 'put';
+        }
+        else {
+            return alert('Missing input: logo')
+        }
+
         const index = projects.findIndex(elem => elem.id === item.id);
 
         set_showSpinner_CreateUpdateProject(true);
 
         // update item in database and in redux store
         axios({
-            method: 'put',
+            method: method,
             url: baseUrl + `/company/projects/${updateProject.id}/`,
             headers: {
-                "Authorization": token
+                "Authorization": token,
+                'Content-Type': 'multipart/form-data'
             },
-            data: {
-                name: updateProject.name,
-                number: updateProject.number,
-                short_name: updateProject.short_name
-                // milestone_items: [],
-                // monuments: []
-            }
+            data: data
         })
         .then((response => {
             console.log("projects updated sucessfully");
@@ -283,56 +298,64 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                     </tbody>
                 </table>
             </div>
-                <div className={createMode || updateMode ? 'p02-c02-win-footer' : 'p02-c02-win-footer-hidden'}>
-                    <div className='p02-c02-footer-row1'>
-                        <div className='p02-c02-row1-col1'>name</div>
-                        <div className='p02-c02-row1-col2'>
-                            <div className='p02-c02-textbox-container'>
-                                <input className='p02-c02-textbox' type='text' id='name' placeholder='...' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='p02-c02-footer-row1'>
-                        <div className='p02-c02-row1-col1'>number</div>
-                        <div className='p02-c02-row1-col2'>
-                            <div className='p02-c02-textbox-container'>
-                                <input className='p02-c02-textbox' type='text' id='number' placeholder='...' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='p02-c02-footer-row1'>
-                        <div className='p02-c02-row1-col1'>short name</div>
-                        <div className='p02-c02-row1-col2'>
-                            <div className='p02-c02-textbox-container'>
-                                <input className='p02-c02-textbox' type='text' id='short_name' placeholder='...' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='p02-c02-footer-row2'>
-                        <div className='p02-c02-row2-col1'>
-                            {showSpinner_CreateUpdateProject ?
-                                <div className="spinner-border p02-c02-spinner" role="status">
-                                    <span className="sr-only"></span>
-                                </div>
-                                :
-                                <input 
-                                    type='button' 
-                                    className='button' 
-                                    value={updateMode ? 'Update' : 'Create'} 
-                                    onClick={updateMode ? () => updateItem(selectedItem) : createItem} 
-                                />
-                            }
-                        </div>
-                        <div className='p02-c02-row2-col2'>
-                            <input 
-                                type='button' 
-                                className='button' 
-                                value={updateMode ? 'Cancel' : 'Close'} 
-                                onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
-                            />
+            <div className={createMode || updateMode ? 'p02-c02-win-footer' : 'p02-c02-win-footer-hidden'}>
+                <div className='p02-c02-footer-row1'>
+                    <div className='p02-c02-row1-col1'>name</div>
+                    <div className='p02-c02-row1-col2'>
+                        <div className='p02-c02-textbox-container'>
+                            <input className='p02-c02-textbox' type='text' id='name' placeholder='...' />
                         </div>
                     </div>
                 </div>
+                <div className='p02-c02-footer-row1'>
+                    <div className='p02-c02-row1-col1'>number</div>
+                    <div className='p02-c02-row1-col2'>
+                        <div className='p02-c02-textbox-container'>
+                            <input className='p02-c02-textbox' type='text' id='number' placeholder='...' />
+                        </div>
+                    </div>
+                </div>
+                <div className='p02-c02-footer-row1'>
+                    <div className='p02-c02-row1-col1'>short name</div>
+                    <div className='p02-c02-row1-col2'>
+                        <div className='p02-c02-textbox-container'>
+                            <input className='p02-c02-textbox' type='text' id='short_name' placeholder='...' />
+                        </div>
+                    </div>
+                </div>
+                <div className='p02-c02-footer-row1'>
+                    <div className='p02-c02-row1-col1'>logo</div>
+                    <div className='p02-c02-row1-col2'>
+                        <div className='p02-c02-textbox-container'>
+                            <input className='p02-c02-textbox' type='file' id='logo' placeholder='...' />
+                        </div>
+                    </div>
+                </div>
+                <div className='p02-c02-footer-row2'>
+                    <div className='p02-c02-row2-col1'>
+                        {showSpinner_CreateUpdateProject ?
+                            <div className="spinner-border p02-c02-spinner" role="status">
+                                <span className="sr-only"></span>
+                            </div>
+                            :
+                            <input 
+                                type='button' 
+                                className='button' 
+                                value={updateMode ? 'Update' : 'Create'} 
+                                onClick={updateMode ? () => updateItem(selectedItem) : createItem} 
+                            />
+                        }
+                    </div>
+                    <div className='p02-c02-row2-col2'>
+                        <input 
+                            type='button' 
+                            className='button' 
+                            value={updateMode ? 'Cancel' : 'Close'} 
+                            onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
     </div> );
 }
