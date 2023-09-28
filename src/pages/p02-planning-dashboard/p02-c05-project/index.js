@@ -235,7 +235,7 @@ const P02_C05_PROJECT = (props) => {
             <div>
                 <img
                     className='logo-icons'
-                    src={baseUrl + props.project.logo}
+                    src={props.project.logo}
                     alt=''
                     onClick={() => showState()} 
                 />
