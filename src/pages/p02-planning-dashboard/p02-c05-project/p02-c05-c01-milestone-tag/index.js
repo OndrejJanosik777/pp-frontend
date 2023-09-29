@@ -357,6 +357,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                                 // props.set_manageMilestoneTasks_modalToogle(true)
                                 dispatch(dashboardActions.set_activeProject({...props.project}))
                                 dispatch(dashboardActions.set_activeMilestone({...props.milestone_item}))
+                                dispatch(dashboardActions.set_activeTask({undefined}))
                                 dispatch(dashboardActions.set_showModal_manageMilestoneTasks(true))
                             }}
                         >

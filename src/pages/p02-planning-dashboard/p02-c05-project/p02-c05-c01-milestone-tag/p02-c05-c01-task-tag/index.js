@@ -5,6 +5,7 @@ import axios from 'axios';
 import './index.scss';
 import moment from 'moment';
 import * as apiActions from '../../../../../app/features/api/apiSlice';
+import * as dashboardSliceActions from '../../../../../app/features/dashboardSlice';
 
 const P02_C02_C01_TASK_TAG = (props) => {
     const dispatch = useDispatch();
@@ -160,10 +161,15 @@ const P02_C02_C01_TASK_TAG = (props) => {
     }
 
     const task_contextMenuClicked = (event) => {
+        // prevent default behaviour
         event.preventDefault();
 
-        console.log('task -> context menu clicked...');
+        // dispatch clicked task, milestone-item, project
+        dispatch(dashboardSliceActions.set_activeProject({...props.project}));
+        dispatch(dashboardSliceActions.set_activeMilestone({...props.milestone_item}));
+        dispatch(dashboardSliceActions.set_activeTask({...task}));
 
+        // display custom context menu
         set_contextMenu_visibility(true);
     }
 
@@ -191,10 +197,22 @@ const P02_C02_C01_TASK_TAG = (props) => {
                     >
                         <ul className='p02-c05-c01-context-task-container'>
                             <li className='p02-c05-c01-context-task-item'>
-                                <span className='p02-c05-c01-task-badge'>edit task</span>
+                                <span 
+                                    className='p02-c05-c01-task-badge'
+                                    onClick={() => {
+                                        dispatch(dashboardSliceActions.set_showModal_manageMilestoneTasks(true));
+                                    }
+                                    }
+                                >edit task</span>
                             </li>
                             <li className='p02-c05-c01-context-task-item'>
-                                <span className='p02-c05-c01-task-badge'>edit document</span>
+                                <span 
+                                className='p02-c05-c01-task-badge'
+                                onClick={
+                                    () => dispatch(dashboardSliceActions.set_showModal_manageMilestoneTasks(true))
+                                }
+                                >
+                                    edit document</span>
                             </li>
                             <li className='p02-c05-c01-context-task-item'>
                                 <span className='p02-c05-c01-task-badge'>complete task</span>

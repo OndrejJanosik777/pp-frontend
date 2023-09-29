@@ -26,22 +26,30 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const taskTypes = useSelector(state => state.api.taskTypes);
     const activeMilestone = useSelector(state => state.dashboard.activeMilestone);
     const activeProject = useSelector(state => state.dashboard.activeProject);
+    const activeTask = useSelector(state => state.dashboard.activeTask);
 
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     //
-    const [tasks, set_tasks] = useState([...props.activeMilestoneItem.tasks]);
+    const [tasks, set_tasks] = useState([...activeMilestone.tasks]);
     const [certificationDocuments, set_certificationDocuments] = useState([]);
     const [certificationDocumentsNoTask, set_certificationDocumentsNoTask] = useState([]);
     // 
-    const [updateMode, set_updateMode] = useState(false);
+    const [selectedItem, set_selectedItem] = useState({...activeTask});
+    const [updateMode, set_updateMode] = useState(selectedItem.task_id != undefined);
     const [createMode, set_createMode] = useState(false);
-    const [selectedItem, set_selectedItem] = useState(undefined);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
+
+    //
+    const [taskStatus, set_taskStatus] = useState(selectedItem.task_status_percentage);
+    const [taskEstimatedHours, set_taskEstimatedHours] = useState(selectedItem.task_estimated_hours);
+    const [taskBookedHours, set_taskBookedHours] = useState(selectedItem.task_booked_hours);
+    const [taskComment, set_taskComment] = useState(selectedItem.task_comment);
 
     const showState = () => {
         console.log('props: ', props);
         console.log('tasks: ', tasks);
         console.log('selectedItem: ', selectedItem);
+        console.log('activeTask: ', activeTask.id);
     }
 
     useEffect(() => {
@@ -50,7 +58,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
         fetchProjectDocuments();
 
-        fetchTasks(props.activeMilestoneItem);
+        // fetchTasks(props.activeMilestoneItem);
     }, []);
 
     const createNewItem = () => {
@@ -62,8 +70,10 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         const estimated_hours = document.getElementById('estimated_hours').value;
         const booked_hours = document.getElementById('booked_hours').value;
         const comment = document.getElementById('comment').value;
-        const milestone_item = props.activeMilestoneItem.id;
-        const deadline = props.activeMilestoneItem.date;
+        // const milestone_item = props.activeMilestoneItem.id;
+        const milestone_item = activeMilestone.id;
+        // const deadline = props.activeMilestoneItem.date;
+        const deadline = activeMilestone.date;
         const status = document.getElementById('status').value;
         const users = [];
         let certification_document = document.getElementById('certification_document').value;
@@ -161,7 +171,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const fetchProjectDocuments = () => {
         axios({
             method: 'get',
-            url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
+            url: baseUrl + `/company/certification-documents/?project=${activeProject.id}`,
             headers: {
                 "Authorization": token
             }
@@ -239,7 +249,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         const deadline = item.task_deadline;
         const estimated_hours = document.getElementById('estimated_hours').value;
         const id = item.task_id;
-        const milestone_item = props.activeMilestoneItem.id;
+        const milestone_item = activeMilestone.id;
         const status = document.getElementById('status').value;
         const task_type = item.task_type_id;
         const users = [];
@@ -492,6 +502,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 type='number' 
                                 id='status' 
                                 placeholder='...' 
+                                value={taskStatus}
+                                onChange={(e) => set_taskStatus(e.target.value)}
                             />
                         </div>
                     </div>
@@ -505,6 +517,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 type='number' 
                                 id='estimated_hours' 
                                 placeholder='...' 
+                                value={taskEstimatedHours}
+                                onChange={(e) => set_taskEstimatedHours(e.target.value)}
                             />
                         </div>
                     </div>
@@ -517,7 +531,9 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 className='p02-c07-textbox' 
                                 type='number' 
                                 id='booked_hours' 
-                                placeholder='...' 
+                                placeholder='...'
+                                value={taskBookedHours}
+                                onChange={(e) => set_taskBookedHours(e.target.value)}
                             />
                         </div>
                     </div>
@@ -531,6 +547,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 type='text' 
                                 id='comment' 
                                 placeholder='...' 
+                                value={taskComment}
+                                onChange={(e) => set_taskComment(e.target.value)}
                             />
                         </div>
                     </div>
