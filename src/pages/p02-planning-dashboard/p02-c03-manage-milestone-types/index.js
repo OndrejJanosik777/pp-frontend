@@ -11,6 +11,7 @@ import magnifier from './assets/magnifier.png';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { update_milestoneTypes } from '../../../app/features/api/apiSlice';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
 import './index.scss';
 
 const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
@@ -232,7 +233,7 @@ const P02_C03_MANAGE_MILESTONE_TYPES = (props) => {
                         type='button' 
                         className='p02-c03-button' 
                         value={'X'} 
-                        onClick={() => props.toogleVisibility(false)} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageMilestoneTypes(false))} 
                     />
                 </div>
             </div>

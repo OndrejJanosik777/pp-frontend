@@ -17,6 +17,7 @@ import arrow_up from './assets/arrow-up-svgrepo-com.svg';
 import arrow_down from './assets/arrow-down-svgrepo-com.svg';
 // actions to dispatch
 import * as apiActions from '../../../app/features/api/apiSlice';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
 // styles
 import './index.scss';
 
@@ -26,6 +27,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     // pick the data from the redux store
     let userPermissions = useSelector(state => state.api.userProfile.groups);
     let baseUrl = useSelector(state => state.api.baseUrl);
+    let activeProject = useSelector(state => state.dashboard.activeProject);
 
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     // local state of array of document to be displayed in component
@@ -77,14 +79,14 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [cmit_short_names, set_cmit_short_names] = useState([]);
 
     useEffect(() => {
-        set_documents_reduxStateFormat([...props.activeProject.documents]);
+        set_documents_reduxStateFormat([...activeProject.documents]);
 
         fetchDocuments();
 
         set_monuments(() => {
             let monuments = [];
 
-            props.activeProject.monuments.map((monument) => {
+            activeProject.monuments.map((monument) => {
                 monuments.push({ ...monument, isSelected: false })
             })
 
@@ -169,7 +171,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 acceptance_status: acceptance_status,
                 comment: comment,
                 monuments: selectedMonuments,
-                project: props.activeProject.id,
+                project: activeProject.id,
             }
         })
         .then((response => {
@@ -203,7 +205,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             set_documents_localStateFormat([...updatedDocuments_localStateFormat]);
 
             // 3 -
-            let updatedProject = {...props.activeProject};
+            let updatedProject = {...activeProject};
             let newDocuments_reduxProjectFormat = [...documents_reduxStateFormat, newDocument_reduxProjectFormat];
             updatedProject.documents = [...newDocuments_reduxProjectFormat];
             dispatch(apiActions.update_project(updatedProject));
@@ -249,7 +251,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         // delete succesfull
         .then((response => {
             // 3 - 
-            let updatedProject = {...props.activeProject};
+            let updatedProject = {...activeProject};
             let updateDocuments_inReduxState = [...updatedProject.documents];
             let index = updateDocuments_inReduxState.findIndex(elem => elem.id === item.document_id);
 
@@ -274,7 +276,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         // fetch documents to local state of component
         axios({
             method: 'get', 
-            url: baseUrl + `/company/get-documents-for-project-dashboard/?project_id=${props.activeProject.id}`,
+            url: baseUrl + `/company/get-documents-for-project-dashboard/?project_id=${activeProject.id}`,
             headers: {
                 "Authorization": token
             }
@@ -451,7 +453,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 acceptance_status: item.document_acceptance_status,
                 comment: item.document_comment,
                 monuments: selectedMonuments,
-                project: props.activeProject.id,
+                project: activeProject.id,
             }
         })
         .then((response => {
@@ -467,7 +469,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 project_id: response.data.project
             }
 
-            let updatedProject = {...props.activeProject};
+            let updatedProject = {...activeProject};
             let updateDocuments_inReduxState = [...updatedProject.documents];
             let index_inReduxState = updateDocuments_inReduxState.findIndex(elem => elem.id === item.document_id);
 
@@ -568,7 +570,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                         type='button' 
                         className='p02-c09-button' 
                         value={'X'} 
-                        onClick={() => props.toogleVisibility(false)} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageDocuments(false))} 
                     />
                 </div>
             </div>

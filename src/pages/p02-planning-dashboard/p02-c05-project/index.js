@@ -6,6 +6,7 @@ import moment from 'moment';
 import planeSVG from './assets/airplane.svg';
 import P02_C05_C01_MILESTONE_TAG from './p02-c05-c01-milestone-tag';
 import './index.scss';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
  
 const P02_C05_PROJECT = (props) => {
     const dispatch = useDispatch();
@@ -252,8 +253,8 @@ const P02_C05_PROJECT = (props) => {
                 className='p02-c05-row-left'
                 onClick={
                     () => {
-                        props.set_activeProject(props.project);
-                        props.set_manageMonuments_modalToogle(true);
+                        dispatch(dashboardActions.set_activeProject(props.project));
+                        dispatch(dashboardActions.set_showModal_manageMonuments(true));
                     }
                 }
             >
@@ -263,8 +264,8 @@ const P02_C05_PROJECT = (props) => {
                 className='p02-c05-row-left'
                 onClick={
                     () => {
-                        props.set_activeProject(props.project);
-                        props.set_manageDocuments_modalToogle(true);
+                        dispatch(dashboardActions.set_activeProject(props.project));
+                        dispatch(dashboardActions.set_showModal_manageDocuments(true));
                     }
                 }
             >
@@ -274,8 +275,10 @@ const P02_C05_PROJECT = (props) => {
                 className='p02-c05-row-left'
                 onClick={
                     () => {
-                        props.set_activeProject(props.project);
-                        props.set_manageMilestones_modalToogle(true);
+                        dispatch(dashboardActions.set_activeProject(props.project));
+                        dispatch(dashboardActions.set_showModal_manageMilestones(true));
+                        // props.set_activeProject(props.project);
+                        // props.set_manageMilestones_modalToogle(true);
                     }
                 }
             >
@@ -285,8 +288,11 @@ const P02_C05_PROJECT = (props) => {
                 className='p02-c05-row-left'
                 onClick={
                     () => {
-                        props.set_activeProject(props.project);
-                        props.set_manageProjectTasks_modalToogle(true);
+                        dispatch(dashboardActions.set_activeProject(props.project));
+                        dispatch(dashboardActions.set_showModal_manageProjectTasks(true))
+                        // dispatch(dashboardActions.set_showModal_manageMilestones(true));
+                        // props.set_activeProject(props.project);
+                        // props.set_manageProjectTasks_modalToogle(true);
                     }
                 }
             >

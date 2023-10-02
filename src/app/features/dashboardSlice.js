@@ -10,7 +10,14 @@ export const dashboardSlice = createSlice({
         activeProject: undefined,
         activeMilestone: undefined,
         activeTask: undefined,
-        showModal_showModal_manageMilestoneTasks: false,    // toogle modal window
+        showModal_manageProjects: false,     // toogle modal window
+        showModal_manageMilestoneTypes: false,
+        showModal_manageTasks: false,    // toogle modal window
+        showModal_manageDocuments: false,     // toogle modal window
+        showModal_manageTaskTypes: false,
+        showModal_manageMilestones: false,
+        showModal_manageMonuments: false,
+        showModal_manageProjectTasks: false,
     },
     reducers: {
         set_spinnerFetchingProjects: (state, action) => {
@@ -34,8 +41,29 @@ export const dashboardSlice = createSlice({
         set_displayedDays: (state, action) => {
             state.displayedDays = action.payload;
         },
-        set_showModal_manageMilestoneTasks: (state, action) => {
-            state.showModal_manageMilestoneTasks = action.payload;
+        set_showModal_manageTasks: (state, action) => {
+            state.showModal_manageTasks = action.payload;
+        },
+        set_showModal_manageDocuments: (state, action) => {
+            state.showModal_manageDocuments = action.payload;
+        },
+        set_showModal_manageProjects: (state, action) => {
+            state.showModal_manageProjects = action.payload;
+        },
+        set_showModal_manageMilestoneTypes: (state, action) => {
+            state.showModal_manageMilestoneTypes = action.payload;
+        },
+        set_showModal_manageTaskTypes: (state, action) => {
+            state.showModal_manageTaskTypes = action.payload;
+        },
+        set_showModal_manageMilestones: (state, action) => {
+            state.showModal_manageMilestones = action.payload;
+        },
+        set_showModal_manageMonuments: (state, action) => {
+            state.showModal_manageMonuments = action.payload;
+        },
+        set_showModal_manageProjectTasks: (state, action) => {
+            state.showModal_manageProjectTasks = action.payload;
         }
     }
 })
@@ -49,7 +77,14 @@ export const {
     set_activeTask,
     reset_dateOffset,
     set_displayedDays,
-    set_showModal_manageMilestoneTasks,
+    set_showModal_manageTasks,
+    set_showModal_manageDocuments,
+    set_showModal_manageProjects,
+    set_showModal_manageMilestoneTypes,
+    set_showModal_manageTaskTypes,
+    set_showModal_manageMilestones,
+    set_showModal_manageMonuments,
+    set_showModal_manageProjectTasks,
 } = dashboardSlice.actions
 
 export default dashboardSlice.reducer;

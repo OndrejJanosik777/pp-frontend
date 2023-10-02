@@ -14,6 +14,7 @@ import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 // actions to dispatch
 import * as apiActions from '../../../app/features/api/apiSlice';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
 // styles
 import './index.scss';
 
@@ -23,10 +24,11 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     // pick the data from the redux store
     let userPermissions = useSelector(state => state.api.userProfile.groups);
     let baseUrl = useSelector(state => state.api.baseUrl);
+    let activeProject = useSelector(state => state.dashboard.activeProject);
 
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     // 
-    const [monuments, set_monuments] = useState([...props.activeProject.monuments]);
+    const [monuments, set_monuments] = useState([...activeProject.monuments]);
     // 
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
@@ -41,7 +43,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
     }, []);
     
     const showState = () => {
-        console.log('props.activeProject: ', props.activeProject);
+        console.log('props.activeProject: ', activeProject);
         console.log('monuments: ', monuments);
     }
 
@@ -87,7 +89,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 hours_S: hours_S,
                 hours_D: hours_D,
                 hours_Z: hours_Z,
-                project: props.activeProject.id,
+                project: activeProject.id,
             }
         })
         .then((response => {
@@ -108,7 +110,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
             
             
             // 2
-            let updatedProject = {...props.activeProject};
+            let updatedProject = {...activeProject};
             updatedProject.monuments = [...updatedMonuments];
             dispatch(apiActions.update_project(updatedProject));
 
@@ -151,7 +153,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
             set_monuments([...updatedMonuments]);
             
             // 3 - deleting in redux store
-            let updatedProject = {...props.activeProject};
+            let updatedProject = {...activeProject};
             updatedProject.monuments = [...updatedMonuments];
             dispatch(apiActions.update_project(updatedProject));
         }))
@@ -216,7 +218,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 hours_S: hours_S,
                 hours_Z: hours_Z,
                 certification_documents: item.certification_documents,
-                project: props.activeProject.id,
+                project: activeProject.id,
             }
         })
         // updated succesfully
@@ -238,7 +240,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
             set_monuments([...updatedMonuments]);
             
             // 3
-            let updatedProject = {...props.activeProject};
+            let updatedProject = {...activeProject};
             updatedProject.monuments = [...updatedMonuments];
             dispatch(apiActions.update_project(updatedProject));
             
@@ -293,7 +295,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                         type='button' 
                         className='p02-c08-button' 
                         value={'X'} 
-                        onClick={() => props.toogleVisibility(false)} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageMonuments(false))} 
                     />
                 </div>
             </div>

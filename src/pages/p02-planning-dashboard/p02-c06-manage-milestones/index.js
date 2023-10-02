@@ -14,6 +14,7 @@ import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 // actions to dispatch
 import * as apiActions from '../../../app/features/api/apiSlice';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
 // styles
 import './index.scss';
 
@@ -24,6 +25,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
     const userPermissions = useSelector(state => state.api.userProfile.groups);
     const baseUrl = useSelector(state => state.api.baseUrl);
     const milestoneTypes = useSelector(state => state.api.milestoneTypes);
+    const activeProject = useSelector(state => state.dashboard.activeProject);
     // 
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     // array to store milestones in project format
@@ -55,8 +57,8 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
         milestone_comment: null,
     }]);
     // object represents project, where milestone belongs
-    const [activeProject, set_activeProject] = useState({...props.activeProject});
-    // 
+    // const [activeProject, set_activeProject] = useState({...props.activeProject});
+    
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
@@ -64,12 +66,12 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
 
     useEffect(() => {
         // 
-        set_milestones_reduxFormat([...props.activeProject.milestone_items]);
+        set_milestones_reduxFormat([...activeProject.milestone_items]);
 
         //
         let extractedMilestones = [];
 
-        props.activeProject.milestone_items.map((item) => {
+        activeProject.milestone_items.map((item) => {
             let newMilestone = {
                 milestone_id: item.id,
                 milestone_type: {...item.milestone_item_type},
@@ -378,7 +380,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                         type='button' 
                         className='p02-c06-button' 
                         value={'X'} 
-                        onClick={() => props.toogleVisibility(false)} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageMilestones(false))} 
                     />
                 </div>
             </div>

@@ -31,6 +31,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     //
     const [tasks, set_tasks] = useState([...activeMilestone.tasks]);
+    const [activeTaskType, set_activeTaskType] = useState('');
     const [certificationDocuments, set_certificationDocuments] = useState([]);
     const [certificationDocumentsNoTask, set_certificationDocumentsNoTask] = useState([]);
     // 
@@ -46,7 +47,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const [taskComment, set_taskComment] = useState(selectedItem.task_comment);
 
     const showState = () => {
-        console.log('props: ', props);
+        // console.log('props: ', props);
         console.log('tasks: ', tasks);
         console.log('selectedItem: ', selectedItem);
         console.log('activeTask: ', activeTask.id);
@@ -64,9 +65,12 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const createNewItem = () => {
         // 1 - create in backend
         // 2 - create in redux state & update project ...
+        // console.log('creating new task...');
+        // console.log('activeTaskType: ', activeTaskType);
+
 
         const task_type = taskTypes.find(
-            elem => elem.name === document.getElementById('task_type').value).id;
+            elem => elem.name === activeTaskType.name).id;
         const estimated_hours = document.getElementById('estimated_hours').value;
         const booked_hours = document.getElementById('booked_hours').value;
         const comment = document.getElementById('comment').value;
@@ -230,6 +234,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     }
 
     const switchToUpdateMode = (item, index) => {
+        console.log('switchToUpdateMode: ', item)
+
         document.getElementById('status').value = item.task_status_percentage;
         document.getElementById('estimated_hours').value = item.task_estimated_hours;
         document.getElementById('booked_hours').value = item.task_booked_hours;
@@ -304,7 +310,6 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
             alert(message);
         })
-
     }
 
     return (<div className='p02-c07-manage-milestone-tasks'>
@@ -351,7 +356,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                         type='button' 
                         className='p02-c07-button' 
                         value={'X'} 
-                        onClick={() => dispatch(dashboardActions.set_showModal_manageMilestoneTasks(false))} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageTasks(false))} 
                     />
                 </div>
             </div>
@@ -456,7 +461,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                             key={Math.random() * 100000} 
                                             id={`task_type_${item.id}`} 
                                             value={`${item.name}`}
-                                            // onClick={() => console.log('option clicked.. ')}
+                                            onClick={() => set_activeTaskType(item)}
+                                            onChange={() => set_activeTaskType(item)}
                                         >{`${item.name}`}
                                         </option>
                                     })}

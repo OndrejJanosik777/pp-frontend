@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 // assets
@@ -11,10 +12,18 @@ import questionmark_blue from './assets/questionmark_blue.png';
 import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
 // styles
 import './index.scss';
 
 const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
+    const dispatch = useDispatch();
+
+    // pick the data from the redux store
+    let userPermissions = useSelector(state => state.api.userProfile.groups);
+    let baseUrl = useSelector(state => state.api.baseUrl);
+    let activeProject = useSelector(state => state.dashboard.activeProject);
+
     const getBaseUrl = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // dev code
@@ -26,7 +35,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     }
 
     // 
-    const [baseUrl, setBaseUrl] = useState(getBaseUrl());
+    // const [baseUrl, setBaseUrl] = useState(getBaseUrl());
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     //
     const [tasks, set_tasks] = useState([]);
@@ -37,7 +46,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
-    const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
+    // const [userPermissions, set_userPermissions] = useState([...props.userPermissions]);
     const [showSpinner_CreateUpdateItem, set_showSpinner_CreateUpdateItem] = useState(false);
 
     useEffect(() => {
@@ -46,7 +55,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
 
         fetchProjectDocuments();
 
-        fetchTasks(props.activeProject);
+        fetchTasks(activeProject);
     }, []);
 
     const showState = () => {
@@ -175,7 +184,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     const fetchProjectDocuments = () => {
         axios({
             method: 'get',
-            url: baseUrl + `/company/certification-documents/?project=${props.activeProject.id}`,
+            url: baseUrl + `/company/certification-documents/?project=${activeProject.id}`,
             headers: {
                 "Authorization": token
             }
@@ -212,7 +221,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     const fetchTasks = (project) => {
         axios({
             method: 'get',
-            url: baseUrl + `/company/get-tasks/?project_id=${project.id}`,
+            url: baseUrl + `/company/get-tasks/?project_id=${activeProject.id}`,
             headers: {
                 "Authorization": token
             }
@@ -386,7 +395,7 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                         type='button' 
                         className='p02-c10-button' 
                         value={'X'} 
-                        onClick={() => props.toogleVisibility(false)} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageProjectTasks(false))} 
                     />
                 </div>
             </div>

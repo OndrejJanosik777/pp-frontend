@@ -30,9 +30,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
     // const [userPermissions, set_userPermissions] = useState([...props.userPermissions])
     
     useEffect(() => {
-        // console.log('props.projects: ', props.projects);
 
-        // set_projects(props.projects);
     }, []);
 
     const showState = () => {
@@ -260,7 +258,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                         alt='' 
                         onClick={() => showState()}
                     />
-                    <input type='button' className='button' value={'X'} onClick={() => props.toogleVisibility(false)} />
+                    <input type='button' className='button' value={'X'} onClick={() => dispatch(dashboardActions.set_showModal_manageProjects(false))} />
                 </div>
             </div>
             <div className='p02-c02-content'>

@@ -10,6 +10,7 @@ import delete_cross from './assets/delete_cross.png';
 import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import axios from 'axios';
+import * as dashboardActions from '../../../app/features/dashboardSlice';
 import './index.scss'; 
 import { update_TaskTypes } from '../../../app/features/api/apiSlice';
 
@@ -237,7 +238,7 @@ const P02_C04_MANAGE_TASK_TYPES = (props) => {
                         type='button' 
                         className='p02-c04-button' 
                         value={'X'} 
-                        onClick={() => props.toogleVisibility(false)} 
+                        onClick={() => dispatch(dashboardActions.set_showModal_manageTaskTypes(false))} 
                     />
                 </div>
             </div>

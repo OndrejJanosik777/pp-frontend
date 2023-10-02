@@ -36,7 +36,14 @@ const P02_PLANNING_DASHBOARD = () => {
     let baseUrl = useSelector(state => state.api.baseUrl);
     let projects = useSelector(state => state.api.projects);
     // modals
-    let showModal_manageMilestoneTasks = useSelector(state => state.dashboard.showModal_manageMilestoneTasks);
+    let showModal_manageDocuments = useSelector(state => state.dashboard.showModal_manageDocuments);
+    let showModal_manageProjects = useSelector(state => state.dashboard.showModal_manageProjects);
+    let showModal_manageMilestoneTypes = useSelector(state => state.dashboard.showModal_manageMilestoneTypes);
+    let showModal_manageTaskTypes = useSelector(state => state.dashboard.showModal_manageTaskTypes);
+    let showModal_manageMilestones = useSelector(state => state.dashboard.showModal_manageMilestones);
+    let showModal_manageTasks = useSelector(state => state.dashboard.showModal_manageTasks);
+    let showModal_manageMonuments = useSelector(state => state.dashboard.showModal_manageMonuments);
+    let showModal_manageProjectTasks = useSelector(state => state.dashboard.showModal_manageProjectTasks);
 
     // local state of component
     // const [projects, set_projects] = useState([]);
@@ -274,85 +281,37 @@ const P02_PLANNING_DASHBOARD = () => {
                 </button>
                 <div className='p02-main-section' id='main-section' name='main-section'>
                     {/* MODAL COMPONENTS IN MAIN SECTION */}
-                    {manageProjects_modalToogle ?
-                    <P02_C02_MANAGE_PROJECTS 
-                        toogleVisibility={set_manageProjects_modalToogle} 
-                    />
-                    : ""}
-                    {manageMilestoneTypes_modalToogle ?
-                    <P02_C03_MANAGE_MILESTONE_TYPES
-                        toogleVisibility={set_manageMilestoneTypes_modalToogle}
-                    />
-                    :
-                    ""}
-                    {manageTasksTypes_modalToogle ?
-                    <P02_C04_MANAGE_TASK_TYPES
-                        toogleVisibility={set_manageTasksTypes_modalToogle}
-                    />
-                    :
-                    ""}
-                    {manageMilestones_modalToogle ?
-                    <P02_C06_MANAGE_MILESTONES
-                        activeProject={activeProject}
-                        toogleVisibility={set_manageMilestones_modalToogle}
-                    />
-                    :
-                    ""}
-                    {showModal_manageMilestoneTasks ?
-                    <P02_C07_MANAGE_MILESTONE_TASKS
-                        activeProject={activeProject}
-                        activeMilestoneItem={activeMilestoneItem}
-                        updateProject={updateProject}
-                        // updateProjectInState={updateProjectInState}
-                        // milestoneTypes={milestoneTypes}
-                        taskTypes={taskTypes}
-                        userPermissions={userPermissions}
-                        toogleVisibility={set_manageMilestoneTasks_modalToogle}
-                    />
-                    :
-                    ""}
-                    {manageMonuments_modalToogle ?
-                    <P02_C08_MANAGE_MONUMENTS
-                        activeProject={activeProject}
-                        toogleVisibility={set_manageMonuments_modalToogle}
-                    />
-                    :
-                    ""}
-                    {manageDocuments_modalToogle ?
-                    <P02_C09_MANAGE_DOCUMENTS
-                        activeProject={activeProject}
-                        toogleVisibility={set_manageDocuments_modalToogle}
-                    />
-                    :
-                    ""}
-                    {manageProjectTasks_modalToogle ?
-                    <P02_C10_MANAGE_PROJECT_TASKS
-                        activeProject={activeProject}
-                        // activeMilestoneItem={activeMilestoneItem}
-                        updateProject={updateProject}
-                        userPermissions={userPermissions}
-                        // updateProjectInState={updateProjectInState}
-                        // milestoneTypes={milestoneTypes}
-                        // taskTypes={taskTypes}
-                        toogleVisibility={set_manageProjectTasks_modalToogle}
-                    />
-                    :
-                    ""}
+                    {showModal_manageProjects ? 
+                        <P02_C02_MANAGE_PROJECTS /> : ""}
+                    {showModal_manageMilestoneTypes ?
+                        <P02_C03_MANAGE_MILESTONE_TYPES /> : ""}
+                    {showModal_manageTaskTypes ?
+                        <P02_C04_MANAGE_TASK_TYPES /> : ""}
+                    {showModal_manageMilestones ?
+                        <P02_C06_MANAGE_MILESTONES /> : ""}
+                    {showModal_manageTasks ?
+                        <P02_C07_MANAGE_MILESTONE_TASKS /> : ""}
+                    {showModal_manageMonuments ?
+                        <P02_C08_MANAGE_MONUMENTS /> : ""}
+                    {showModal_manageDocuments ?
+                        <P02_C09_MANAGE_DOCUMENTS /> : ""}
+                    {showModal_manageProjectTasks ?
+                        <P02_C10_MANAGE_PROJECT_TASKS /> : ""}
                     <div className='p02-nav-bar'>
                         <div className='p02-nav-bar-left'>
                             <div 
                                 className='p02-item' 
-                                onClick={() => set_manageProjects_modalToogle(!manageProjects_modalToogle)}
+                                onClick={() => dispatch(dashboardActions.set_showModal_manageProjects(true))}
                             >Projects</div>
                             <div className='p02-item'>|</div>
                             <div 
                                 className='p02-item' 
-                                onClick={() => set_manageMilestoneTypes_modalToogle(!manageMilestoneTypes_modalToogle)} 
+                                onClick={() => dispatch(dashboardActions.set_showModal_manageMilestoneTypes(true))} 
                             >Milestone Types</div>
                             <div className='p02-item'>|</div>
                             <div 
                                 className='p02-item'
-                                onClick={() => set_manageTasksTypes_modalToogle(true)}
+                                onClick={() => dispatch(dashboardActions.set_showModal_manageTaskTypes(true))}
                             >Task types</div>
                             <div className='p02-item'>|</div>
                             <div 

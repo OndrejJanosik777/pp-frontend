@@ -200,20 +200,23 @@ const P02_C02_C01_TASK_TAG = (props) => {
                                 <span 
                                     className='p02-c05-c01-task-badge'
                                     onClick={() => {
-                                        dispatch(dashboardSliceActions.set_showModal_manageMilestoneTasks(true));
+                                        dispatch(dashboardSliceActions.set_showModal_manageTasks(true));
                                     }
                                     }
                                 >edit task</span>
                             </li>
-                            <li className='p02-c05-c01-context-task-item'>
-                                <span 
-                                className='p02-c05-c01-task-badge'
-                                onClick={
-                                    () => dispatch(dashboardSliceActions.set_showModal_manageMilestoneTasks(true))
-                                }
-                                >
-                                    edit document</span>
-                            </li>
+                            {task.document_number == null ?
+                                <li></li> :
+                                <li className='p02-c05-c01-context-task-item'>
+                                    <span 
+                                    className='p02-c05-c01-task-badge'
+                                    onClick={
+                                        () => dispatch(dashboardSliceActions.set_showModal_manageDocuments(true))
+                                    }
+                                    >
+                                        edit document</span>
+                                </li>
+                            }
                             <li className='p02-c05-c01-context-task-item'>
                                 <span className='p02-c05-c01-task-badge'>complete task</span>
                             </li>
