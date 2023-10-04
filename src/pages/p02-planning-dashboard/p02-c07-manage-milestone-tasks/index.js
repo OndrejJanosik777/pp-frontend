@@ -60,6 +60,13 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         fetchProjectDocuments();
 
         // fetchTasks(props.activeMilestoneItem);
+
+        if (selectedItem.task_id != undefined) {
+            document.getElementById('status').value = selectedItem.task_status_percentage;
+            document.getElementById('estimated_hours').value = selectedItem.task_estimated_hours;
+            document.getElementById('booked_hours').value = selectedItem.task_booked_hours;
+            document.getElementById('comment').value = selectedItem.task_comment;
+        }
     }, []);
 
     const createNewItem = () => {
@@ -299,6 +306,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
             set_showSpinner_CreateUpdateItem(false);
 
+            // update all projects
             dispatch(apiActions.fetch_projects());
         }))
         .catch((error) => {
