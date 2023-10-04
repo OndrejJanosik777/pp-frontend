@@ -265,6 +265,8 @@ const P02_C05_PROJECT = (props) => {
                 onClick={
                     () => {
                         dispatch(dashboardActions.set_activeProject(props.project));
+                        dispatch(dashboardActions.set_activeMilestone([]));
+                        dispatch(dashboardActions.set_activeTask([]));
                         dispatch(dashboardActions.set_showModal_manageDocuments(true));
                     }
                 }

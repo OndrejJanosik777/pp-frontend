@@ -28,6 +28,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     let userPermissions = useSelector(state => state.api.userProfile.groups);
     let baseUrl = useSelector(state => state.api.baseUrl);
     let activeProject = useSelector(state => state.dashboard.activeProject);
+    const activeMilestone = useSelector(state => state.dashboard.activeMilestone);
+    const activeTask = useSelector(state => state.dashboard.activeTask);
 
     const [token, setToken] = useState("Bearer " + localStorage.getItem('PP-token'));
     // local state of array of document to be displayed in component
@@ -81,8 +83,6 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     useEffect(() => {
         set_documents_reduxStateFormat([...activeProject.documents]);
 
-        fetchDocuments();
-
         set_monuments(() => {
             let monuments = [];
 
@@ -91,7 +91,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             })
 
             return [...monuments];
-        })
+        });
+
+        fetchDocuments();
+
+        // set_updateMode(activeTask.task_id != undefined);
     }, []);
     
     const showState = () => {
@@ -286,9 +290,13 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
             let new_document_cmit_short_names = [];
 
-            new_documents.map((item) => {
+            new_documents.map((item, index) => {
                 if (!new_document_cmit_short_names.includes(item.document_cmit_short_name)) {
                     new_document_cmit_short_names.push(item.document_cmit_short_name);
+                }
+
+                if (activeTask.document_id === item.document_id) {
+                    switchToUpdateMode(item, index);
                 }
             })
 
@@ -323,7 +331,13 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         document.getElementById('acceptance_status').value = item.document_acceptance_status;
         document.getElementById('comment').value = item.document_comment;
 
-        let updatedMonuments = [...monuments];
+        let updatedMonuments = [];
+
+        activeProject.monuments.map((monument) => {
+            updatedMonuments.push({ ...monument, isSelected: false })
+        })
+
+        // let updatedMonuments = [...monuments];
 
         item.document_monuments.map((monumentId) => {
             let monument = updatedMonuments.find(elem => elem.id === monumentId);
