@@ -153,6 +153,8 @@ const P02_C05_PROJECT = (props) => {
             // console.log('milestone deadline updated in database: ', response.data);
 
             // props.updateProject(props.project);
+
+            
         }))
         .catch((error) => {
             console.log("error: ", error);
