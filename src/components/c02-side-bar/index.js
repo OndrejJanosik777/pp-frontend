@@ -2,12 +2,18 @@ import React, { Component } from 'react'
 import arrow_left from './assets/arrow_left.png';
 import magnifier_dark from './assets/magnifier_dark.png';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import * as sideBarActions from '../../app/features/sideBarSlice';
 import './index.scss';
 
 const C02_SIDEBAR = (props) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    return ( <div className={props.extendedSideBar ? 
+    // pick the data from the redux store
+    let extendedSideBar = useSelector(state => state.sideBar.extendedSideBar);
+
+    return ( <div className={extendedSideBar ? 
     'c02-side-bar-extended' : 
     'c02-side-bar-collapsed'
     }>
@@ -30,12 +36,19 @@ const C02_SIDEBAR = (props) => {
             >
                 <div className='co2-button-name'>Employees</div>
             </button>
+            <button 
+                className='co2-button-container'
+                onClick={() => navigate('/test-center/')}
+            >
+                <div className='co2-button-name'>Test Center</div>
+            </button>
         </div>
         <div  className='c02-right-section'>
             <img 
                 className='c02-img' 
                 src={arrow_left} alt='' 
-                onClick={() => props.set_extendedSideBar(!props.extendedSideBar)}
+                // onClick={() => props.set_extendedSideBar(!props.extendedSideBar)}
+                onClick={() => dispatch(sideBarActions.set_extendedSideBar(!extendedSideBar))}
             />
             <img className='c02-img-magnifier' src={magnifier_dark} alt='' />
         </div>
