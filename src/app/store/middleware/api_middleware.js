@@ -5,8 +5,8 @@ import * as dashboardActions from "../../features/dashboardSlice";
 // async middleware function
 // call backend api and dispatch data to store
 const apiMiddleware = storeAPI => next => async action => {
-    console.log('API MIDDLEWARE');
-    console.log('action: ', action);
+    // console.log('API MIDDLEWARE');
+    // console.log('action: ', action);
 
     let baseUrl = storeAPI.getState().api.baseUrl;
 
