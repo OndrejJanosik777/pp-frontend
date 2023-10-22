@@ -306,6 +306,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                             <th>id</th>
                             <th>P/N</th>
                             <th>name</th>
+                            <th>substantiation</th>
                             <th>hours D</th>
                             <th>hours K</th>
                             <th>hours S</th>
@@ -320,6 +321,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                                 <td>{monument.id}</td>
                                 <td>{monument.part_number}</td>
                                 <td>{monument.name}</td>
+                                <td>{monument.substantiation}</td>
                                 <td>{monument.hours_D}</td>
                                 <td>{monument.hours_K}</td>
                                 <td>{monument.hours_S}</td>

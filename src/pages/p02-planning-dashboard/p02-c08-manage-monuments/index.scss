@@ -20,7 +20,7 @@
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
         height: 35rem;
-        width: 45rem;
+        width: 55rem;
         opacity: 1;
         z-index: 20;
         display: flex;
@@ -106,7 +106,7 @@
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 5% 10% 35% 10% 10% 10% 10% 10%;
+                        grid-template-columns: 5% 10% 20% 15% 10% 10% 10% 10% 10%;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
