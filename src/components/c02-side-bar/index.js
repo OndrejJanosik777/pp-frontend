@@ -20,25 +20,41 @@ const C02_SIDEBAR = (props) => {
         <div className='co2-left-section'>
             <button 
                 className='co2-button-container'
-                onClick={() => navigate('/dashboard/')}
+                onClick={ () => {
+                    dispatch(sideBarActions.set_extendedSideBar(false));
+                    navigate('/dashboard/');
+                    }
+                }
             >
                 <div className='co2-button-name'>Planning Dashboard</div>
             </button>
             <button 
                 className='co2-button-container'
-                onClick={() => navigate('/documents/')}
+                onClick={ () => {
+                    dispatch(sideBarActions.set_extendedSideBar(false));
+                    navigate('/documents/');
+                    }
+                }
             >
                 <div className='co2-button-name'>Documents overview</div>
             </button>
             <button 
                 className='co2-button-container'
-                onClick={() => navigate('/employees/')}
+                onClick={ () => {
+                    dispatch(sideBarActions.set_extendedSideBar(false));
+                    navigate('/employees/')
+                    }
+                }
             >
                 <div className='co2-button-name'>Employees</div>
             </button>
             <button 
                 className='co2-button-container'
-                onClick={() => navigate('/test-center/')}
+                onClick={ () => {
+                    dispatch(sideBarActions.set_extendedSideBar(false));
+                    navigate('/test-center/');
+                    }
+                }
             >
                 <div className='co2-button-name'>Test Center</div>
             </button>

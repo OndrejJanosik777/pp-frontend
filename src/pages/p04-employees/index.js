@@ -71,6 +71,7 @@ const P04_EMPLOYEES = (props) => {
     const showState = () => {
         console.log("userPermissions: ", userPermissions);
         console.log("userGroups: ", userGroups);
+        console.log('employees: ', employees);
     }
 
     const deleteEmployee = (employee) => {
@@ -289,6 +290,7 @@ const P04_EMPLOYEES = (props) => {
                             <tr>
                                 <th>id</th>
                                 <th>username</th>
+                                <th>initials</th>
                                 <th>firstname</th>
                                 <th>lastname</th>
                                 <th>email</th>
@@ -396,6 +398,7 @@ const P04_EMPLOYEES = (props) => {
                                 return <tr key={Math.random() * 100000}>
                                     <td>{employee.id}</td>
                                     <td>{employee.user.username}</td>
+                                    <td>{employee.employee_initials}</td>
                                     <td>{employee.user.first_name}</td>
                                     <td>{employee.user.last_name}</td>
                                     <td>{employee.user.email}</td>

@@ -51,6 +51,7 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
             document.getElementById('lastName').value = props.selectedEmployee.user.last_name;
             document.getElementById('email').value = props.selectedEmployee.user.email;
             document.getElementById('pensum').value = props.selectedEmployee.pensum;
+            document.getElementById('initials').value = props.selectedEmployee.employee_initials;
 
             let newUserPermissions = [];
 
@@ -101,6 +102,7 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
         let email = document.getElementById('email').value;
         let department = document.getElementById('department').value;
         let pensum = document.getElementById('pensum').value;
+        let employee_initials = document.getElementById('initials').value;
 
         let groups = [];
 
@@ -131,6 +133,7 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
             data: {
                 username: username,
                 password: password,
+                employee_initials: employee_initials,
                 first_name: first_name,
                 last_name: last_name,
                 email: email,
@@ -172,6 +175,7 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
             username = props.selectedEmployee.user.username;
         }
 
+        let employee_initials = document.getElementById('initials').value;
         let first_name = document.getElementById('firstName').value;
         let last_name = document.getElementById('lastName').value;
         let email = document.getElementById('email').value;
@@ -188,6 +192,7 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
         let data = {
             id: id,
             username: username,
+            employee_initials: employee_initials,
             first_name: first_name,
             last_name: last_name,
             email: email,
@@ -303,6 +308,14 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                                 :
                                 <div></div>
                             }
+                        </div>
+                    </div>
+                </div>
+                <div className='p04-c01-row'>
+                    <div className='p04-c01-row-left-col'>Initials</div>
+                    <div className='p04-c01-row-right-col'>
+                        <div className='p04-c01-input-container'>
+                            <input id='initials' className='p04-c01-textbox' type='text' placeholder='...' />
                         </div>
                     </div>
                 </div>
