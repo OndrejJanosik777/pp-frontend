@@ -159,6 +159,7 @@ const P05_TEST_CENTER = () => {
                         onPaste={(e) => contentPasted(e)}
                         contentEditable={false}
                     ></textarea>
+                    <button onClick={() => saveNewItems()} >save changes</button>
                     <table>
                         <thead>
                             <tr>
@@ -181,13 +182,16 @@ const P05_TEST_CENTER = () => {
                             })}
                         </tbody>
                     </table>
-                    <button onClick={() => saveNewItems()} >save changes</button>
+                    
                 </div> :
                 <div></div>
                 }
                 {activeMenu === 'ItemsTC' ? 
                 <div>
                     <div>number of items: {TCItems.length}</div>
+                    <button 
+                        // onClick={() => saveNewItems()} 
+                    >save changes</button>
                     <table>
                         <thead>
                             <tr>
@@ -220,9 +224,6 @@ const P05_TEST_CENTER = () => {
                             })}
                         </tbody>
                     </table>
-                    <button 
-                        // onClick={() => saveNewItems()} 
-                    >save changes</button>
                 </div> :
                 <div></div>
                 }

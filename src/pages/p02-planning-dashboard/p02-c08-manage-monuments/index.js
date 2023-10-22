@@ -57,14 +57,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
         const hours_K = document.getElementById('hours_K').value;
         const hours_S = document.getElementById('hours_S').value;
         const hours_Z = document.getElementById('hours_Z').value;
-
-        console.log('creating new monument...');
-        console.log('part_number...', part_number);
-        console.log('name...', name);
-        console.log('hours_D...', hours_D);
-        console.log('hours_K...', hours_K);
-        console.log('hours_S...', hours_S);
-        console.log('hours_Z', hours_Z);
+        const substantiation = document.getElementById('substantiation').value;
 
         set_showSpinner_CreateUpdateItem(true);
 
@@ -89,6 +82,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 hours_S: hours_S,
                 hours_D: hours_D,
                 hours_Z: hours_Z,
+                substantiation: substantiation,
                 project: activeProject.id,
             }
         })
@@ -103,6 +97,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 hours_S: response.data.hours_S,
                 hours_D: response.data.hours_D,
                 hours_Z: response.data.hours_Z,
+                substantiation: response.data.substantiation,
             }
 
             let updatedMonuments = [...monuments, newMonument];
@@ -174,6 +169,13 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
         document.getElementById('hours_K').value = item.hours_K;
         document.getElementById('hours_S').value = item.hours_S;
         document.getElementById('hours_Z').value = item.hours_Z;
+        // document.getElementById('substantiation').value = item.substantiation;
+        if (item.substantiation === null) {
+            document.getElementById('substantiation').value = "";
+        }
+        else {
+            document.getElementById('substantiation').value = item.substantiation;
+        }
 
         set_updateMode(true);
 
@@ -193,6 +195,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
         const hours_K = document.getElementById('hours_K').value;
         const hours_S = document.getElementById('hours_S').value;
         const hours_Z = document.getElementById('hours_Z').value;
+        const substantiation = document.getElementById('substantiation').value;
 
         set_showSpinner_CreateUpdateItem(true);
 
@@ -217,6 +220,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 hours_K: hours_K,
                 hours_S: hours_S,
                 hours_Z: hours_Z,
+                substantiation: substantiation,
                 certification_documents: item.certification_documents,
                 project: activeProject.id,
             }
@@ -231,6 +235,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                 hours_S: response.data.hours_S,
                 hours_D: response.data.hours_D,
                 hours_Z: response.data.hours_Z,
+                substantiation: response.data.substantiation,
             }
 
             let updatedMonuments = [...monuments];
@@ -427,6 +432,19 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                                 id='hours_Z' 
                                 placeholder='...' 
                             />
+                        </div>
+                    </div>
+                </div>
+                <div className='p02-c08-footer-row1'>
+                    <div className='p02-c08-row1-col1'>substantiation</div>
+                    <div className='p02-c08-row1-col2'>
+                        <div className='p02-c08-textbox-container'>
+                            <select name='substantiation' id='substantiation'>
+                                <option value=''>--Please choose an option--</option>
+                                <option value='static test'>static test</option>
+                                <option value='comparison'>comparison</option>
+                                <option value='similarity'>similarity</option>
+                            </select>
                         </div>
                     </div>
                 </div>
