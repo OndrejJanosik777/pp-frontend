@@ -26,16 +26,20 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
     const [showSpinner_CreateUpdateProject, set_showSpinner_CreateUpdateProject] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);
-    const [selectedItem, set_selectedItem] = useState({});
+    const [selectedItem, set_selectedItem] = useState();
+    const [employees, set_employees] = useState([]);
     // const [userPermissions, set_userPermissions] = useState([...props.userPermissions])
     
     useEffect(() => {
-
+        // fetch employee data for drop down menu
+        fetchEmployeeData();
     }, []);
 
     const showState = () => {
-        console.log('userPermissions: ', userPermissions);
-        console.log('logo: ', document.getElementById('logo').files);
+        // console.log('userPermissions: ', userPermissions);
+        // console.log('logo: ', document.getElementById('logo').files);
+
+        console.log('employees: ', employees);
     }
 
     const checkboxChanged = (item) => {
@@ -156,11 +160,6 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
     const switchToUpdateMode = (item) => {
         set_updateMode(true);
         set_selectedItem(item);
-
-        document.getElementById('name').value = item.name;
-        document.getElementById('number').value = item.number;
-        document.getElementById('short_name').value = item.short_name;
-        // document.getElementById('logo').value = item.logo;
     }
 
     const updateItem = (item) => {
@@ -171,25 +170,37 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         updateProject.number = document.getElementById('number').value;
         updateProject.short_name = document.getElementById('short_name').value;
 
+
         if (updateProject.name == "" || updateProject.number == "" || updateProject.short_name == "")  {
             return alert('Missing input: name, number or short name')
         }
+
+        let cve_lead = employees.find(elem => elem.employee_initials === document.getElementById('cve_lead').value);
+        let stress_lead = employees.find(elem => elem.employee_initials === document.getElementById('stress_lead').value);
+        let enviromental_lead = employees.find(elem => elem.employee_initials === document.getElementById('enviromental_lead').value);
 
         let data = {
             name: updateProject.name,
             number: updateProject.number,
             short_name: updateProject.short_name,
+            cve_lead: (cve_lead === undefined ? null : cve_lead.employee_id),
+            stress_lead: (stress_lead === undefined ? null : stress_lead.employee_id),
+            enviromental_lead: (enviromental_lead === undefined ? null : enviromental_lead.employee_id),
         }
 
         let method = 'patch';
 
-        if (document.getElementById('logo').files.length > 0) {
+        if (document.getElementById('logo').files.length > 0 && document.getElementById('logo_updated').checked) {
             data = { ...data, logo: document.getElementById('logo').files[0] };
             method = 'put';
         }
-        else {
-            return alert('Missing input: logo')
+        else if (document.getElementById('logo').files.length === 0 && document.getElementById('logo_updated').checked) {
+            data = { ...data, logo: null };
+            method = 'put';
         }
+
+        console.log('method: ', method);
+        console.log('data: ', data);
 
         const index = projects.findIndex(elem => elem.id === item.id);
 
@@ -207,6 +218,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         })
         .then((response => {
             console.log("projects updated sucessfully");
+            console.log("response.data: ", response.data);
 
             // let index = projects.findIndex(elem => elem.id === response.data.id);
 
@@ -218,6 +230,27 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                 milestone_items: [...updateProject.milestone_items],
                 monuments: [...updateProject.monuments]
             };
+
+            if (cve_lead !== undefined) {
+                updatedItems[index].cve_lead = {
+                    "id": cve_lead.employee_id,
+                    "employee_initials" : cve_lead.employee_initials
+                }
+            }
+
+            if (stress_lead !== undefined) {
+                updatedItems[index].stress_lead = {
+                    "id": stress_lead.employee_id,
+                    "employee_initials" : stress_lead.employee_initials
+                }
+            }
+
+            if (enviromental_lead !== undefined) {
+                updatedItems[index].enviromental_lead = {
+                    "id": enviromental_lead.employee_id,
+                    "employee_initials" : enviromental_lead.employee_initials
+                }
+            }
 
             dispatch(apiActions.update_projects(updatedItems));
 
@@ -234,6 +267,29 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         })
     }
 
+    const fetchEmployeeData = (item) => {
+        axios({
+            method: 'get',
+            url: baseUrl + '/company/get-employees-data/',
+            headers: {
+                "Authorization": token,
+            },
+        })
+        .then((response => {
+            console.log("/company/get-employees-data/ fetched succesfully...");
+
+            set_employees([...response.data]);
+        }))
+        .catch((error) => {
+            console.log("/company/get-employees-data/ fetched NOT succesfully...");
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+        })
+    }
+
     return ( <div className='p02-c02-manage-projects'>
         <div className='p02-c02-background'></div>
         <div className='p02-c02-window'>
@@ -241,7 +297,16 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                 <div className='p02-c02-nav-bar-left'>
                     {/* <img className='p02-c02-icons' src={delete_cross} alt='' /> */}
                     {userPermissions.findIndex(elem => elem.name === "create_project" || elem.name ===  "all_permissions") !== -1 ?
-                    <img className='p02-c02-icons' src={create_new} alt='' onClick={() => set_createMode(!createMode)} />
+                    <img 
+                        className='p02-c02-icons' 
+                        src={create_new} 
+                        alt='' 
+                        onClick={() => {
+                                set_selectedItem(undefined);
+                                set_createMode(!createMode);
+                            }
+                        } 
+                    />
                     :
                     <div></div>
                     }
@@ -268,7 +333,10 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                             <th>show</th>
                             <th>name</th>
                             <th>number</th>
-                            <th>description</th>
+                            <th>short name</th>
+                            <th>CVE</th>
+                            <th>STRESS</th>
+                            <th>ENVIRO</th>
                             <th>actions</th>
                         </tr>
                     </thead>
@@ -279,6 +347,9 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                 <td>{item.name}</td>
                                 <td>{item.number}</td>
                                 <td>{item.short_name}</td>
+                                <td>{item.cve_lead != null ? item.cve_lead.employee_initials : ""}</td>
+                                <td>{item.stress_lead != null ? item.stress_lead.employee_initials : ""}</td>
+                                <td>{item.enviromental_lead != null ? item.enviromental_lead.employee_initials : ""}</td>
                                 <td>
                                     {userPermissions.find(elem => elem.name === "edit_project"  || elem.name ===  "all_permissions") ?
                                         <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(item)} />
@@ -301,7 +372,13 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                     <div className='p02-c02-row1-col1'>name</div>
                     <div className='p02-c02-row1-col2'>
                         <div className='p02-c02-textbox-container'>
-                            <input className='p02-c02-textbox' type='text' id='name' placeholder='...' />
+                            <input 
+                                className='p02-c02-textbox' 
+                                type='text' 
+                                id='name' 
+                                placeholder='...' 
+                                defaultValue={selectedItem === undefined ? "" : selectedItem.name} 
+                            />
                         </div>
                     </div>
                 </div>
@@ -309,7 +386,13 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                     <div className='p02-c02-row1-col1'>number</div>
                     <div className='p02-c02-row1-col2'>
                         <div className='p02-c02-textbox-container'>
-                            <input className='p02-c02-textbox' type='text' id='number' placeholder='...' />
+                            <input 
+                                className='p02-c02-textbox' 
+                                type='text' 
+                                id='number' 
+                                placeholder='...' 
+                                defaultValue={selectedItem === undefined ? "" : selectedItem.number}
+                            />
                         </div>
                     </div>
                 </div>
@@ -317,15 +400,101 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                     <div className='p02-c02-row1-col1'>short name</div>
                     <div className='p02-c02-row1-col2'>
                         <div className='p02-c02-textbox-container'>
-                            <input className='p02-c02-textbox' type='text' id='short_name' placeholder='...' />
+                            <input 
+                                className='p02-c02-textbox' 
+                                type='text' 
+                                id='short_name' 
+                                placeholder='...'
+                                defaultValue={selectedItem === undefined ? "" : selectedItem.short_name} 
+                            />
                         </div>
                     </div>
                 </div>
-                <div className='p02-c02-footer-row1'>
-                    <div className='p02-c02-row1-col1'>logo</div>
+                <div className='p02-c02-footer-row2'>
+                    <div className='p02-c02-row1-col1'>Logo</div>
                     <div className='p02-c02-row1-col2'>
                         <div className='p02-c02-textbox-container'>
                             <input className='p02-c02-textbox' type='file' id='logo' placeholder='...' />
+                        </div>
+                    </div>
+                    {updateMode ? 
+                        <div className='p02-c02-row1-col2'>
+                            <div className='p02-c02-textbox-container'>
+                                <label>Update Logo</label>
+                                <input className='p02-c02-textbox' type='checkbox' id='logo_updated' />
+                            </div>
+                        </div> :
+                        <div></div>
+                    }
+                </div>
+                <div className='p02-c02-footer-row2'>
+                    <div className='p02-c02-row1-col1'>CVE LEAD</div>
+                    <div className='p02-c02-row1-col2'>
+                        <div className='p02-c02-textbox-container'>
+                            <select name="cve_lead" id="cve_lead">
+                                <option value="">--Please choose an option--</option>
+                                {employees.map((item) => {
+                                    let isSelected = false;
+
+                                    if (selectedItem !== undefined) {
+                                        if (selectedItem.cve_lead  !== null) {
+                                            isSelected = selectedItem.cve_lead.employee_initials === item.employee_initials;
+                                        }
+                                    }
+
+                                    return <option 
+                                        value={item.employee_initials} 
+                                        key={Math.random() * 100000}
+                                        selected={isSelected}
+                                    >{item.employee_initials}</option>
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                    <div className='p02-c02-row1-col1'>STRESS LEAD</div>
+                    <div className='p02-c02-row1-col2'>
+                        <div className='p02-c02-textbox-container'>
+                            <select name="stress_lead" id="stress_lead">
+                                <option value="">--Please choose an option--</option>
+                                {employees.map((item, index) => {
+                                    let isSelected = false;
+
+                                    if (selectedItem !== undefined) {
+                                        if (selectedItem.stress_lead  !== null) {
+                                            isSelected = selectedItem.stress_lead.employee_initials === item.employee_initials;
+                                        }
+                                    }
+
+                                    return <option 
+                                        value={item.employee_initials} 
+                                        key={Math.random() * 100000}
+                                        selected={isSelected}
+                                    >{item.employee_initials}</option>
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                    <div className='p02-c02-row1-col1'>ENVIROMENTAL LEAD</div>
+                    <div className='p02-c02-row1-col2'>
+                        <div className='p02-c02-textbox-container'>
+                            <select name="enviromental_lead" id="enviromental_lead">
+                                <option value="">--Please choose an option--</option>
+                                {employees.map((item) => {
+                                    let isSelected = false;
+
+                                    if (selectedItem !== undefined) {
+                                        if (selectedItem.enviromental_lead  !== null) {
+                                            isSelected = selectedItem.enviromental_lead.employee_initials === item.employee_initials;
+                                        }
+                                    }
+
+                                    return <option 
+                                        value={item.employee_initials} 
+                                        key={Math.random() * 100000}
+                                        selected={isSelected}
+                                    >{item.employee_initials}</option>
+                                })}
+                            </select>
                         </div>
                     </div>
                 </div>
