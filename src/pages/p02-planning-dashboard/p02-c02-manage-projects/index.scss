@@ -18,7 +18,7 @@
     .p02-c02-window {
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
-        height: 30rem;
+        height: 50rem;
         width: 65rem;
         opacity: 1;
         z-index: 20;
@@ -286,6 +286,7 @@
 
         .p02-c02-win-footer-hidden {
             visibility: collapse;
+            height: 0;
         }
     }
 }

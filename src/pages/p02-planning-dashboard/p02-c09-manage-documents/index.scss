@@ -113,7 +113,7 @@
         .p02-c09-content {
             background-color: #FFFFFF;
             width: 100%;
-            // height: 100%;
+            height: 100%;
             min-height: 2.5rem;
             overflow-y: scroll;
             overflow-x: hidden;
@@ -269,6 +269,11 @@
                     }
                 }
             }
+        }
+
+        .p02-c09-content-nav-bar {
+            height: 0.2rem;
+            overflow: hidden;
         }
 
         .p02-c09-win-footer {
@@ -468,7 +473,7 @@
 
         .p02-c09-win-footer-hidden {
             // visibility: collapse;
-            // height: 45%;
+            height: 0;
             display: none;
         }
     }

@@ -207,7 +207,7 @@ const P05_TEST_CENTER = () => {
                                 <th>Category</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className='p05-items-table'>
                             {TCItems.map((item) => {
                                 return <tr key={Math.random() * 1000000}>
                                     <td>{item.id}</td>

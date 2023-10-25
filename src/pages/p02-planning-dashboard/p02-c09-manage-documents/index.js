@@ -588,7 +588,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     />
                 </div>
             </div>
-            <div className='p02-c09-content'>
+            <div className='p02-c09-content p02-c09-content-nav-bar'>
                 <table>
                     <thead>
                         <tr>
