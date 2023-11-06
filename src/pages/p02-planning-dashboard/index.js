@@ -24,7 +24,7 @@ import P02_C08_MANAGE_MONUMENTS from './p02-c08-manage-monuments';
 import P02_C09_MANAGE_DOCUMENTS from './p02-c09-manage-documents';
 import P02_C10_MANAGE_PROJECT_TASKS from './p02-c10-manage-project-tasks';
 import { useSelector, useDispatch } from 'react-redux';
-// styles
+// styles 
 import './index.scss';
 import * as apiActions from '../../app/features/api/apiSlice';
 import * as dashboardActions from '../../app/features/dashboardSlice';

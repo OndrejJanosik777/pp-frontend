@@ -43,13 +43,23 @@
 
             .p03-table-01 {
                 width: 100%;
+                overflow-y: scroll;
+                overflow-x: hidden;
 
                 thead {
                     width: 100%;
+                    // height: 1rem;
+                    // overflow-y: scroll;
+                    // overflow-x: hidden;
+
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 250px 160px 1fr;
+                        grid-template-columns: 
+                        200px 
+                        1fr
+                        160px
+                        80px;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
@@ -71,7 +81,23 @@
                     tr {
                         width: 100%;
                         display: grid;
-                        grid-template-columns: 80px 170px 80px 80px 100px 140px 50px 80px 80px 80px 80px 1fr;
+                        grid-template-columns: 
+                        80px    // project - number
+                        120px   // project - name
+                        80px    // document - id
+                        80px    // ..
+                        80px 
+                        80px 
+                        80px 
+                        80px 
+                        80px 
+                        100px 
+                        140px 
+                        1fr 
+                        80px 
+                        80px 
+                        80px 
+                        80px;
 
                         th {
                             border-bottom: 2px solid #B3B3B3;
@@ -83,18 +109,53 @@
                         }
                     }
                 }
+            }
+            
+            .p03-table-03 {
+                width: 100%;
                 
                 tbody {
+                    tr {
+                        width: 100%;
+                        display: grid;
+                        grid-template-columns: 
+                        80px    // project - number
+                        120px   // project - name
+                        80px    // document - id
+                        80px    // ..
+                        80px 
+                        80px 
+                        80px 
+                        80px 
+                        80px 
+                        100px 
+                        140px 
+                        1fr 
+                        80px 
+                        80px 
+                        80px 
+                        80px;
+
+                        th {
+                            border-bottom: 2px solid #B3B3B3;
+                            border-right: 2px solid #D0D0D0;
+                            border-left: 2px solid #F6F6F6;
+                            padding: 1px 1px;
+                            width: 100%;
+                            text-align: center;
+                        }
+                    }
+
                     tr:nth-child(even) {
                         background-color: #F7F7F7;
-
+    
                     }
                     
                     tr {
                         border-bottom: 1px solid #F6F6F6;
                         align-items: flex-start;
-
-
+    
+    
                         td:first-child {
                             border-right: 1px solid #D0D0D0;
                             height: 100%;
@@ -102,7 +163,7 @@
                             justify-content: center;
                             align-items: flex-start;
                         }
-
+    
                         td:last-child {
                             display: flex;
                             justify-content: flex-start;
