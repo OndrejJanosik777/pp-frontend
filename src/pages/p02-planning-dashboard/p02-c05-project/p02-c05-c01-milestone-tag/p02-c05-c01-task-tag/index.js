@@ -148,8 +148,14 @@ const P02_C02_C01_TASK_TAG = (props) => {
         borderStyle: `solid`,
     }
 
+    let colour = "lightskyblue";
+
+    if (task.task_status_percentage > 80) colour = "yellow";
+    if (task.task_status_percentage == 100) colour = "lightgreen";
+
     const BarProgress = {
         width: `${task.task_status_percentage}%`,
+        backgroundColor: colour,
     }
 
     const TaskLabel = {
