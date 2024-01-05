@@ -1,4 +1,4 @@
-.p02-c07-manage-milestone-tasks {
+.P02_C07_MANAGE_MILESTONE_TASKS {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -7,7 +7,7 @@
     justify-content: center;
     align-items: center;
 
-    .p02-c07-background {
+    .P02_C07_MANAGE_MILESTONE_TASKS-background {
         background-color: #464646;
         opacity: 0.8;
         width: 100%;
@@ -15,7 +15,7 @@
         position: absolute;
     }
 
-    .p02-c07-window {
+    .P02_C07_MANAGE_MILESTONE_TASKS-window {
         // margin-top: 5rem;
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
@@ -29,7 +29,7 @@
         align-items: center;
         position: relative;
 
-        .p02-c07-nav-bar {
+        .P02_C07_MANAGE_MILESTONE_TASKS-nav-bar {
             background-color: #F1F1F1;
             width: 100%;
             display: flex;
@@ -37,15 +37,15 @@
             align-items: center;
             border-bottom: 2px solid #D0D0D0;
 
-            .p02-c07-nav-bar-left {
+            .P02_C07_MANAGE_MILESTONE_TASKS-nav-bar-left {
                 
             }
-            .p02-c07-nav-bar-right {
+            .P02_C07_MANAGE_MILESTONE_TASKS-nav-bar-right {
                 display: flex;
                 justify-content: center;
                 align-items: center;
 
-                .p02-c07-textbox-container {
+                .P02_C07_MANAGE_MILESTONE_TASKS-textbox-container {
                     height: 20px;
                     display: flex;
                     justify-content: center;
@@ -56,17 +56,17 @@
                         cursor: pointer;
                     }
             
-                    .p02-c07-textbox {
+                    .P02_C07_MANAGE_MILESTONE_TASKS-textbox {
                         width: 160px;
                         height: 20px;
                     }
             
-                    .p02-c07-img {
+                    .P02_C07_MANAGE_MILESTONE_TASKS-img {
                         // height: 25px;
                     }
                 }
 
-                .p02-c07-button {
+                .P02_C07_MANAGE_MILESTONE_TASKS-button {
                     font-weight: bold;
                     padding: 1px 5px;
                     background-color: #44759D;
@@ -82,7 +82,7 @@
                 }
             }
 
-            .p02-c07-icons {
+            .P02_C07_MANAGE_MILESTONE_TASKS-icons {
                 padding: 3px 5px;
 
                 &:hover {
@@ -91,7 +91,7 @@
             }
         }
 
-        .p02-c07-content {
+        .P02_C07_MANAGE_MILESTONE_TASKS-content {
             background-color: #FFFFFF;
             width: 100%;
             height: 100%;
@@ -179,7 +179,7 @@
                             display: flex;
                             align-items: center;
 
-                            .p02-c07-icons {
+                            .P02_C07_MANAGE_MILESTONE_TASKS-icons {
                                 padding: 3px 5px;
                 
                                 &:hover {
@@ -192,14 +192,14 @@
             }
         }
 
-        .p02-c07-win-footer {
+        .P02_C07_MANAGE_MILESTONE_TASKS-win-footer {
             background-color: #F1F1F1;
             width: 100%;
             border-top: 2px solid #D0D0D0;
             // height: 125px;
 
 
-            .p02-c07-button-container {
+            .P02_C07_MANAGE_MILESTONE_TASKS-button-container {
                 display: flex;
                 align-items: end;
                 border-top: 1px solid grey;
@@ -208,12 +208,12 @@
                 margin: 0 10px;
                 z-index: 25;
         
-                .p02-c07-button-name {
+                .P02_C07_MANAGE_MILESTONE_TASKS-button-name {
                     text-decoration: underline;
                     color: rgb(78, 78, 78);
                 }
         
-                .p02-c07-img {
+                .P02_C07_MANAGE_MILESTONE_TASKS-img {
                     padding-bottom: 2px;
                     padding-left: 1px;
                 }
@@ -224,30 +224,30 @@
                 }
             }
 
-            .p02-c07-footer-row1 {
+            .P02_C07_MANAGE_MILESTONE_TASKS-footer-row1 {
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
                 // grid-template-columns: 1fr 5fr;
                 // padding: 2px;
 
-                .p02-c07-row1-col1 {
+                .P02_C07_MANAGE_MILESTONE_TASKS-row1-col1 {
                     text-align: left;
                     padding: 2px 10px;
                     width: 80px;
                 }
 
-                .p02-c07-row1-col1-w2 {
+                .P02_C07_MANAGE_MILESTONE_TASKS-row1-col1-w2 {
                     text-align: right;
                     padding: 2px 10px;
                     width: 170px;
                 }
 
-                .p02-c07-row1-col2 {
+                .P02_C07_MANAGE_MILESTONE_TASKS-row1-col2 {
                     // text-align: right;
                     padding: 2px 10px;
 
-                    .p02-c07-textbox-container {
+                    .P02_C07_MANAGE_MILESTONE_TASKS-textbox-container {
                         height: 20px;
                         display: flex;
                         justify-content: center;
@@ -258,12 +258,12 @@
                             cursor: pointer;
                         }
                 
-                        .p02-c07-textbox {
+                        .P02_C07_MANAGE_MILESTONE_TASKS-textbox {
                             width: 500px;
                             height: 20px;
                         }
                 
-                        .p02-c07-date {
+                        .P02_C07_MANAGE_MILESTONE_TASKS-date {
                             width: 500px;
                             height: 20px;
                         }
@@ -275,19 +275,19 @@
                 }
             }
 
-            .p02-c07-footer-row2 {
+            .P02_C07_MANAGE_MILESTONE_TASKS-footer-row2 {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 // grid-template-columns: 1fr 5fr;
                 // padding: 2px;
 
-                .p02-c07-row2-col1 {
+                .P02_C07_MANAGE_MILESTONE_TASKS-row2-col1 {
                     text-align: right;
                     padding: 2px 10px;
                     // width: 65px;
 
-                    .p02-c07-button {
+                    .P02_C07_MANAGE_MILESTONE_TASKS-button {
                         &:hover {
                             background-color: rgb(226, 156, 27);
                             // border: none;
@@ -295,17 +295,17 @@
                         }
                     }
 
-                    .p02-c07-spinner {
+                    .P02_C07_MANAGE_MILESTONE_TASKS-spinner {
                         height: 15px;
                         width: 15px;
                     }
                 }
 
-                .p02-c07-row2-col2 {
+                .P02_C07_MANAGE_MILESTONE_TASKS-row2-col2 {
                     // text-align: right;
                     padding: 2px 10px;
 
-                    .p02-c07-textbox-container {
+                    .P02_C07_MANAGE_MILESTONE_TASKS-textbox-container {
                         height: 20px;
                         display: flex;
                         justify-content: center;
@@ -316,17 +316,17 @@
                             cursor: pointer;
                         }
                 
-                        .p02-c07-textbox {
+                        .P02_C07_MANAGE_MILESTONE_TASKS-textbox {
                             width: 260px;
                             height: 20px;
                         }
                 
-                        .p02-c07-img {
+                        .P02_C07_MANAGE_MILESTONE_TASKS-img {
                             // height: 25px;
                         }
                     }
 
-                    .p02-c07-button {
+                    .P02_C07_MANAGE_MILESTONE_TASKS-button {
                         &:hover {
                             background-color: rgb(226, 156, 27);
                             // border: none;
@@ -338,7 +338,7 @@
             }
         }
 
-        .p02-c07-win-footer-hidden {
+        .P02_C07_MANAGE_MILESTONE_TASKS-win-footer-hidden {
             // visibility: collapse;
             display: none;
         }

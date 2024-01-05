@@ -6,6 +6,7 @@ import './index.scss';
 // components
 import C01_NAVBAR from '../../components/c01-nav-bar';
 import C02_SIDEBAR from '../../components/c02-side-bar';
+import C03_FILTER from '../../components/c03-filter';
 import axios from 'axios';
 import moment from 'moment';
 import * as documentsActions from '../../app/features/documentsSlice';
@@ -14,22 +15,11 @@ const tempBackend = require('./data');
 
 const P03_DOCUMENTS = () => {
     const dispatch = useDispatch();
-
-    // const getBaseUrl = () => {
-    //     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    //         // dev code
-    //         return 'http://127.0.0.1:8000';
-    //     } else {
-    //         // production code
-    //         return 'https://pp--backend.herokuapp.com';
-    //     }
-    // }
  
     // pick the data from the redux store
     let baseUrl = useSelector(state => state.api.baseUrl);
-    // let baseUrl = useSelector(state => state.api.baseUrl);
 
-    // const [baseUrl, set_baseUrl] = useState(getBaseUrl());
+    // local state of component
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [extendedSideBar, set_extendedSideBar] = useState(false);
     // fetched documents already filtered and sorted
@@ -42,9 +32,9 @@ const P03_DOCUMENTS = () => {
     const [certificationDocument_status, set_certificationDocument_status] = useState([...useSelector(state => state.documents.certificationDocument_status)]);
     const [certificationDocument_author, set_certificationDocument_author] = useState([...useSelector(state => state.documents.certificationDocument_author)]);
         // arrays to 
-    const [projectNumbers, set_projectNumbers] = useState([]);
+    const [projectNumbersFilter_items, set_projectNumbersFilter_items] = useState([]);
     const [milestoneTypes, set_milestoneTypes] = useState([]);
-    const [statuses, set_statuses] = useState([]);
+    const [statusesFilter_items, set_statusesFilter_items] = useState([]);
     const [authors, set_authors] = useState([]);
 
     useEffect(() => {
@@ -54,10 +44,11 @@ const P03_DOCUMENTS = () => {
 
     const showState = () => {
         console.log('documents: ', documents);
+        console.log('projectNumbersFilter_items: ', projectNumbersFilter_items);
     }
 
     const fetchDocuments = () => {
-        dispatch(documentsActions.fetch_Documents());
+        // dispatch(documentsActions.fetch_Documents());
 
         axios({
             method: 'get',
@@ -67,7 +58,7 @@ const P03_DOCUMENTS = () => {
             }
         })
         .then((response => {
-            console.log("fetched documents: ", response.data);
+            console.log("fetched documents succesfully: ", response.data);
     
             // let newProject = {...response.data, displayed: true};
     
@@ -91,9 +82,12 @@ const P03_DOCUMENTS = () => {
 
             // set_documents(newDocuments);
 
+            // dispatch all documents into state...
             dispatch(documentsActions.set_Documents([...response.data]));
 
-            filterDocuments([...response.data]);
+            // set_documents([...response.data]);
+
+            // filterDocuments([...response.data]);
 
             filterOptions([...response.data]);
     
@@ -137,6 +131,11 @@ const P03_DOCUMENTS = () => {
         console.log("new_milestoneTypes: ", new_milestoneTypes);
         console.log("new_statuses: ", new_statuses);
         console.log("new_authors: ", new_authors);
+
+        set_projectNumbersFilter_items([...new_projectNumbers]);
+        set_statusesFilter_items([...new_statuses]);
+
+        set_documents([...documents]);
     }
 
     const filterDocuments = (documents) => {
@@ -185,7 +184,7 @@ const P03_DOCUMENTS = () => {
                     <table className='p03-table-01'>
                         <thead>
                             <tr>
-                                <th>Project</th>
+                                <th onClick={() => showState()}>Project</th>
                                 <th>Certification Document</th>
                                 <th>Milestone</th>
                                 <th></th>
@@ -195,7 +194,15 @@ const P03_DOCUMENTS = () => {
                     <table className='p03-table-02'>
                         <thead>
                             <tr>
-                                <th>number</th>
+                                <th>
+                                    number
+                                    <C03_FILTER 
+                                        // items={['a', 'b', 'c', 'd', 'e']}
+                                        items={[...projectNumbersFilter_items]}
+                                        filteredItems={[]}
+                                        set_filteredItems={() => {}}
+                                    />
+                                </th>
                                 <th>name</th>
                                 <th>id</th>
                                 <th>name</th>
@@ -204,11 +211,32 @@ const P03_DOCUMENTS = () => {
                                 <th>deadline 1</th>
                                 <th>deadline 2</th>
                                 <th>sended on</th>
-                                <th>status</th>
+                                <th>
+                                    status
+                                    <C03_FILTER 
+                                        items={[...statusesFilter_items]}
+                                        filteredItems={[]}
+                                        set_filteredItems={() => {}}
+                                    />
+                                </th>
                                 <th>last update</th>
                                 <th>comment</th>
-                                <th>author</th>
-                                <th>type</th>
+                                <th>
+                                    author
+                                    <C03_FILTER 
+                                        items={['a', 'b', 'c', 'd', 'e']}
+                                        filteredItems={['a']}
+                                        set_filteredItems={() => {}}
+                                    />
+                                </th>
+                                <th>
+                                    type
+                                    <C03_FILTER 
+                                        items={['a', 'b', 'c', 'd', 'e']}
+                                        filteredItems={['a']}
+                                        set_filteredItems={() => {}}
+                                    />
+                                </th>
                                 <th>deadline</th>
                                 {/* <th>status</th> */}
                                 <th>action</th>

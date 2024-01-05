@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
     increment, 
@@ -11,6 +11,7 @@ import {
     set_BaseUrl
 } from '../../app/features/api/apiSlice';
 import './index.scss'
+import C03_FILTER from '../../components/c03-filter';
 
 // playground component
 // 
@@ -20,12 +21,24 @@ const Playground = () => {
     const count = useSelector(state => state.counter.value);
     const dispatch = useDispatch();
 
+    // state
+    const [items, set_items] = useState(['cola', 'cake', 'twix', 'bread', 'avocado']);
+    const [filteredItems, set_filteredItems] = useState(['cola']);
+
+
+
     // hook to run while loading component
     useEffect(() => {
         console.log('p01-landing-page loaded...');
 
         dispatch(set_BaseUrl());
     }, []);
+
+    const showState = () => {
+        console.log('conmonent function showState');
+        console.log('items: ', items);
+        console.log('filteredItems: ', filteredItems);
+    }
 
     return ( <div className='p00-playground'>
         <div className='p00-nav-bar'>
@@ -46,6 +59,9 @@ const Playground = () => {
             }}
         >Remove 1</button>
         </div>
+        <button
+            onClick={() => showState()}
+        >state</button>
         <div className='p00-main-body'>
             <div>counter.value: {count}</div>
             <div>username: {useSelector(state => state.api.userProfile.username)}</div>
@@ -59,8 +75,17 @@ const Playground = () => {
                     onClick={() => dispatch(fetch_userProfile())}
                 >Fetch User</button>
             </div>
+            <C03_FILTER 
+                items={items}
+                filteredItems={filteredItems}
+                set_filteredItems={set_filteredItems}
+            />
         </div>
     </div> );
 }
  
 export default Playground;
+
+/*
+component filter items
+*/

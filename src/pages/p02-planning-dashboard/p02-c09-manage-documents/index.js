@@ -630,8 +630,6 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             <th>author</th>
                             <th>milestone
                                 <div className='p02-c09-icon'>
-                                    {/* <img src={arrow_up} alt='' className='p02-c09-img-inactive' ></img> */}
-                                    {/* <img src={arrow_down} alt='' className='p02-c09-img-inactive' ></img> */}
                                     <img 
                                         src={filter} 
                                         alt='' 

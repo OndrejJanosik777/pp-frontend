@@ -31,14 +31,14 @@ const LandingPage = () => {
 
     // hook to run while loading component
     useEffect(() => {
-        console.log('p01-landing-page loaded...');
+        // console.log('p01-landing-page loaded...');
 
         dispatch(set_BaseUrl());
     }, []);
 
     const showState = () => {
-        console.log('username: ', username);
-        console.log('password: ', password);
+        // console.log('username: ', username);
+        // console.log('password: ', password);
     }
 
     const loggingIn = () => {

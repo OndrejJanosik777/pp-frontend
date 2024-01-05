@@ -1,0 +1,66 @@
+.c03-filter {
+    // color: red;
+    height: 1rem;
+    position: relative;
+
+
+
+    // .p02-c09-icon {
+        .p02-c09-img-active {
+            border: 1px solid black;
+            padding: 0.05rem;
+            height: inherit;
+            // height: 0.8rem;
+            background-color: orange;
+            border-radius: 0.10rem;
+
+            &:hover {
+                cursor: pointer;
+                // background-color: lightgray;
+            }
+        }
+
+        .p02-c09-img-inactive {
+            border: 1px solid black;
+            padding: 0.05rem;
+            height: inherit;
+            // height: 0.8rem;
+            // background-color: orange;
+            border-radius: 0.10rem;
+
+            &:hover {
+                cursor: pointer;
+                // background-color: lightgray;
+            }
+        }
+    // }
+
+    .p02-c09-filter-choises {
+        min-width: 3rem;
+        width: max-content;
+        min-height: 2rem;
+        background-color: rgb(255, 230, 230);
+        position: absolute;
+        padding: 0.4rem 0.2rem;
+        list-style: none;
+        border: solid 1px black;
+        top: 1.4rem;
+        text-align: left;
+
+        li {
+            padding: 0.1rem;
+
+            label {
+                padding: 0rem 0.3rem;
+            }
+
+            input {
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+        }
+    }
+}

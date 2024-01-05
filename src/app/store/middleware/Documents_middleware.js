@@ -9,7 +9,7 @@ import * as DocumentsActions from '../../features/documentsSlice';
 // async middleware function
 // call backend api and dispatch data to store
 const DocumentsMiddleware = storeAPI => next => async action => {
-    console.log('DocumentsMiddleware.js');
+    // console.log('DocumentsMiddleware.js');
     // console.log('action: ', action);
 
     let baseUrl = storeAPI.getState().api.baseUrl;
