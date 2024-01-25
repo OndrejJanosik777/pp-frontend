@@ -231,6 +231,7 @@ const P02_C05_PROJECT = (props) => {
     return ( <div className='p02-c05-project'>
         <div className='p02-c05-left-container'>
             <div>{`#${props.project.id} : ${props.project.number}`}</div>
+            <div>{props.project.name}</div>
             <div>{props.project.short_name}</div>
             <div>{`CVE: ${props.project.cve_lead === null ? "..." : props.project.cve_lead.employee_initials}`}</div>
             <div>{`ENVIRO: ${props.project.enviromental_lead === null ? "..." : props.project.enviromental_lead.employee_initials}`}</div>
