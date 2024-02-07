@@ -78,7 +78,17 @@ const LandingPage = () => {
                 <label htmlFor="floatingInput">username</label>
             </div>
             <div className="form-floating p01-input">
-                <input type="password" className="form-control" id="floatingPassword" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input 
+                    type="password" 
+                    className="form-control" 
+                    id="floatingPassword" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") loggingIn();
+                    }}
+                    
+                />
                 <label htmlFor="floatingPassword">password</label>
             </div>
             {showSpinnerLogin ?
