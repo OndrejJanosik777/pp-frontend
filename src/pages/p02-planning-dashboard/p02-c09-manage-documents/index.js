@@ -317,6 +317,102 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         })
     }
 
+    // TODO:
+    const reviseDocument = (item, index) => {
+        console.log('revising document (item): ', item);
+        console.log('revising document (index): ', index);
+
+        // 1 - update item in backend 
+        // 2 - update item in local state
+        // 3 - update item in redux store
+        // console.log('updateItem function');
+
+        // item.document_name = document.getElementById('name').value;
+        // item.document_number = document.getElementById('number').value;
+        // item.document_revision = document.getElementById('revision').value;
+        // item.document_deadline = document.getElementById('deadline').value;
+        // item.document_deadline_second = document.getElementById('deadline_second').value;
+        // item.document_sended_on = document.getElementById('sended_on').value;
+        // item.document_acceptance_status = document.getElementById('acceptance_status').value;
+        // item.document_comment = document.getElementById('comment').value;
+        // const selectedMonuments = [];
+
+        // monuments.map((monument) => {
+        //     if (monument.isSelected) {
+        //         selectedMonuments.push(monument.id);
+        //     }
+        // })
+
+        // if (document.getElementById('name').value === "") return alert('missing input');
+        // if (document.getElementById('number').value === "") return alert('missing input');
+        // if (document.getElementById('revision').value === "") return alert('missing input');
+        // if (document.getElementById('deadline').value === "") item.document_deadline = null;
+        // if (document.getElementById('deadline_second').value === "") item.document_deadline_second = null;
+        // if (document.getElementById('sended_on').value === "") item.document_sended_on = null;
+        // if (document.getElementById('acceptance_status').value === "") return alert('missing input');
+        // if (document.getElementById('comment').value === "") return alert('missing input');
+        // if (selectedMonuments.length === 0) return alert('missing input');
+
+        // set_showSpinner_CreateUpdateItem(true);
+
+        // // 1 - 
+        axios({
+            method: 'post',
+            url: baseUrl + `/company/revise-document/?documentId=${item.document_id}`,
+            headers: {
+                "Authorization": token
+            }
+            // data: {
+            //     name: item.document_name,
+            //     number: item.document_number,
+            //     revision: item.document_revision,
+            //     deadline: item.document_deadline,
+            //     deadline_second: item.document_deadline_second,
+            //     sended_on: item.document_sended_on,
+            //     acceptance_status: item.document_acceptance_status,
+            //     comment: item.document_comment,
+            //     monuments: selectedMonuments,
+            //     project: activeProject.id,
+            // }
+        })
+        .then((response => {
+            // 2 - 
+            // let updatedDocuments = [...documents_localStateFormat];
+            // updatedDocuments.splice(index, 1, item)
+            // set_documents_localStateFormat([...updatedDocuments]);
+
+            // // 3 - 
+            // let updateDocument_inReduxState = {
+            //     id: response.data.id,
+            //     acceptance_status: response.data.acceptance_status,
+            //     project_id: response.data.project
+            // }
+
+            // let updatedProject = {...activeProject};
+            // let updateDocuments_inReduxState = [...updatedProject.documents];
+            // let index_inReduxState = updateDocuments_inReduxState.findIndex(elem => elem.id === item.document_id);
+
+            // updateDocuments_inReduxState.splice(index_inReduxState, 1, updateDocument_inReduxState);
+
+            // updatedProject.documents = [...updateDocuments_inReduxState];
+
+            // dispatch(apiActions.update_project(updatedProject));
+
+            // // set_monuments([...monuments]);
+
+            // set_showSpinner_CreateUpdateItem(false);
+        }))
+        .catch((error) => {
+            console.log("error while revising document: ", error);
+
+            // let message = error.message + "\n" + error.response.data;
+
+            // alert(message);
+
+            // set_showSpinner_CreateUpdateItem(false);
+        })
+    }
+
     const switchToUpdateMode = (item, index) => {
         console.log('Manage Documents - switchToUpdateMode function');
         console.log('item: ', item);
@@ -683,7 +779,6 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             <div className='p02-c09-content'>
                 <table>
                     <tbody>
-                        {/* TODO:  */}
                         {documents_localStateFormat.map((document, index) => {
                             let documentStyle = null;
                             let documentDeadline = null;
@@ -929,6 +1024,24 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             } : () => set_createMode(false)} 
                         />
                     </div>
+                    {
+                        updateMode ?
+                        <div className='p02-c09-row2-col1'>
+                            {showSpinner_CreateUpdateItem ?
+                            <div className="spinner-border p02-c09-spinner" role="status">
+                                <span className="sr-only"></span>
+                            </div>
+                            :
+                            <input 
+                                type='button' 
+                                className='p02-c09-button' 
+                                value={'Revise'}
+                                onClick={() => reviseDocument(selectedItem, selectedItemIndex)} 
+                            />
+                            }
+                        </div> :
+                        <div></div>
+                    }
                 </div>
             </div>
         </div>
