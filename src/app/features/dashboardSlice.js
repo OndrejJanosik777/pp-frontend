@@ -18,8 +18,13 @@ export const dashboardSlice = createSlice({
         showModal_manageMilestones: false,
         showModal_manageMonuments: false,
         showModal_manageProjectTasks: false,
+        documents: [],
     },
     reducers: {
+        fetch_documents: (state, action) => { },
+        update_documents: (state, action) => {
+            state.documents = [...action.payload];
+        },
         set_spinnerFetchingProjects: (state, action) => {
             state.spinnerFetchingProjects = action.payload;
         },
@@ -70,6 +75,8 @@ export const dashboardSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { 
+    fetch_documents,
+    update_documents,
     set_spinnerFetchingProjects,
     set_dateOffset,
     set_activeProject,

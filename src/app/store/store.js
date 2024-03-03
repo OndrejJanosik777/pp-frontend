@@ -9,6 +9,7 @@ import apiMiddleware from './middleware/api_middleware'
 import counterMiddleware from './middleware/counter_middleware';
 import TCMiddleware from './middleware/TC_middleware';
 import DocumentsMiddleware from './middleware/Documents_middleware';
+import dashboardMiddleware from './middleware/dashboard_middleware';
 
 export default configureStore({
     reducer: {
@@ -24,5 +25,6 @@ export default configureStore({
         .concat(counterMiddleware)
         .concat(TCMiddleware)
         .concat(DocumentsMiddleware)
+        .concat(dashboardMiddleware)
     ,
 })

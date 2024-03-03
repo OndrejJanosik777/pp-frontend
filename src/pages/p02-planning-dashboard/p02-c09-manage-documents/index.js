@@ -95,6 +95,10 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
         fetchDocuments();
 
+        let activeProjectId = 24;
+
+        // dispatch(dashboardActions.fetch_documents());
+
         // set_updateMode(activeTask.task_id != undefined);
     }, []);
     
@@ -302,8 +306,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
             sortDeadlineAscending(new_documents);
 
-
             set_showSpinner_FetchingDocuments(false);
+
             set_cmit_short_names([...new_document_cmit_short_names]);
         }))
         .catch((error) => {
@@ -401,6 +405,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             // // set_monuments([...monuments]);
 
             // set_showSpinner_CreateUpdateItem(false);
+
+            fetchDocuments();
         }))
         .catch((error) => {
             console.log("error while revising document: ", error);
