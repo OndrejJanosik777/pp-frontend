@@ -180,8 +180,12 @@ const P02_C02_C01_TASK_TAG = (props) => {
     }
 
     const ContextMenuTaskStyle = {
-        position: 'relative',
-        zIndex: `30`,
+        // position: 'relative',
+        // zIndex: '30',
+        position: 'absolute',
+        marginLeft: `${-360}px`,
+        marginTop: `${0}px`,
+        zIndex: `50`,
     }
 
     const style_document_deadline = {
@@ -263,7 +267,6 @@ const P02_C02_C01_TASK_TAG = (props) => {
                     >
                     {task.document_number === null ?
                         `${task.task_comment}` :
-                        // "" :
                         `${task.document_number} (${task.document_revision}) : ${task.document_name}`
                     }
                 </div>

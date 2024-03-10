@@ -300,7 +300,11 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 id='milestone-tag'
             >
         {/* LINE */}
-        <div className='p02-c05-c01-milestone-line' >{milestone_item.name}</div>
+        <div className='p02-c05-c01-milestone-line' >{
+            milestone_item.milestone_item_type !== undefined ?
+            milestone_item.milestone_item_type.short_name :
+            ''
+        }</div>
         {/* MILESTONE TAG */}
         {milestoneTag_visibility ?
             <div style={MilestoneTagStyle}>
@@ -369,7 +373,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                                 dispatch(dashboardActions.set_showModal_manageTasks(true))
                             }}
                             >
-                            Manage Tasks
+                                Manage Tasks
                         </span>
                     </li>
                     <li className='p02-c05-c01-context-item'>
