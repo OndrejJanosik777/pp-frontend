@@ -20,9 +20,13 @@ const P02_C05_PROJECT = (props) => {
     const [achievedMilestones, set_achievedMilestones] = useState({});
     const [completedTasks, set_completedTasks] = useState(0);
     const [totalTasks, set_totalTasks] = useState(0);
+    const [nrOfMilestones, set_nrOfMilestones] = useState(0);
+    const [nrOfTasks, set_nrOfTasks] = useState(0);
     const [documents, set_documents] = useState([]);
 
     useEffect(() => {
+        console.log('P02_C05_PROJECT: ', props);
+
         let achievedMilestones = props.project.milestone_items.filter(elem => {
             let now = moment();
             let m_date = moment(elem.date);
@@ -39,6 +43,7 @@ const P02_C05_PROJECT = (props) => {
             set_documents([...props.project.documents]);
         }
 
+        // calculate number of completed tasks
         props.project.milestone_items.map((milestoneItem) => {
             newTotalTasks += milestoneItem.tasks.length;
 
@@ -49,12 +54,27 @@ const P02_C05_PROJECT = (props) => {
             })
         })
 
+        // calculate height of project stripe
+        let nrOfMilestones = 0;
+        let nrOfTasks = 0;
+
+        props.project.milestone_items.map((item) => {
+            nrOfMilestones += 1;
+
+            item.tasks.map((task) => {
+                nrOfTasks += 1;
+            })
+        });
+
         set_totalTasks(newTotalTasks);
         set_completedTasks(newCompletedTasks);
+        set_nrOfMilestones(nrOfMilestones);
+        set_nrOfTasks(nrOfTasks);
     }, []);
 
     const showState = () => {
-        console.log('showing state of component: ""P02_C05_PROJECT"', props);
+        console.log('nrOfMilestones', nrOfMilestones);
+        console.log('nrOfTasks', nrOfTasks);
     }
 
     const display_modal_createNewTask = (project, milestoneItem) => {
@@ -225,24 +245,41 @@ const P02_C05_PROJECT = (props) => {
 
             return test;
         }
+    }
 
+    const style_leftContainer = {
+        border: '1px solid black',
+        minHeight: '170px',
+        Height: `${20 * nrOfMilestones + 10 * nrOfTasks}px`,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'start',
+        alignItems: 'center',
+        backgroundColor: '#F1F1F1',
+        width: '8rem',
+        maxWidth: '8rem',
+        overflow: 'hidden',
+        zIndex: 14,
     }
 
     return ( <div className='p02-c05-project'>
-        <div className='p02-c05-left-container'>
-            <div>{`#${props.project.id} : ${props.project.number}`}</div>
+        <div 
+            className='p02-c05-left-container' 
+            style={style_leftContainer}
+        >
+            <div onClick={() => showState()} >{`#${props.project.id} : ${props.project.number}`}</div>
             <div>{props.project.name}</div>
             <div>{props.project.short_name}</div>
             <div>{`CVE: ${props.project.cve_lead === null ? "..." : props.project.cve_lead.employee_initials}`}</div>
             <div>{`ENVIRO: ${props.project.enviromental_lead === null ? "..." : props.project.enviromental_lead.employee_initials}`}</div>
             <div>{`STRESS: ${props.project.stress_lead === null ? "..." : props.project.stress_lead.employee_initials}`}</div>
             <div>
-                <img
+                {/* <img
                     className='logo-icons'
                     src={props.project.logo}
                     alt=''
                     onClick={() => showState()} 
-                />
+                /> */}
             </div>
             {/* <div>
                 <img
@@ -282,8 +319,6 @@ const P02_C05_PROJECT = (props) => {
                     () => {
                         dispatch(dashboardActions.set_activeProject(props.project));
                         dispatch(dashboardActions.set_showModal_manageMilestones(true));
-                        // props.set_activeProject(props.project);
-                        // props.set_manageMilestones_modalToogle(true);
                     }
                 }
             >
@@ -295,9 +330,6 @@ const P02_C05_PROJECT = (props) => {
                     () => {
                         dispatch(dashboardActions.set_activeProject(props.project));
                         dispatch(dashboardActions.set_showModal_manageProjectTasks(true))
-                        // dispatch(dashboardActions.set_showModal_manageMilestones(true));
-                        // props.set_activeProject(props.project);
-                        // props.set_manageProjectTasks_modalToogle(true);
                     }
                 }
             >
@@ -305,7 +337,7 @@ const P02_C05_PROJECT = (props) => {
             </div>
         </div>
         <div style={middleStyle}>
-            {
+            { 
             props.project.milestone_items.map((milestone_item, index) => {
                 // console.log('drawing milestone items: ', index)
 

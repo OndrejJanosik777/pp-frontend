@@ -20,6 +20,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [initialOffsetTask, set_initialOffsetTask] = useState(0);   // task offset in px from milestone
     const [difference, set_difference] = useState(0);
     const [taskWidth, set_taskWidth] = useState(0);
+    const [delta_days_task_start_doc_deadline, set_delta_days_task_start_doc_deadline] = useState(0);
     const [taskIsMoving, set_taskIsMoving] = useState(false);   
     const [index, set_index] = useState(props.index);
     const [task, set_task] = useState(props.task);
@@ -31,11 +32,12 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
 
     const showState = () => {
-        console.log('props: ', props);
-        console.log('offsetTask: ', offsetTask / 8);
-        console.log('difference: ', difference);
-        console.log('leftOffsetMilestone: ', leftOffsetMilestone);
-        console.log('taskWidth: ', taskWidth);
+        // console.log('props: ', props);
+        // console.log('offsetTask: ', offsetTask / 8);
+        // console.log('difference: ', difference);
+        // console.log('leftOffsetMilestone: ', leftOffsetMilestone);
+        // console.log('taskWidth: ', taskWidth);
+        // console.log('delta_days_task_start_doc_deadline: ', delta_days_task_start_doc_deadline);
     }
 
     useEffect(() => {
@@ -43,12 +45,14 @@ const P02_C02_C01_TASK_TAG = (props) => {
         let milestoneDeadline = moment(props.milestone_item.date);
         let difference = taskDeadline.diff(milestoneDeadline, "days");
         let taskWidth = Math.ceil(props.task.task_estimated_hours / 8);
+        let taskStart = moment(props.task.task_deadline).subtract(taskWidth, 'days');
+        let delta_days_task_start_doc_deadline = taskStart.diff(props.task.document_deadline, "days");
 
         set_offsetTask((difference - taskWidth) * 16);
         set_initialOffsetTask((difference - taskWidth) * 16);
         set_difference(difference);
         set_taskWidth(taskWidth);
-        set_milestone_item(props.milestone_item);
+        set_delta_days_task_start_doc_deadline(delta_days_task_start_doc_deadline);
     }, []);
 
     const handleTaskTagMove = useRef((event) => {
@@ -160,17 +164,13 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
     const TaskLabel = {
         color: 'black',
-        backgroundColor: props.milestone_item.color,
         height: '100%',
-        marginLeft: '4px',
         lineHeight: '9px',
     }
 
     const task_contextMenuClicked = (event) => {
-        // prevent default behaviour
         event.preventDefault();
 
-        // dispatch clicked task, milestone-item, project
         dispatch(dashboardSliceActions.set_activeProject({...props.project}));
         dispatch(dashboardSliceActions.set_activeMilestone({...props.milestone_item}));
         dispatch(dashboardSliceActions.set_activeTask({...task}));
@@ -181,21 +181,30 @@ const P02_C02_C01_TASK_TAG = (props) => {
 
     const ContextMenuTaskStyle = {
         position: 'relative',
-        // marginLeft: `${leftOffset_milestone}px`,
-        // marginTop: `${-25 - 10 * milestone_item.tasks.length}px`,
-        // marginLeft: `${-taskWidth * 8}px`,
-        // marginTop: `60px`,
         zIndex: `30`,
+    }
+
+    const style_document_deadline = {
+        height: '14px',
+        position: 'absolute',
+        top: '-2px',
+        left: '5px',
+        left: `${5 - delta_days_task_start_doc_deadline * 16}px`,
+        borderLeft: '2px solid red',
     }
 
     return ( <div 
                 style={ taskDisplayed ? TaskTag : TaskTagHidden }
                 className='p02-c05-c01-task-tag'
-                
                 // onClick={() => showState()}
                 onContextMenu={(e) => task_contextMenuClicked(e)}
-                title={`task deadline: \n${task.task_deadline} \n(${task.task_status_percentage}%)`}
-            >
+                title={
+                    props.task.document_deadline !== null ?
+                    `document deadline: \n${moment(props.task.document_deadline).format('DD-MMM-YYYY')}` :
+                    `task deadline: \n${moment(task.task_deadline).format('DD-MMM-YYYY')}`
+                }
+                >
+                {/* CONTEXT MENU */}
                 {contextMenu_visibility ? 
                     <div
                         style={ContextMenuTaskStyle}
@@ -233,32 +242,36 @@ const P02_C02_C01_TASK_TAG = (props) => {
                     </div> :
                     <div></div>
                 }
-                {/* <div className='box-container'>
-                    <div className='box'>box</div>
-                </div> */}
+                {/* TASK BAR */}
                 <div 
                     className='p02-c05-c01-task-bar' 
                     style={TaskBar}
                     onClick={(e) => taskClicked(e)}
                 >
+                {/* BAR PROGRESS */}
                 <div 
                     className='p02-c05-c01-bar-progress'
                     style={BarProgress}
                     onClick={(e) => taskClicked(e)}
                 ></div>
                 </div>
+                {/* DOCUMENT DEADLINE -  */}
                 <div
-                    // onClick={() => showState()}
+                    onClick={() => showState()}
                     className='p02-c05-c01-task-label'
                     style={TaskLabel}
-
-                >
+                    >
                     {task.document_number === null ?
                         `${task.task_comment}` :
                         // "" :
                         `${task.document_number} (${task.document_revision}) : ${task.document_name}`
                     }
                 </div>
+                {/* DOCUMENT DEADLINE - RED LINE */}
+                {props.task.document_deadline !== null ?
+                    <div style={style_document_deadline}></div> :
+                    <div></div>
+                }
     </div> );
 }
  

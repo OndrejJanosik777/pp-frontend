@@ -19,9 +19,12 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
     const [dateOffset, set_dateOffset] = useState(useSelector(state => state.dashboard.dateOffset));
     // const [loaded, setLoaded] = useState([]);
-    const [leftOffset_milestone, set_leftOffset_milestone] = useState(0);     // distance from beginning of left center edge to milestone in px
-    const [leftOffsetTasks, set_leftOffsetTasks] = useState([]);            // relative offset vs. milestone item per task
-    const [initialLeftOffset, set_initialLeftOffset] = useState(0);         // used to calculate delta-days
+    // distance from beginning of left center edge to milestone in px
+    const [leftOffset_milestone, set_leftOffset_milestone] = useState(0);  
+    // relative offset vs. milestone item per task   
+    const [leftOffsetTasks, set_leftOffsetTasks] = useState([]);        
+    // used to calculate delta-days    
+    const [initialLeftOffset, set_initialLeftOffset] = useState(0);         
     const [milestoneIsMoving, set_milestoneIsMoving] = useState(false);     
     const [milestoneTag_visibility, set_milestoneTag_visibility] = useState(false);
     const [contextMenu_visibility, set_contextMenu_visibility] = useState(false);
@@ -265,10 +268,9 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
     const TaskNumberCircle = {
         position: 'absolute',
-        marginLeft: `${leftOffset_milestone - 18}px`,
-        marginTop: `${-32 - 10 * milestone_item.tasks.length}px`,
+        marginLeft: `${leftOffset_milestone - 20}px`,
+        marginTop: `${1}px`,
         backgroundColor: props.milestone_item.color,
-        // backgroundColor: `lightgreen`,
         borderWidth: `1px`,
         borderColor: `grey`,
         borderStyle: `solid`,
@@ -283,19 +285,23 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     }
 
     const MilestoneTagStyle = {
-        // position: 'absolute',
         paddingLeft: `${leftOffset_milestone}px`,
-        // paddingLeft: `30px`,
-        // paddingLeft: `${props.milestone_offsetLeft * -8}px`,
-        paddingTop: `${10}px`,
         zIndex: `10`,
+        position: 'absolute',
     }
 
     const MilestoneLowerMargin = {
         marginBottom: `${10 * milestone_item.tasks.length}px`,
     }
 
-    return (<div className='p02-c05-c01-milestone-tag' id='milestone-tag'>
+    return (<div 
+                className='p02-c05-c01-milestone-tag' 
+                style={{height: `${tasks.length * 10 + 23}px`}} 
+                id='milestone-tag'
+            >
+        {/* LINE */}
+        <div className='p02-c05-c01-milestone-line' >{milestone_item.name}</div>
+        {/* MILESTONE TAG */}
         {milestoneTag_visibility ?
             <div style={MilestoneTagStyle}>
                 <button
@@ -315,8 +321,10 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 <div style={MilestoneLowerMargin}></div>
             </div>
             :
-            <div style={{ height: '30px' }}></div>
+            // <div style={{ height: '30px' }}></div>
+            <div style={{ height: `${30 + 10 * milestone_item.tasks.length}px` }}></div>
         }
+        {/* CONTEXT MENU */}
         {contextMenu_visibility ?
             <div 
                 style={ContextMenuStyle}
@@ -360,7 +368,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                                 dispatch(dashboardActions.set_activeTask({undefined}))
                                 dispatch(dashboardActions.set_showModal_manageTasks(true))
                             }}
-                        >
+                            >
                             Manage Tasks
                         </span>
                     </li>
@@ -375,7 +383,9 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 </ul>
             </div>
             :
-            <div></div>}
+            <div></div>
+        }
+        {/* CIRCLE WITH NUMBER OF TASKS */}
         {milestoneTag_visibility ?
             <div 
                 style={TaskNumberCircle}
@@ -386,23 +396,39 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             :
             <div></div>
         }
+        {/* CONTAINER WITH TASKS */}
         {milestone_item.tasks.map((task, index) => {
             // if (tasksDisplayed && milestoneTag_visibility) {
             if (tasksDisplayed) {
-                return <P02_C02_C01_TASK_TAG 
-                    key={Math.random() * 100000}
-                    project = {props.project}
-                    milestone_item = {props.milestone_item}
-                    task = {task}
-                    // 
-                    index = {index}
-                    leftOffsetMilestone = {leftOffset_milestone}
-                    // leftOffsetMilestone = {leftOffsetTasks}
-                    // updateTaskDeadline = {updateTaskDeadline}
-                    userPermissions = {userPermissions}
-                />
-            }
-        })}
+                // return <P02_C02_C01_TASK_TAG 
+                //         key={Math.random() * 100000}
+                //         project = {props.project}
+                //         milestone_item = {props.milestone_item}
+                //         task = {task}
+                //         // 
+                //         index = {index}
+                //         leftOffsetMilestone = {leftOffset_milestone}
+                //         // leftOffsetMilestone = {leftOffsetTasks}
+                //         // updateTaskDeadline = {updateTaskDeadline}
+                //         userPermissions = {userPermissions}
+                //     />
+                return <div className='p02-c05-c01-test'>
+                    <P02_C02_C01_TASK_TAG 
+                        key={Math.random() * 100000}
+                        project = {props.project}
+                        milestone_item = {props.milestone_item}
+                        task = {task}
+                        // 
+                        index = {index}
+                        leftOffsetMilestone = {leftOffset_milestone}
+                        // leftOffsetMilestone = {leftOffsetTasks}
+                        // updateTaskDeadline = {updateTaskDeadline}
+                        userPermissions = {userPermissions}
+                    />
+                </div>
+                }
+            })
+        }
     </div>);
 }
 

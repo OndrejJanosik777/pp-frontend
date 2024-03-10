@@ -1,7 +1,32 @@
 .p02-c05-c01-milestone-tag {
     position: relative;
     width: 100%;
+    box-sizing: border-box;
     // z-index: 10;
+
+    .p02-c05-c01-test {
+        // background-color: chocolate;
+        width: 100%;
+        // height: 100%;
+        // border: 1px solid black;
+        position: absolute;
+        top: 23px;
+        z-index: 13;
+    }
+
+    .p02-c05-c01-tasks-cont {
+        background-color: brown;
+        // position: absolute;
+        // top: 0;
+    }
+
+    .p02-c05-c01-milestone-line {
+        background-color: rgba(181, 252, 252, 0.507);
+        width: 100%;
+        height: 23px;
+        position: absolute;
+        // top: 10px;
+    }
 
     .p02-c05-c01-dragable {
         // border-radius: 8px;
