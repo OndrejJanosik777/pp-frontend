@@ -59,7 +59,16 @@ const P03_DOCUMENTS = () => {
         })
         .then((response => {
             console.log("fetched documents succesfully: ", response.data);
+            
+            // filter document that have not been accepted or rejected
+            // sort documents according deadline 1
+            let documents = response.data
+                .sort((a, b) => moment(a.document_deadline) - moment(b.document_deadline))
+                .filter((elem) => elem.document_acceptance_status !== "rejected" && elem.document_acceptance_status !== "accepted")
+                // .filter((elem) => elem.document_acceptance_status !== "accepted")
     
+            console.log("filtered documents: ", documents);
+
             // let newProject = {...response.data, displayed: true};
     
             // let updatedProjects = [...projects, newProject];
@@ -80,16 +89,18 @@ const P03_DOCUMENTS = () => {
 
             // console.log("test moments: ", moment('2023-06-18').diff(moment('2023-07-18'), 'days'));
 
-            // set_documents(newDocuments);
+            set_documents(documents);
 
             // dispatch all documents into state...
-            dispatch(documentsActions.set_Documents([...response.data]));
+            // dispatch(documentsActions.set_Documents([...response.data]));
+            // dispatch(documentsActions.set_Documents([...filteredDocuments]));
+            // dispatch(documentsActions.set_Documents([...newDocuments]));
 
             // set_documents([...response.data]);
 
             // filterDocuments([...response.data]);
 
-            filterOptions([...response.data]);
+            // filterOptions([...response.data]);
     
             // props.set_projects(updatedProjects);
     

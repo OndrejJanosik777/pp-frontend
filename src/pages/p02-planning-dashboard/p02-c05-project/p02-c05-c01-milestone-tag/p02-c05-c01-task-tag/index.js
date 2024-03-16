@@ -197,6 +197,8 @@ const P02_C02_C01_TASK_TAG = (props) => {
         borderLeft: '2px solid red',
     }
 
+
+    // displaying component ...
     return ( <div 
                 style={ taskDisplayed ? TaskTag : TaskTagHidden }
                 className='p02-c05-c01-task-tag'

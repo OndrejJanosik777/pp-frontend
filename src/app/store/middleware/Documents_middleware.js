@@ -29,7 +29,11 @@ const DocumentsMiddleware = storeAPI => next => async action => {
           console.log('fetch succesfull ... ', response.data);
           // dispatching action:type fetchUserProfile_onSuccess with action:payload
           // response data ...
-          storeAPI.dispatch(DocumentsActions.set_Documents([...response.data]));
+          let filteredDocuments = response.data
+                .filter((elem) => elem.document_acceptance_status !== "rejected")
+
+
+          storeAPI.dispatch(DocumentsActions.set_Documents([...filteredDocuments]));
         }
         catch(error) {
           console.log('error while fetching data...', error);
