@@ -35,15 +35,6 @@ const P02_PLANNING_DASHBOARD = () => {
     // pick the data from the redux store
     let baseUrl = useSelector(state => state.api.baseUrl);
     let projects = useSelector(state => state.api.projects);
-    // modals
-    let showModal_manageDocuments = useSelector(state => state.dashboard.showModal_manageDocuments);
-    let showModal_manageProjects = useSelector(state => state.dashboard.showModal_manageProjects);
-    let showModal_manageMilestoneTypes = useSelector(state => state.dashboard.showModal_manageMilestoneTypes);
-    let showModal_manageTaskTypes = useSelector(state => state.dashboard.showModal_manageTaskTypes);
-    let showModal_manageMilestones = useSelector(state => state.dashboard.showModal_manageMilestones);
-    let showModal_manageTasks = useSelector(state => state.dashboard.showModal_manageTasks);
-    let showModal_manageMonuments = useSelector(state => state.dashboard.showModal_manageMonuments);
-    let showModal_manageProjectTasks = useSelector(state => state.dashboard.showModal_manageProjectTasks);
 
     // local state of component
     // const [projects, set_projects] = useState([]);
@@ -92,6 +83,7 @@ const P02_PLANNING_DASHBOARD = () => {
         set_displayedDays(daysToDisplay);
         dispatch(dashboardActions.set_displayedDays(daysToDisplay));
     })
+
     // hook to run while loading component
     useEffect(() => {
         // console.log('dashboard Projects loaded...');
@@ -105,12 +97,12 @@ const P02_PLANNING_DASHBOARD = () => {
         // fetchTaskTypes();
 
         // fetching data from backend database to redux store
-        dispatch(apiActions.set_BaseUrl());
-        dispatch(apiActions.fetch_userProfile());
-        dispatch(apiActions.fetch_taskTypes());
-        dispatch(apiActions.fetch_milestoneTypes());
-        dispatch(apiActions.fetch_projects());
-        dispatch(dashboardActions.set_displayedDays(
+            dispatch(apiActions.set_BaseUrl());
+            dispatch(apiActions.fetch_userProfile());
+            dispatch(apiActions.fetch_taskTypes());
+            dispatch(apiActions.fetch_milestoneTypes());
+            dispatch(apiActions.fetch_projects());
+            dispatch(dashboardActions.set_displayedDays(
             parseInt((window.innerWidth - 8 * 16 - 0 * 16 - 4 * 16) / 16)
         ));
     }, []);
@@ -145,22 +137,14 @@ const P02_PLANNING_DASHBOARD = () => {
                 </button>
                 <div className='p02-main-section' id='main-section' name='main-section'>
                     {/* MODAL COMPONENTS IN MAIN SECTION */}
-                    {showModal_manageProjects ? 
-                        <P02_C02_MANAGE_PROJECTS /> : ""}
-                    {showModal_manageMilestoneTypes ?
-                        <P02_C03_MANAGE_MILESTONE_TYPES /> : ""}
-                    {showModal_manageTaskTypes ?
-                        <P02_C04_MANAGE_TASK_TYPES /> : ""}
-                    {showModal_manageMilestones ?
-                        <P02_C06_MANAGE_MILESTONES /> : ""}
-                    {showModal_manageTasks ?
-                        <P02_C07_MANAGE_MILESTONE_TASKS /> : ""}
-                    {showModal_manageMonuments ?
-                        <P02_C08_MANAGE_MONUMENTS /> : ""}
-                    {showModal_manageDocuments ?
-                        <P02_C09_MANAGE_DOCUMENTS /> : ""}
-                    {showModal_manageProjectTasks ?
-                        <P02_C10_MANAGE_PROJECT_TASKS /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageProjects) ? <P02_C02_MANAGE_PROJECTS /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageMilestoneTypes) ? <P02_C03_MANAGE_MILESTONE_TYPES /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageTaskTypes) ? <P02_C04_MANAGE_TASK_TYPES /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageMilestones) ? <P02_C06_MANAGE_MILESTONES /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageTasks) ? <P02_C07_MANAGE_MILESTONE_TASKS /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageMonuments) ? <P02_C08_MANAGE_MONUMENTS /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageDocuments) ? <P02_C09_MANAGE_DOCUMENTS /> : ""}
+                    {useSelector(state => state.dashboard.showModal_manageProjectTasks) ? <P02_C10_MANAGE_PROJECT_TASKS /> : ""}
                     <div className='p02-nav-bar'>
                         <div className='p02-nav-bar-left'>
                             <div 

@@ -7,7 +7,7 @@ import questionmark_blue from './assets/questionmark_blue.png';
 import C01_NAVBAR from '../../components/c01-nav-bar';
 import C02_SIDEBAR from '../../components/c02-side-bar';
 import * as TCActions from '../../app/features/testCenterSlice';
-import './index.scss';
+import './index.scss'; 
 import axios from 'axios'; 
 
 const P05_TEST_CENTER = () => {

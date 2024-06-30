@@ -87,7 +87,6 @@ const LandingPage = () => {
                     onKeyDown={(e) => {
                         if (e.key === "Enter") loggingIn();
                     }}
-                    
                 />
                 <label htmlFor="floatingPassword">password</label>
             </div>

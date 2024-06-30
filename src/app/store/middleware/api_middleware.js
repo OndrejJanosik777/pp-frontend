@@ -86,6 +86,8 @@ const apiMiddleware = storeAPI => next => async action => {
   
           let projects = [];
 
+          console.log('api_middleware: fetch_project: ', response.data);
+
           response.data.map((item) => {
               projects.push({...item, displayed: item.displayed_on_dashboard})
           })

@@ -274,12 +274,12 @@ const P02_C05_PROJECT = (props) => {
             <div>{`ENVIRO: ${props.project.enviromental_lead === null ? "..." : props.project.enviromental_lead.employee_initials}`}</div>
             <div>{`STRESS: ${props.project.stress_lead === null ? "..." : props.project.stress_lead.employee_initials}`}</div>
             <div>
-                {/* <img
+                <img
                     className='logo-icons'
                     src={props.project.logo}
                     alt=''
                     onClick={() => showState()} 
-                /> */}
+                />
             </div>
             {/* <div>
                 <img

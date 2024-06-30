@@ -69,42 +69,7 @@ const P03_DOCUMENTS = () => {
     
             console.log("filtered documents: ", documents);
 
-            // let newProject = {...response.data, displayed: true};
-    
-            // let updatedProjects = [...projects, newProject];
-
-            // let newDocuments = [...response.data];
-
-            // newDocuments.sort((a, b) => {
-            //     let aDeadline = a.deadline;
-            //     let bDeadline = b.deadline;
-
-            //     if (aDeadline === null) aDeadline = '2999-01-01';
-            //     if (bDeadline === null) bDeadline = '2999-01-01';
-                
-            //     return moment(aDeadline).diff(moment(bDeadline), 'days');
-            // });
-    
-            // console.log("sorted documents: ", newDocuments);
-
-            // console.log("test moments: ", moment('2023-06-18').diff(moment('2023-07-18'), 'days'));
-
             set_documents(documents);
-
-            // dispatch all documents into state...
-            // dispatch(documentsActions.set_Documents([...response.data]));
-            // dispatch(documentsActions.set_Documents([...filteredDocuments]));
-            // dispatch(documentsActions.set_Documents([...newDocuments]));
-
-            // set_documents([...response.data]);
-
-            // filterDocuments([...response.data]);
-
-            // filterOptions([...response.data]);
-    
-            // props.set_projects(updatedProjects);
-    
-            // set_showSpinner_CreateUpdateProject(false);
         }))
         .catch((error) => {
             console.log("error: ", error);

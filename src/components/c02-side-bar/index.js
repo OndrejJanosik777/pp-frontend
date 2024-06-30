@@ -58,6 +58,16 @@ const C02_SIDEBAR = (props) => {
             >
                 <div className='co2-button-name'>Test Center</div>
             </button>
+            <button 
+                className='co2-button-container'
+                onClick={ () => {
+                    dispatch(sideBarActions.set_extendedSideBar(false));
+                    navigate('/test-center/');
+                    }
+                }
+            >
+                <div className='co2-button-name'>Hand Calculations</div>
+            </button>
         </div>
         <div  className='c02-right-section'>
             <img 
