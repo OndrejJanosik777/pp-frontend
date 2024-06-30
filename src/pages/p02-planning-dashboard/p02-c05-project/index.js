@@ -273,9 +273,9 @@ const P02_C05_PROJECT = (props) => {
             <div>{`CVE: ${props.project.cve_lead === null ? "..." : props.project.cve_lead.employee_initials}`}</div>
             <div>{`ENVIRO: ${props.project.enviromental_lead === null ? "..." : props.project.enviromental_lead.employee_initials}`}</div>
             <div>{`STRESS: ${props.project.stress_lead === null ? "..." : props.project.stress_lead.employee_initials}`}</div>
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <img
-                    className='logo-icons'
+                    style={{ maxWidth: '90%', maxHeight: '2rem', margin: '0.2rem 0.2rem' }}
                     src={props.project.logo}
                     alt=''
                     onClick={() => showState()} 

@@ -475,8 +475,15 @@
     }
 
     .logo-icons {
-        width: 100%;
-        margin: 0.2rem 0rem;
+        max-width: 90%;
+        max-height: 2rem;
+        margin: 0.2rem 0.2rem;
+        // border: 1px solid black;
         // transform: rotate(45deg);
+    }
+
+    .test {
+        display: flex;
+        justify-content: center;
     }
 }
