@@ -7,6 +7,7 @@ import planeSVG from './assets/airplane.svg';
 import P02_C05_C01_MILESTONE_TAG from './p02-c05-c01-milestone-tag';
 import './index.scss';
 import * as dashboardActions from '../../../app/features/dashboardSlice';
+import { hover } from '@testing-library/user-event/dist/hover';
  
 const P02_C05_PROJECT = (props) => {
     const dispatch = useDispatch();
@@ -267,11 +268,18 @@ const P02_C05_PROJECT = (props) => {
             className='p02-c05-left-container' 
             style={style_leftContainer}
         >
-            <div onClick={() => showState()} >{`#${props.project.id} : ${props.project.number}`}</div>
-            <div style={{ textAlign: "center"}}>
+            <div 
+                style={{ borderBottom: "1px solid gray", width: "100%", textAlign: "center", fontWeight: "bold" }}
+                onClick={() => showState()} 
+            >
+                {`#${props.project.id} : ${props.project.number}`}
+            </div>
+            <div 
+                style={{ textAlign: "center", width: "100%", paddingTop: "0.2rem"}}
+            >
                 {props.project.name}
             </div>
-            <div style={{ textAlign: "center", width: "100%", borderBottom: "1px solid gray", borderTop: "1px solid gray", margin: "0.5rem 0"}}>
+            <div style={{ textAlign: "center", width: "100%", borderBottom: "1px solid gray", borderTop: "1px solid gray", margin: "0.2rem 0"}}>
                 {props.project.short_name}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem" }}>
