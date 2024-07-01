@@ -268,11 +268,37 @@ const P02_C05_PROJECT = (props) => {
             style={style_leftContainer}
         >
             <div onClick={() => showState()} >{`#${props.project.id} : ${props.project.number}`}</div>
-            <div>{props.project.name}</div>
-            <div>{props.project.short_name}</div>
-            <div>{`CVE: ${props.project.cve_lead === null ? "..." : props.project.cve_lead.employee_initials}`}</div>
-            <div>{`ENVIRO: ${props.project.enviromental_lead === null ? "..." : props.project.enviromental_lead.employee_initials}`}</div>
-            <div>{`STRESS: ${props.project.stress_lead === null ? "..." : props.project.stress_lead.employee_initials}`}</div>
+            <div style={{ textAlign: "center"}}>
+                {props.project.name}
+            </div>
+            <div style={{ textAlign: "center", width: "100%", borderBottom: "1px solid gray", borderTop: "1px solid gray", margin: "0.5rem 0"}}>
+                {props.project.short_name}
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem" }}>
+                <div>
+                    {`CVE LEAD: `}
+                </div>
+                <div>
+                    {`${props.project.cve_lead === null ? "..." : props.project.cve_lead.employee_initials}`}
+                </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem" }}>
+                <div>
+                    {`ENV LEAD: `}
+                </div>
+                <div>
+                    {`${props.project.enviromental_lead === null ? "..." : props.project.enviromental_lead.employee_initials}`}
+                </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem" }}>
+                <div>
+                    {`STRESS LEAD: `}
+                </div>
+                <div>
+                    {`${props.project.stress_lead === null ? "..." : props.project.stress_lead.employee_initials}`}
+                </div>
+            </div>
+            <div style={{ width: "100%", borderBottom: "1px solid gray", margin: "0.5rem 0" }}></div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <img
                     style={{ maxWidth: '90%', maxHeight: '2rem', margin: '0.2rem 0.2rem' }}
@@ -291,6 +317,7 @@ const P02_C05_PROJECT = (props) => {
             </div> */}
             <div 
                 className='p02-c05-row-left'
+                style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem", cursor: "pointer", borderTop: "1px solid gray", marginTop: "0.2rem" }}
                 onClick={
                     () => {
                         dispatch(dashboardActions.set_activeProject(props.project));
@@ -298,10 +325,16 @@ const P02_C05_PROJECT = (props) => {
                     }
                 }
             >
-                {`Monuments: ${props.project.monuments.length}`}
+                <div>
+                    {`Monuments:`}
+                </div>
+                <div>
+                    {`${props.project.monuments.length}`}
+                </div>
             </div>
             <div 
                 className='p02-c05-row-left'
+                style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem", cursor: "pointer" }}
                 onClick={
                     () => {
                         dispatch(dashboardActions.set_activeProject(props.project));
@@ -311,10 +344,16 @@ const P02_C05_PROJECT = (props) => {
                     }
                 }
             >
-                {`Documents: ${documents.length}`}
+                <div>
+                    {`Documents:`}
+                </div>
+                <div>
+                    {`${documents.length}`}
+                </div>
             </div>
             <div 
                 className='p02-c05-row-left'
+                style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem", cursor: "pointer" }}
                 onClick={
                     () => {
                         dispatch(dashboardActions.set_activeProject(props.project));
@@ -322,10 +361,16 @@ const P02_C05_PROJECT = (props) => {
                     }
                 }
             >
-                {`Milestones: ${achievedMilestones.length}/${props.project.milestone_items.length}`}
+                <div>
+                    {`Milestones:`}
+                </div>
+                <div>
+                    {`${achievedMilestones.length}/${props.project.milestone_items.length}`}
+                </div>
             </div>
             <div 
                 className='p02-c05-row-left'
+                style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem", cursor: "pointer" }}
                 onClick={
                     () => {
                         dispatch(dashboardActions.set_activeProject(props.project));
@@ -333,7 +378,12 @@ const P02_C05_PROJECT = (props) => {
                     }
                 }
             >
-                {`Tasks: ${completedTasks}/${totalTasks}`}
+                <div>
+                    {`Tasks:`}
+                </div>
+                <div>
+                    {`${completedTasks}/${totalTasks}`}
+                </div>
             </div>
         </div>
         <div style={middleStyle}>
