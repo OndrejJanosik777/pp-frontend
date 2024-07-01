@@ -302,7 +302,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         {/* LINE */}
         <div className='p02-c05-c01-milestone-line' >{
             milestone_item.milestone_item_type !== undefined ?
-            milestone_item.milestone_item_type.short_name :
+            `${milestone_item.milestone_item_type.short_name} : ${moment(milestone_item.date).format('D-MMM-YYYY')}` :
             ''
         }</div>
         {/* MILESTONE TAG */}
@@ -314,7 +314,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                         "p02-c05-c01-dragable" :
                         "p02-c05-c01-not-dragable"
                     }
-                    title={props.milestone_item.milestone_item_type.name + '\n' + props.milestone_item.date}
+                    title={props.milestone_item.milestone_item_type.name + '\n' + moment(props.milestone_item.date).format('D-MMM-YYYY')}
                     onContextMenu={(e) => contextMenuClicked(e)}
                     onClick={ userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_milestone_item" ) !== -1 ? 
                     (e) => mouseOverMilestoneClicked(e) :
