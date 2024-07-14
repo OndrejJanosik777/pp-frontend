@@ -191,12 +191,12 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         let method = 'patch';
 
         if (document.getElementById('logo').files.length > 0 && document.getElementById('logo_updated').checked) {
-            data = { ...data, logo: document.getElementById('logo').files[0] };
-            method = 'put';
+            data = { ...data, logo_2: document.getElementById('logo').files[0] };
+            method = 'patch';
         }
         else if (document.getElementById('logo').files.length === 0 && document.getElementById('logo_updated').checked) {
-            data = { ...data, logo: null };
-            method = 'put';
+            data = { ...data, logo_2: null };
+            method = 'patch';
         }
 
         console.log('method: ', method);

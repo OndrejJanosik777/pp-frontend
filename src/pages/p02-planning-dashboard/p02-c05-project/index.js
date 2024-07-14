@@ -310,7 +310,7 @@ const P02_C05_PROJECT = (props) => {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <img
                     style={{ maxWidth: '90%', maxHeight: '2rem', margin: '0.2rem 0.2rem' }}
-                    src={props.project.logo}
+                    src={`https://res.cloudinary.com/dpdthtsnm/${props.project.logo_2}`}
                     alt=''
                     onClick={() => showState()} 
                 />
