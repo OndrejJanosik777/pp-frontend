@@ -10,6 +10,8 @@ import magnifier from './assets/magnifier.png';
 import * as apiActions from '../../../app/features/api/apiSlice';
 import * as dashboardActions from '../../../app/features/dashboardSlice';
 import './index.scss';
+import '../../../styles/tables.scss';
+import '../../../styles/forms.scss';
 import axios from 'axios'; 
 
 const P02_C02_MANAGE_PROJECTS = (props) => {
@@ -40,6 +42,8 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         // console.log('logo: ', document.getElementById('logo').files);
 
         console.log('employees: ', employees);
+        console.log('projects: ', projects);
+        console.log('selectedItem: ', selectedItem);
     }
 
     const checkboxChanged = (item) => {
@@ -293,12 +297,12 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
     return ( <div className='p02-c02-manage-projects'>
         <div className='p02-c02-background'></div>
         <div className='p02-c02-window'>
+            {/* TOP SECTION - NAVIGATION BAR */}
             <div className='p02-c02-nav-bar'>
-                <div className='p02-c02-nav-bar-left'>
-                    {/* <img className='p02-c02-icons' src={delete_cross} alt='' /> */}
+                <div>
                     {userPermissions.findIndex(elem => elem.name === "create_project" || elem.name ===  "all_permissions") !== -1 ?
                     <img 
-                        className='p02-c02-icons' 
+                        className='icons-01' 
                         src={create_new} 
                         alt='' 
                         onClick={() => {
@@ -311,46 +315,59 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                     <div></div>
                     }
                 </div>
-                <div className='p02-c02-nav-bar-right'>
-                    <div className='p02-c02-textbox-container'>
-                        <input className='p02-c02-textbox' type='text' placeholder='Search ...' />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div style={{
+                        height: '20px',
+                        display: 'flex', justifyContent: 'center', alignItems: 'center',
+                        padding: '0 5px'
+                    }}>
+                        <input style={{ width: '160px', height: '20px' }} type='text' placeholder='Search ...' />
                         <img className='p02-c02-img' src={magnifier} alt='' />
                     </div>
-                    <img className='p02-c02-icons' src={edit_panels} alt='' />
+                    <img className='icons-01' src={edit_panels} alt='' />
                     <img 
-                        className='p02-c02-icons' 
+                        className='icons-01' 
                         src={questionmark_blue} 
                         alt='' 
                         onClick={() => showState()}
                     />
-                    <input type='button' className='button' value={'X'} onClick={() => dispatch(dashboardActions.set_showModal_manageProjects(false))} />
+                    <input type='button' className='button-02' value={'X'} onClick={() => dispatch(dashboardActions.set_showModal_manageProjects(false))} />
                 </div>
             </div>
-            <div className='p02-c02-content'>
-                <table>
+            {/* MIDDLE SECTION - TO DISPLAY ITEMS */}
+            <div className='table-01-container'>
+                <table >
                     <thead>
                         <tr>
+                            <th>id</th>
                             <th>show</th>
                             <th>name</th>
                             <th>number</th>
+                            <th>logo</th>
                             <th>short name</th>
                             <th>CVE</th>
                             <th>STRESS</th>
                             <th>ENVIRO</th>
+                            <th>PLE</th>
+                            <th>PLP</th>
                             <th>actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {projects.map((item) => {
                             return <tr key={Math.random() * 100000}>
-                                <td><input type='checkbox' checked={item.displayed} onChange={() => checkboxChanged(item)} /></td>
+                                <td>{item.id}</td>
+                                <td className='center'><input type='checkbox' checked={item.displayed} onChange={() => checkboxChanged(item)} /></td>
                                 <td>{item.name}</td>
                                 <td>{item.number}</td>
+                                <td className='logo'><img src={`https://res.cloudinary.com/dpdthtsnm/${item.logo_2}`} alt='' style={{height: '17px'}} ></img></td>
                                 <td>{item.short_name}</td>
                                 <td>{item.cve_lead != null ? item.cve_lead.employee_initials : ""}</td>
                                 <td>{item.stress_lead != null ? item.stress_lead.employee_initials : ""}</td>
                                 <td>{item.enviromental_lead != null ? item.enviromental_lead.employee_initials : ""}</td>
-                                <td>
+                                <td>{item.ple != null ? item.ple.employee_initials : ""}</td>
+                                <td>{item.plp != null ? item.plp.employee_initials : ""}</td>
+                                <td className='center'>
                                     {userPermissions.find(elem => elem.name === "edit_project"  || elem.name ===  "all_permissions") ?
                                         <img className='p02-c02-icons' src={pencil_edit} alt='' onClick={() => switchToUpdateMode(item)} />
                                         :
@@ -367,72 +384,21 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                     </tbody>
                 </table>
             </div>
-            <div className={createMode || updateMode ? 'p02-c02-win-footer' : 'p02-c02-win-footer-hidden'}>
-                <div className='p02-c02-footer-row1'>
-                    <div className='p02-c02-row1-col1'>name</div>
-                    <div className='p02-c02-row1-col2'>
-                        <div className='p02-c02-textbox-container'>
-                            <input 
-                                className='p02-c02-textbox' 
-                                type='text' 
-                                id='name' 
-                                placeholder='...' 
-                                defaultValue={selectedItem === undefined ? "" : selectedItem.name} 
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className='p02-c02-footer-row1'>
-                    <div className='p02-c02-row1-col1'>number</div>
-                    <div className='p02-c02-row1-col2'>
-                        <div className='p02-c02-textbox-container'>
-                            <input 
-                                className='p02-c02-textbox' 
-                                type='text' 
-                                id='number' 
-                                placeholder='...' 
-                                defaultValue={selectedItem === undefined ? "" : selectedItem.number}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className='p02-c02-footer-row1'>
-                    <div className='p02-c02-row1-col1'>short name</div>
-                    <div className='p02-c02-row1-col2'>
-                        <div className='p02-c02-textbox-container'>
-                            <input 
-                                className='p02-c02-textbox' 
-                                type='text' 
-                                id='short_name' 
-                                placeholder='...'
-                                defaultValue={selectedItem === undefined ? "" : selectedItem.short_name} 
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className='p02-c02-footer-row2'>
-                    <div className='p02-c02-row1-col1'>Logo</div>
-                    <div className='p02-c02-row1-col2'>
-                        <div className='p02-c02-textbox-container'>
-                            <input className='p02-c02-textbox' type='file' id='logo' placeholder='...' />
-                        </div>
-                    </div>
-                    {updateMode ? 
-                        <div className='p02-c02-row1-col2'>
-                            <div className='p02-c02-textbox-container'>
-                                <label>Update Logo</label>
-                                <input className='p02-c02-textbox' type='checkbox' id='logo_updated' />
-                            </div>
-                        </div> :
-                        <div></div>
-                    }
-                </div>
-                <div className='p02-c02-footer-row2'>
-                    <div className='p02-c02-row1-col1'>CVE LEAD</div>
-                    <div className='p02-c02-row1-col2'>
-                        <div className='p02-c02-textbox-container'>
+            {/* BOTTOM SECTION - FOR CREATE / EDIT */}
+            <div className='create-edit-container'
+                style={createMode || updateMode ? { width: '100%' } : { visibility: 'collapse', height: '0' }}>
+                <table>
+                    <tr>
+                        <td className='label-01'>name</td>
+                        <td><input 
+                            className='text-01' type='text' id='name' 
+                            defaultValue={selectedItem === undefined ? "" : selectedItem.name}>
+                            </input>
+                        </td>
+                        <td className='label-01'>CVE LEAD</td>
+                        <td>
                             <select name="cve_lead" id="cve_lead">
-                                <option value="">--Please choose an option--</option>
+                                <option value="">--select--</option>
                                 {employees.map((item) => {
                                     let isSelected = false;
 
@@ -449,13 +415,44 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                     >{item.employee_initials}</option>
                                 })}
                             </select>
-                        </div>
-                    </div>
-                    <div className='p02-c02-row1-col1'>STRESS LEAD</div>
-                    <div className='p02-c02-row1-col2'>
-                        <div className='p02-c02-textbox-container'>
+                        </td>
+                        <td className='label-01'>PLE LEAD</td>
+                        <td>
+                            <select name="ple" id="ple">
+                                <option value="">--select--</option>
+                                {employees.map((item) => {
+                                    let isSelected = false;
+
+                                    if (selectedItem !== undefined) {
+                                        if (selectedItem.ple  !== null) {
+                                            isSelected = selectedItem.ple.employee_initials === item.employee_initials;
+                                        }
+                                    }
+
+                                    return <option 
+                                        value={item.employee_initials} 
+                                        key={Math.random() * 100000}
+                                        selected={isSelected}
+                                    >{item.employee_initials}</option>
+                                })}
+                            </select>
+                        </td>
+                        <td style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <label>LOGO UPLOAD</label>
+                            <input type='checkbox' id='logo_updated' style={updateMode ? {} : {visibility: 'hidden'} } />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className='label-01'>number</td>
+                        <td><input 
+                            className='text-01' type='text' id='number' 
+                            defaultValue={selectedItem === undefined ? "" : selectedItem.number}>
+                            </input>
+                        </td>
+                        <td className='label-01'>STRESS LEAD</td>
+                        <td>
                             <select name="stress_lead" id="stress_lead">
-                                <option value="">--Please choose an option--</option>
+                                <option value="">--select--</option>
                                 {employees.map((item, index) => {
                                     let isSelected = false;
 
@@ -472,13 +469,41 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                     >{item.employee_initials}</option>
                                 })}
                             </select>
-                        </div>
-                    </div>
-                    <div className='p02-c02-row1-col1'>ENVIROMENTAL LEAD</div>
-                    <div className='p02-c02-row1-col2'>
-                        <div className='p02-c02-textbox-container'>
+                        </td>
+                        <td className='label-01'>PLP LEAD</td>
+                        <td>
+                            <select name="plp" id="plp">
+                                <option value="">--select--</option>
+                                {employees.map((item) => {
+                                    let isSelected = false;
+
+                                    if (selectedItem !== undefined) {
+                                        if (selectedItem.plp  !== null) {
+                                            isSelected = selectedItem.plp.employee_initials === item.employee_initials;
+                                        }
+                                    }
+
+                                    return <option 
+                                        value={item.employee_initials} 
+                                        key={Math.random() * 100000}
+                                        selected={isSelected}
+                                    >{item.employee_initials}</option>
+                                })}
+                            </select>
+                        </td>
+                        <td><input className='p02-c02-textbox' type='file' id='logo' placeholder='...' /></td>
+                    </tr>
+                    <tr>
+                        <td className='label-01'>short name</td>
+                        <td><input 
+                            className='text-01' type='text' id='short_name' 
+                            defaultValue={selectedItem === undefined ? "" : selectedItem.short_name}>
+                            </input>
+                        </td>
+                        <td className='label-01'>ENV LEAD</td>
+                        <td>
                             <select name="enviromental_lead" id="enviromental_lead">
-                                <option value="">--Please choose an option--</option>
+                                <option value="">--select--</option>
                                 {employees.map((item) => {
                                     let isSelected = false;
 
@@ -494,14 +519,22 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                                         selected={isSelected}
                                     >{item.employee_initials}</option>
                                 })}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div className='p02-c02-footer-row2'>
-                    <div className='p02-c02-row2-col1'>
+                            </select>                            
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td className='logo'><img 
+                            src={selectedItem === undefined ? "" : `https://res.cloudinary.com/dpdthtsnm/${selectedItem.logo_2}`} 
+                            alt='' 
+                            style={{height: '17px'}} 
+                        ></img></td>
+                    </tr>
+                </table>
+                <div style={{ height: '10px', width: '100%', borderBottom: '1px solid grey' }}></div>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '5px 0px' }}>
+                    <div>
                         {showSpinner_CreateUpdateProject ?
-                            <div className="spinner-border p02-c02-spinner" role="status">
+                            <div className="spinner-border" style={{ width: '15px', height: '15px' }} role="status">
                                 <span className="sr-only"></span>
                             </div>
                             :
@@ -513,7 +546,7 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                             />
                         }
                     </div>
-                    <div className='p02-c02-row2-col2'>
+                    <div>
                         <input 
                             type='button' 
                             className='button' 
