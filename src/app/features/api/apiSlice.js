@@ -31,10 +31,12 @@ export const apiSlice = createSlice({
         update_userProfile: (state, action) => {
             state.userProfile = { ...action.payload };
         },
+        //
         fetch_taskTypes: (state, action) => { },
         update_TaskTypes: (state, action) => {
             state.taskTypes = [...action.payload];
         },
+        //
         fetch_milestoneTypes: (state, action) => { },
         update_milestoneTypes: (state, action) => {
             state.milestoneTypes = [...action.payload];
@@ -44,12 +46,14 @@ export const apiSlice = createSlice({
         update_projects: (state, action) => {
             state.projects = [...action.payload];
         },
+        //
         update_project: (state, action) => {
             let index = state.projects.findIndex(elem => elem.id === action.payload.id);
             let updatedProjects = [...state.projects];
             updatedProjects[index] = {...action.payload};
             state.projects = [...updatedProjects];
         },
+        //
         set_BaseUrl: (state, action) => {
             if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
               state.baseUrl = 'http://127.0.0.1:8000';

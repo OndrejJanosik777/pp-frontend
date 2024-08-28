@@ -173,6 +173,8 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         updateProject.name = document.getElementById('name').value;
         updateProject.number = document.getElementById('number').value;
         updateProject.short_name = document.getElementById('short_name').value;
+        updateProject.ple = document.getElementById('ple').value;
+        updateProject.plp = document.getElementById('plp').value;
 
 
         if (updateProject.name == "" || updateProject.number == "" || updateProject.short_name == "")  {
@@ -182,6 +184,8 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         let cve_lead = employees.find(elem => elem.employee_initials === document.getElementById('cve_lead').value);
         let stress_lead = employees.find(elem => elem.employee_initials === document.getElementById('stress_lead').value);
         let enviromental_lead = employees.find(elem => elem.employee_initials === document.getElementById('enviromental_lead').value);
+        let ple = employees.find(elem => elem.employee_initials === document.getElementById('ple').value);
+        let plp = employees.find(elem => elem.employee_initials === document.getElementById('plp').value);
 
         let data = {
             name: updateProject.name,
@@ -190,6 +194,8 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
             cve_lead: (cve_lead === undefined ? null : cve_lead.employee_id),
             stress_lead: (stress_lead === undefined ? null : stress_lead.employee_id),
             enviromental_lead: (enviromental_lead === undefined ? null : enviromental_lead.employee_id),
+            ple: (enviromental_lead === undefined ? null : ple.employee_id),
+            plp: (enviromental_lead === undefined ? null : plp.employee_id)
         }
 
         let method = 'patch';
@@ -253,6 +259,20 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                 updatedItems[index].enviromental_lead = {
                     "id": enviromental_lead.employee_id,
                     "employee_initials" : enviromental_lead.employee_initials
+                }
+            }
+
+            if (ple !== undefined) {
+                updatedItems[index].ple = {
+                    "id": ple.employee_id,
+                    "employee_initials" : ple.employee_initials
+                }
+            }
+
+            if (plp !== undefined) {
+                updatedItems[index].plp = {
+                    "id": plp.employee_id,
+                    "employee_initials" : plp.employee_initials
                 }
             }
 
