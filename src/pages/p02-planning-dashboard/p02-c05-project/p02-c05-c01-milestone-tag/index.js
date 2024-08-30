@@ -302,7 +302,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         {/* LINE */}
         <div className='p02-c05-c01-milestone-line' >{
             milestone_item.milestone_item_type !== undefined ?
-            `${milestone_item.milestone_item_type.short_name} : ${moment(milestone_item.date).format('D-MMM-YYYY')}` :
+            `${milestone_item.milestone_item_type.short_name} : ${moment(milestone_item.date).format('D-MMM-YY')}(KW${moment(milestone_item.date).format('WW')})` :
             ''
         }</div>
         {/* MILESTONE TAG */}
