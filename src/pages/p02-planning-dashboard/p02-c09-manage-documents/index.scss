@@ -406,19 +406,13 @@
 
             .p02-c09-footer-row2 {
                 display: flex;
-                justify-content: center;
+                justify-content: space-around;
                 align-items: center;
-                // position: absolute;
                 bottom: 0;
-                // width: 100%;
-
-                // grid-template-columns: 1fr 5fr;
-                // padding: 2px;
 
                 .p02-c09-row2-col1 {
                     text-align: right;
                     padding: 2px 10px;
-                    // width: 65px;
 
                     .p02-c09-button {
                         &:hover {
@@ -435,7 +429,6 @@
                 }
 
                 .p02-c09-row2-col2 {
-                    // text-align: right;
                     padding: 2px 10px;
 
                     .p02-c09-textbox-container {

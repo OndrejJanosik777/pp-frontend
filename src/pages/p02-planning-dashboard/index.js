@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import moment from 'moment'; 
+import moment from 'moment';  
 // icons, pictures
 import planeSVG from './assets/airplane.svg';
 import home from './assets/home.png';

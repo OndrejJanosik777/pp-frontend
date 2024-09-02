@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import moment from 'moment';
+import moment from 'moment'; 
 // assets
 import editSVG from './assets/pencil-square.svg';
 import deleteSVG from './assets/trash3.svg';
@@ -1001,34 +1001,36 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c09-footer-row2'>
-                    <div className='p02-c09-row2-col1'>
-                        {showSpinner_CreateUpdateItem ?
-                        <div className="spinner-border p02-c09-spinner" role="status">
-                            <span className="sr-only"></span>
+                    <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+                        <div className='p02-c09-row2-col1'>
+                            {showSpinner_CreateUpdateItem ?
+                            <div className="spinner-border p02-c09-spinner" role="status">
+                                <span className="sr-only"></span>
+                            </div>
+                            :
+                            <input 
+                                type='button' 
+                                className='p02-c09-button' 
+                                value={updateMode ? 'Update' : 'Create'} 
+                                onClick={updateMode ? 
+                                    () => updateItem(selectedItem, selectedItemIndex) 
+                                    : 
+                                    createNewItem} 
+                            />
+                            }
                         </div>
-                        :
-                        <input 
-                            type='button' 
-                            className='p02-c09-button' 
-                            value={updateMode ? 'Update' : 'Create'} 
-                            onClick={updateMode ? 
-                                () => updateItem(selectedItem, selectedItemIndex) 
-                                : 
-                                createNewItem} 
-                        />
-                        }
-                    </div>
-                    <div className='p02-c09-row2-col2'>
-                        <input 
-                            type='button' 
-                            className='p02-c09-button' 
-                            value={updateMode ? 'Cancel' : 'Close'} 
-                            onClick={updateMode ? () => {
-                                // clearForm();
-                                set_updateMode(false);
-                                // set_createMode(true);
-                            } : () => set_createMode(false)} 
-                        />
+                        <div className='p02-c09-row2-col2'>
+                            <input 
+                                type='button' 
+                                className='p02-c09-button' 
+                                value={updateMode ? 'Cancel' : 'Close'} 
+                                onClick={updateMode ? () => {
+                                    // clearForm();
+                                    set_updateMode(false);
+                                    // set_createMode(true);
+                                } : () => set_createMode(false)} 
+                            />
+                        </div>
                     </div>
                     {
                         updateMode ?
