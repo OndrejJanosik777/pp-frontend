@@ -17,7 +17,7 @@ import * as apiActions from '../../../app/features/api/apiSlice';
 import * as dashboardActions from '../../../app/features/dashboardSlice';
 // styles
 import './index.scss';
-
+ 
 const P02_C06_MANAGE_MILESTONES = (props) => {
     const dispatch = useDispatch();
 
@@ -403,7 +403,7 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
                                 <td>{milestone.milestone_id}</td>
                                 <td>{milestone.milestone_type.short_name}</td>
                                 <td>{milestone.milestone_name}</td>
-                                <td>{milestone.milestone_date}</td>
+                                <td>{milestone.milestone_date != null ? moment(milestone.milestone_date).format("DD-MMM-YYYY") : ''}</td>
                                 <td>{milestone.milestone_comment}</td>
                                 <td>
                                     { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "edit_milestone_item" ) !== -1 ? 

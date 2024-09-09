@@ -443,15 +443,15 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                                 <td>{task.task_id}</td>
                                 <td>{task.task_type_name}</td>
                                 <td>{task.task_status_percentage}</td>
-                                <td>{task.task_deadline}</td>
-                                <td>{task.milestone_deadline}</td>
+                                <td>{task.task_deadline != null ? moment(task.task_deadline).format("DD-MMM-YYYY") : ''}</td>
+                                <td>{task.milestone_deadline != null ? moment(task.milestone_deadline).format("DD-MMM-YYYY") : ''}</td>
                                 <td>{task.milestone_short_name}</td>
                                 <td>{task.task_estimated_hours}</td>
                                 <td>{task.task_booked_hours}</td>
                                 <td>{task.task_comment}</td>
                                 <td>{task.document_number}</td>
                                 <td>{task.document_acceptance_status}</td>
-                                <td>{task.document_last_status_update}</td>
+                                <td>{task.document_last_status_update != null ? moment(task.document_last_status_update).format("DD-MMM-YYYY") : ''}</td>
                                 <td>
                                     {/* { userPermissions.findIndex(elem => elem === "all_permissions" || elem === "edit_task" ) !== -1 ?
                                         <img 

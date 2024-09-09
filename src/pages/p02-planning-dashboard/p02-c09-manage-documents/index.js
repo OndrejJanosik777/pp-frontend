@@ -19,7 +19,7 @@ import arrow_down from './assets/arrow-down-svgrepo-com.svg';
 import * as apiActions from '../../../app/features/api/apiSlice';
 import * as dashboardActions from '../../../app/features/dashboardSlice';
 // styles
-import './index.scss';
+import './index.scss'; 
 
 const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const dispatch = useDispatch();
@@ -69,6 +69,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     }]);
     // 
     const [updateMode, set_updateMode] = useState(false);
+    const [updateTask, set_updateTask] = useState(true);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
@@ -79,6 +80,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [showFilterDeadline, set_showFilterDeadline] = useState(false);
     const [filteredMilestones, set_filteredMilestones] = useState([]);
     const [cmit_short_names, set_cmit_short_names] = useState([]);
+    const [task_types, set_task_types] = useState([{ "task_type_id": null, "task_type_name": null }])
+    const [milestone_items, set_milestone_items] = useState([{ "milestone_item_id": null, "milestone_item_name": null }])
+    const [employees, set_employees] = useState([{ "employee_id": null, "employee_initials": null }])
 
     useEffect(() => {
         set_documents_reduxStateFormat([...activeProject.documents]);
@@ -109,6 +113,9 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         console.log('cmit_short_names: ', cmit_short_names);
         console.log('filteredMilestones: ', filteredMilestones);
         console.log('showSpinner_CreateUpdateItem: ', showSpinner_CreateUpdateItem);
+        console.log('task_types: ', task_types);
+        console.log('milestone_items: ', milestone_items);
+        console.log('employees: ', employees);
     }
 
     const clearForm = () => {
@@ -129,6 +136,102 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     }
 
     const createNewItem = () => {
+        if (updateTask) {
+            createDocumentAndTask();
+        } 
+        else {
+            createDocument();
+        }
+    }
+
+    const createDocumentAndTask = () => {
+        // get data from form for Document
+        let document_name = document.getElementById('name').value;
+        let document_number = document.getElementById('number').value;
+        let document_revision = document.getElementById('revision').value;
+        let document_deadline = document.getElementById('deadline').value;
+        let document_deadline_second = document.getElementById('deadline_second').value;
+        let document_sended_on = document.getElementById('sended_on').value;
+        let document_acceptance_status = document.getElementById('acceptance_status').value;
+        let document_comment = document.getElementById('comment').value;
+        let document_monuments = [];
+        let document_project = activeProject.id;
+        let document_author = null;
+        // get data from form for Task
+        let task_type = document.getElementById('task_type').value;
+        let task_estimated_hours = document.getElementById('task_estimated_hours').value;
+        let task_booked_hours = document.getElementById('task_booked_hours').value;
+        let task_comment = document.getElementById('task_comment').value;
+        let task_milestone_item = parseInt(document.getElementById('task_milestone_item').value);
+        let task_status = document.getElementById('task_status').value;
+        let task_employee = parseInt(document.getElementById('task_employee').value);
+        let task_deadline = document.getElementById('task_deadline').value;
+        //
+        monuments.map((monument) => {
+            if (monument.isSelected) {
+                document_monuments.push(monument.id);
+            }
+        })
+        // check required data
+        if (document_name === "") return alert('missing "document_name"');
+        if (document_number === "") return alert('missing "document_number"');
+        if (document_revision === "") return alert('missing "revision"');
+        if (document_deadline === "") document_deadline = null;        
+        if (document_deadline_second === "") document_deadline_second = null;        
+        if (document_sended_on === "") document_sended_on = null;        
+        if (document_acceptance_status === "") return alert('missing "acceptance_status"');
+        if (document_comment === "") return alert('missing "comment"');
+        if (document_monuments.length === 0) return alert('missing "monuments"');
+
+        set_showSpinner_CreateUpdateItem(true);
+
+
+        axios({
+            method: 'post',
+            url: baseUrl + `/company/create-document-and-task/`,
+            headers: {
+                "Authorization": token
+            },
+            data: {
+                // document data
+                document_name: document_name,
+                document_number: document_number,
+                document_revision: document_revision,
+                document_last_status_update: moment().format('YYYY-MM-DD'),
+                document_deadline: document_deadline_second,
+                document_deadline_second: document_sended_on,
+                document_sended_on: document_sended_on,
+                document_acceptance_status: document_acceptance_status,
+                document_comment: document_comment,
+                document_monuments: document_monuments,
+                document_project: document_project,
+                document_author: document_author,
+                // task data
+                task_task_type: activeProject.id,
+                task_estimated_hours: activeProject.id,
+                task_booked_hours: activeProject.id,
+                task_comment: activeProject.id,
+                task_milestone_item: activeProject.id,
+                task_status: activeProject.id,
+                task_employee: activeProject.id,
+                task_task_deadline: activeProject.id,
+            }
+        })
+        .then((response) => {
+
+        })
+        .catch((error) => {
+            console.log("error: ", error);
+
+            let message = error.message + "\n" + error.response.data;
+
+            alert(message);
+
+            set_showSpinner_CreateUpdateItem(false);
+        })
+    }
+
+    const createDocument = () => {
         // 1 - create new item in database
         // 2 - create new item in local state
         // 3 - create new item in redux store (...update project)
@@ -290,7 +393,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             }
         })
         .then((response => {
-            let new_documents = [...response.data];
+            let new_documents = [...response.data.documents];
 
             let new_document_cmit_short_names = [];
 
@@ -309,6 +412,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             set_showSpinner_FetchingDocuments(false);
 
             set_cmit_short_names([...new_document_cmit_short_names]);
+
+            set_task_types([...response.data.task_types]);
+
+            set_milestone_items([...response.data.milestone_items]);
+
+            set_employees([...response.data.employees]);
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -641,12 +750,6 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         <div className='p02-c09-window'>
             <div className='p02-c09-nav-bar'>
                 <div className='p02-c09-nav-bar-left'>
-                    {/* <img 
-                        className='p02-c09-icons' 
-                        src={delete_cross} 
-                        alt=''
-                        onClick={showState}
-                    /> */}
                     { userPermissions.findIndex(elem => elem.name === "all_permissions" || elem.name === "create_document" ) !== -1 ?
                         <img 
                             className='p02-c09-icons' 
@@ -876,6 +979,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 </table>
             </div>
             <div className={createMode || updateMode ? 'p02-c09-win-footer' : 'p02-c09-win-footer-hidden'}>
+                <div className='p02-c09-footer-row1' style={{ width: "100%", display: "flex", justifyContent: "center" }}>DOCUMENT DATA:</div>
                 <div className='p02-c09-footer-row1'>
                     <div className='p02-c09-row1-col1'>name</div>
                     <div className='p02-c09-row1-col2'>
@@ -910,8 +1014,6 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             />
                         </div>
                     </div>
-                </div>
-                <div className='p02-c09-footer-row1'>
                     <div className='p02-c09-row1-col1'>deadline 1</div>
                     <div className='p02-c09-row1-col2'>
                         <div className='p02-c09-textbox-container'>
@@ -953,12 +1055,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                         <div className='p02-c09-textbox-container'>
                             <select 
                                 id="acceptance_status" 
-                                // className='p02-c09-textbox-short'
-                                // selectedIndex={selectedIndex}
-                                // onClick={() => console.log('option clicked')}
-                                // onChange={document.getElementById(`${item.short_name} : ${item.name}`).selected = true}
                             >
-                                <option value="" id='default-milestonetype'>--Please choose an option--</option>
+                                <option value="" id='default-milestonetype'>--select--</option>
                                 <option id='in_work' value='in work'>in work</option>
                                 <option id='check_loop' value='check loop'>check loop</option>
                                 <option id='approved' value='approved'>approved</option>
@@ -970,9 +1068,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c09-footer-row1'>
-                    <div className='p02-c09-row1-col1-large'>Select monuments affected with document:</div>
-                </div>
-                <div className='p02-c09-footer-row1'>
+                    <div >Select monuments affected with document:</div>
                     <div className='p02-c09-monument-container'>
                         {monuments.map((monument, index) => {
                             return <div 
@@ -989,17 +1085,132 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 </div>
                 <div className='p02-c09-footer-row1'>
                     <div className='p02-c09-row1-col1'>comment</div>
+                    <div className='p02-c09-row1-col2' style={{ width: "100%" }}>
+                        <div className='p02-c09-textbox-container' style={{ width: "100%" }}>
+                            <input 
+                                type='text' 
+                                // className='p02-c09-textbox' 
+                                style={{ height: "20px", width: "100%" }}
+                                id='comment' 
+                                defaultValue={"..."}
+                            />
+                        </div>
+                    </div>
+                </div>
+                {/* TASK DATA SECTION */}
+                <div className='p02-c09-footer-row1' style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                    <input type='checkbox' id="checkbox" name="checkbox" onChange={ () => set_updateTask(!updateTask) } checked={updateTask} />
+                    <div style={{ paddingLeft: "2px" }}>TASK DATA:</div>
+                </div>
+                <div className='p02-c09-footer-row1' style={updateTask ? { visibility: "visible" } : { visibility: "hidden" }}>
+                    <div className='p02-c09-row1-col1'>estimated hours</div>
                     <div className='p02-c09-row1-col2'>
                         <div className='p02-c09-textbox-container'>
                             <input 
+                                className='p02-c09-textbox-short' 
                                 type='text' 
-                                className='p02-c09-textbox' 
-                                id='comment' 
+                                id='task_estimated_hours' 
+                                defaultValue={40}
+                            />
+                        </div>
+                    </div>
+                    <div className='p02-c09-row1-col1'>booked hours</div>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <input 
+                                className='p02-c09-textbox-short' 
+                                type='text' 
+                                id='task_booked_hours' 
+                                defaultValue={0}
+                            />
+                        </div>
+                    </div>
+                    <div className='p02-c09-row1-col1'>status (%)</div>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <input 
+                                className='p02-c09-textbox-short' 
+                                type='text' 
+                                id='task_status' 
+                                defaultValue={0}
+                            />
+                        </div>
+                    </div>
+                    <label 
+                            htmlFor='milestone_item_type' 
+                            className='p02-c09-row1-col1'
+                    >task type</label>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <select 
+                                id="task_type" 
+                            >
+                                <option value="" id='task_type'>--select--</option>
+                                {task_types.map((item) => {
+                                    return <option id={item.task_type_id} value={item.task_type_id}>{item.task_type_name}</option>
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                    <label 
+                            htmlFor='milestone_item_type' 
+                            className='p02-c09-row1-col1'
+                    >milestone item</label>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <select 
+                                id="task_milestone_item" 
+                            >
+                                <option value="" id='task_milestone_item'>--select--</option>
+                                {milestone_items.map((item) => {
+                                    return <option id={item.milestone_item_id} value={item.milestone_item_id}>{item.milestone_item_name}</option>
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                    <label 
+                            htmlFor='milestone_item_type' 
+                            className='p02-c09-row1-col1'
+                    >employee</label>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <select 
+                                id="task_employee" 
+                            >
+                                <option value="" id='task_employee'>--select--</option>
+                                {employees.map((item) => {
+                                    return <option id={item.employee_id} value={item.employee_id}>{item.employee_initials}</option>
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                    <div className='p02-c09-row1-col1'>deadline</div>
+                    <div className='p02-c09-row1-col2'>
+                        <div className='p02-c09-textbox-container'>
+                            <input 
+                                type='date' 
+                                className='p02-c09-date' 
+                                id='task_deadline' 
                                 placeholder='...' 
                             />
                         </div>
                     </div>
                 </div>
+                <div className='p02-c09-footer-row1' style={updateTask ? { visibility: "visible" } : { visibility: "hidden" }}>
+                    <div className='p02-c09-row1-col1'>comment</div>
+                    <div className='p02-c09-row1-col2' style={{ width: "100%" }}>
+                        <div className='p02-c09-textbox-container' style={{ width: "100%" }}>
+                            <input 
+                                type='text' 
+                                // className='p02-c09-textbox' 
+                                style={{ height: "20px", width: "100%" }}
+                                id='task_comment' 
+                                defaultValue={"..."}
+                            />
+                        </div>
+                    </div>
+                </div>
+                {/* BUTTON SECTION */}
                 <div className='p02-c09-footer-row2'>
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
                         <div className='p02-c09-row2-col1'>
@@ -1051,6 +1262,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                         <div></div>
                     }
                 </div>
+                
             </div>
         </div>
 

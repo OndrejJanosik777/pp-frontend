@@ -425,8 +425,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 <td>{task.task_id}</td>
                                 <td>{task.task_type_name}</td>
                                 <td>{task.task_status_percentage}</td>
-                                <td>{task.task_deadline}</td>
-                                <td>{task.milestone_deadline}</td>
+                                <td>{task.task_deadline != null ? moment(task.task_deadline).format("DD-MMM-YYYY") : ''}</td>
+                                <td>{task.milestone_deadline != null ? moment(task.milestone_deadline).format("DD-MMM-YYYY") : ''}</td>
                                 <td>{task.milestone_short_name}</td>
                                 <td>{task.task_estimated_hours}</td>
                                 <td>{task.task_booked_hours}</td>

@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter> 
       <Routes>
         <Route path="/" element={<P01_LANDING_PAGE />} ></Route>
         <Route path="/Dashboard/" element={<P02_PLANNING_DASHBOARD />} ></Route>
@@ -32,9 +32,6 @@ root.render(
       </Routes>
     </BrowserRouter>
   </Provider>
-  // <React.StrictMode>
-  //   <App />
-  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

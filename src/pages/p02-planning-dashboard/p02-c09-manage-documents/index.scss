@@ -20,7 +20,7 @@
         // margin-top: 5rem;
         background-color: #F1F1F1;
         border: 2px solid #A8A8A8;
-        height: 35rem;
+        height: 50rem;
         width: 100rem;
         opacity: 1;
         z-index: 20;
@@ -322,8 +322,9 @@
 
                 .p02-c09-row1-col1 {
                     text-align: left;
-                    padding: 2px 10px;
+                    padding: 2px 5px;
                     width: 110px;
+                    width: fit-content;
                 }
 
                 .p02-c09-row1-col1-large {
