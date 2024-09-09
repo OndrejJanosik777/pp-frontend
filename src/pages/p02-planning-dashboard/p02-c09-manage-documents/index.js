@@ -182,9 +182,17 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         if (document_acceptance_status === "") return alert('missing "acceptance_status"');
         if (document_comment === "") return alert('missing "comment"');
         if (document_monuments.length === 0) return alert('missing "monuments"');
+        // check required data
+        if (task_type === "") return alert('missing "task_type"');
+        if (task_estimated_hours === "") return alert('missing "task_estimated_hours"');
+        if (task_booked_hours === "") return alert('missing "task_booked_hours"');
+        if (task_comment === "") return alert('missing "task_comment"');
+        if (task_milestone_item === "") return alert('missing "task_milestone_item"');
+        if (task_status === "") return alert('missing "task_status"');
+        if (task_employee === "") task_employee = null; 
+        if (task_deadline === "") return alert('missing "task_deadline"');
 
         set_showSpinner_CreateUpdateItem(true);
-
 
         axios({
             method: 'post',
@@ -198,8 +206,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 document_number: document_number,
                 document_revision: document_revision,
                 document_last_status_update: moment().format('YYYY-MM-DD'),
-                document_deadline: document_deadline_second,
-                document_deadline_second: document_sended_on,
+                document_deadline: document_deadline,
+                document_deadline_second: document_deadline_second,
                 document_sended_on: document_sended_on,
                 document_acceptance_status: document_acceptance_status,
                 document_comment: document_comment,
@@ -207,18 +215,18 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                 document_project: document_project,
                 document_author: document_author,
                 // task data
-                task_task_type: activeProject.id,
-                task_estimated_hours: activeProject.id,
-                task_booked_hours: activeProject.id,
-                task_comment: activeProject.id,
-                task_milestone_item: activeProject.id,
-                task_status: activeProject.id,
-                task_employee: activeProject.id,
-                task_task_deadline: activeProject.id,
+                task_task_type: task_type,
+                task_estimated_hours: task_estimated_hours,
+                task_booked_hours: task_booked_hours,
+                task_comment: task_comment,
+                task_milestone_item: task_milestone_item,
+                task_status: task_status,
+                task_employee: task_employee,
+                task_task_deadline: task_deadline,
             }
         })
         .then((response) => {
-
+            set_showSpinner_CreateUpdateItem(false);
         })
         .catch((error) => {
             console.log("error: ", error);
