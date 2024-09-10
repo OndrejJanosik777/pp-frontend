@@ -226,6 +226,30 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             }
         })
         .then((response) => {
+            // new item created succesfully
+            let newDocument_localStateFormat = {
+                document_id: response.data.document_id,
+                document_name: document_name,
+                document_number: document_number,
+                document_revision: document_revision,
+                document_last_status_update: moment().format('YYYY-MM-DD'),
+                document_deadline: document_deadline,
+                document_deadline_second: document_deadline_second,
+                document_sended_on: document_sended_on,
+                document_acceptance_status: document_acceptance_status,
+                document_comment: document_comment,
+                document_author_username: document_author,
+                // document_cmit_short_name: milestone_items.find((element) => element.id === parseInt(document.getElementById('task_milestone_item').value)).milestone_item_name,
+                document_cmit_short_name: null,
+                document_cmi_deadline: task_deadline,
+                document_status: task_status,
+                document_monuments: document_monuments
+            }
+
+            // 2 - 
+            let updatedDocuments_localStateFormat = [...documents_localStateFormat, newDocument_localStateFormat];
+            set_documents_localStateFormat([...updatedDocuments_localStateFormat]);
+
             set_showSpinner_CreateUpdateItem(false);
         })
         .catch((error) => {
