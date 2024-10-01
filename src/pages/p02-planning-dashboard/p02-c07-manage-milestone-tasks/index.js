@@ -78,29 +78,39 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         // 2 - create in redux state & update project ...
         // console.log('activeTaskType: ', document.getElementById('task_type').value);
 
-        const task_type = taskTypes.find(
-            elem => elem.name === document.getElementById('task_type').value).id;
-        const estimated_hours = document.getElementById('estimated_hours').value;
-        const booked_hours = document.getElementById('booked_hours').value;
-        const comment = document.getElementById('comment').value;
-        // const milestone_item = props.activeMilestoneItem.id;
-        const milestone_item = activeMilestone.id;
-        // const deadline = props.activeMilestoneItem.date;
-        const deadline = activeMilestone.date;
-        const status = document.getElementById('status').value;
-        const users = [];
+        let task_type = document.getElementById('task_type').value;
+        let milestone_item = document.getElementById('milestone_item').value;
+        let employee = document.getElementById('employee').value;
+
         let certification_document = document.getElementById('certification_document').value;
+        let task_deadline = document.getElementById('task_deadline').value;
+        let estimated_hours = document.getElementById('estimated_hours').value;
+
+        let booked_hours = document.getElementById('booked_hours').value;
+        let status = document.getElementById('status').value;
+        let comment = document.getElementById('comment').value;
 
         if (task_type === "") return alert('missing task_type');
-        if (estimated_hours === "") return alert('missing estimated_hours');
-        if (booked_hours === "") return alert('missing booked_hours');
-        if (comment === "") return alert('missing comment');
         if (milestone_item === "") return alert('missing milestone_item');
-        if (status === "") return alert('missing status');
-        if (deadline === "") return alert('missing deadline');
-        // if (users === "") return alert('missing users');
-        if (certification_document === "") return alert('missing certification_document');
+        if (employee === "-1") employee = null;
+
         if (certification_document === "-1") certification_document = null;
+        if (task_deadline === "") return alert('missing task_deadline');
+        if (estimated_hours === "") return alert('missing estimated_hours');
+
+        if (booked_hours === "") return alert('missing booked_hours');
+        if (status === "") return alert('missing status');
+        if (comment === "") return alert('missing comment');
+
+        console.log(task_type)
+        console.log(milestone_item)
+        console.log(employee)
+        console.log(certification_document)
+        console.log(task_deadline)
+        console.log(estimated_hours)
+        console.log(booked_hours)
+        console.log(status)
+        console.log(comment)
 
         set_showSpinner_CreateUpdateItem(true);
 
@@ -117,13 +127,13 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                 comment: comment,
                 milestone_item: milestone_item,
                 status: status,
-                users: users,
+                employee: employee,
                 certification_document: certification_document,
-                task_deadline: deadline
+                task_deadline: task_deadline
             }
         })
         .then((response => {
-            console.log('task created succesfully: ', response.data);
+            // console.log('task created succesfully: ', response.data);
 
             set_tasks([...tasks, response.data]);
 
@@ -247,13 +257,13 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
         console.log('switchToUpdateMode: ', item)
 
-        document.getElementById('selected_task_id').value = item.task_id;
-        document.getElementById('selected_task_task_type').value = item.task_type_name;
-        document.getElementById('status').value = item.task_status_percentage;
-        document.getElementById('estimated_hours').value = item.task_estimated_hours;
-        document.getElementById('booked_hours').value = item.task_booked_hours;
-        document.getElementById('comment').value = item.task_comment;
-        document.getElementById('deadline').value = selectedItem.task_deadline;
+        // document.getElementById('selected_task_id').value = item.task_id;
+        // document.getElementById('selected_task_task_type').value = item.task_type_name;
+        // document.getElementById('status').value = item.task_status_percentage;
+        // document.getElementById('estimated_hours').value = item.task_estimated_hours;
+        // document.getElementById('booked_hours').value = item.task_booked_hours;
+        // document.getElementById('comment').value = item.task_comment;
+        // document.getElementById('task_deadline').value = selectedItem.task_deadline;
 
         set_updateMode(true);
         set_selectedItem(item);
@@ -392,6 +402,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                             <th>task</th>
                             <th>milestone</th>
                             <th>hours</th>
+                            <th>employee</th>
                             <th>task</th>
                             <th>document</th>
                             <th>possible</th>
@@ -405,6 +416,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                             <th>name</th>
                             <th>estimated</th>
                             <th>booked</th>
+                            <th>initials</th>
                             <th>comment</th>
                             <th>number</th>
                             <th>status</th>
@@ -434,6 +446,7 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 <td>{task.milestone_short_name}</td>
                                 <td>{task.task_estimated_hours}</td>
                                 <td>{task.task_booked_hours}</td>
+                                <td>{task.task_employee_initials}</td>
                                 <td>{task.task_comment}</td>
                                 <td>{task.document_number}</td>
                                 <td>{task.document_acceptance_status}</td>
@@ -467,95 +480,71 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             </div>
             {/* CREATE MODE */}
             <div className={createMode ? 'P02_C07_MANAGE_MILESTONE_TASKS-win-footer' : 'P02_C07_MANAGE_MILESTONE_TASKS-win-footer-hidden'}>
-                <div 
-                // className='P02_C07_MANAGE_MILESTONE_TASKS-footer-row1'
-                >
+                <div>
                     {
-                        <table style={{ border: '1px solid black', width: '100%', backgroundColor: 'lightgrey' }}>
-                            <tr style={{ border: '1px solid black', width: '100%' }}>
+                        <table style={{ width: '100%' }}>
+                            <tr style={{ width: '100%' }}>
                                 {/* TASK TYPE */}
-                                <td>
-                                    <label 
-                                        htmlFor='milestone_item_type' 
-                                        // className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'
-                                    >task type</label>
-                                </td>
-                                <td>
-                                    <div 
-                                    // className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'
-                                    >
-                                        <div 
-                                        // className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'
-                                        >
-                                            <select 
-                                                id="task_type" 
-                                                // value={'hello world'}
-                                            >
-                                                <option value='' id='default-milestonetype'>--Please choose an option--</option>
-                                                {taskTypes.map((item) => {
-                                                    return <option 
-                                                        key={Math.random() * 100000} 
-                                                        id={`task_type_${item.id}`} 
-                                                        value={`${item.name}`}
-                                                        // onClick={() => set_activeTaskType(item)}
-                                                        onChange={() => set_activeTaskType(item)}
-                                                    >{`${item.name}`}
-                                                    </option>
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>
+                                <td style={{ width: '10%' }}>task type</td>
+                                <td style={{ width: '20%' }}>
+                                    <select id='task_type'>
+                                        <option value='-1' id='default-task'>--select--</option>
+                                        {taskTypes.map((item) => {
+                                            return <option 
+                                                key={Math.random() * 100000} 
+                                                id={`${item.id}`} 
+                                                value={`${item.id}`}
+                                                // onClick={() => set_activeTaskType(item)}
+                                                onChange={() => set_activeTaskType(item)}
+                                            >{`${item.name}`}
+                                            </option>
+                                        })}
+                                    </select>
                                 </td>
                                 {/* MILESTONE ITEM */}
-                                <td>
-                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'>milestone</div>
-                                </td>
-                                <td>
-                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
-                                        <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
-                                            <select // TODO:
-                                                    id="milestone" 
-                                                >
-                                                    <option value='' id='default-milestonetype'>--Please choose an option--</option>
-                                                    {activeProject.milestone_items.map((item, index) => {
-                                                        return <option 
-                                                            key={Math.random() * 100000} 
-                                                            id={`${item.id}`} 
-                                                            value={`${item.id}`}
-                                                            selected={item.id === activeMilestone.id}
-                                                        >{`${item.name}`}
-                                                        </option>
-                                                    })}
-                                                </select>
-                                        </div>
-                                    </div>
+                                <td style={{ width: '10%' }}>milestone item</td>
+                                <td style={{ width: '20%' }}>
+                                    <select id="milestone_item">
+                                        <option value='-1' id='default-milestone_item'>--select--</option>
+                                        {activeProject.milestone_items.map((item, index) => {
+                                            return <option 
+                                                key={Math.random() * 100000} 
+                                                id={`${item.id}`} 
+                                                value={`${item.id}`}
+                                                selected={item.id === activeMilestone.id}
+                                            >{`${item.name}`}
+                                            </option>
+                                        })}
+                                    </select>
                                 </td>
                                 {/* EMPLOYEE */}
-                                <td>
-                                    <div 
-                                    className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'
-                                    style={{textAlign: 'left', padding: '2px 10px', width: '100px'}}
-                                    >type</div>
-                                </td>
-                                <td>
-                                    <input 
+                                <td style={{ width: '10%' }}>Employee</td>
+                                <td style={{ width: '20%' }}>
+                                    {/* <input 
                                         className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
                                         style={{width: '150px'}}
                                         type='text'
                                         id='selected_task_task_type' 
                                         value={selectedItem.task_type_name}
                                         disabled
-                                    />
+                                    /> */}
+                                        <select id="employee">
+                                            <option value='-1' id='default-employee'>--select--</option>
+                                            {employees.map((item, index) => {
+                                                return <option 
+                                                    key={Math.random() * 100000} 
+                                                    id={`${item.id}`} 
+                                                    value={`${item.id}`}
+                                                    // selected={item.id === activeMilestone.id}
+                                                >{`${item.employee_initials}`}
+                                                </option>
+                                            })}
+                                        </select>
                                 </td>
                             </tr>
-                            <tr style={{ border: '1px solid black', width: '100%' }}>
+                            <tr style={{ width: '100%' }}>
                                 {/* CERTIFICATION DOCUMENT */}
-                                <td>
-                                    <label 
-                                        htmlFor='milestone_item_type' 
-                                        className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1-w2'
-                                    >certification document</label>
-                                </td>
+                                <td>certification document</td>
                                 <td>
                                     { updateMode ?
                                         <div></div> :
@@ -580,16 +569,14 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                     }
                                 </td>
                                 {/* TASK DEADLINE */}
-                                <td>
-                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'>deadline</div> 
-                                </td>
+                                <td>task deadline</td>
                                 <td>
                                     <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
                                         <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
                                             <input 
                                                 className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
                                                 type='date' 
-                                                id='deadline' 
+                                                id='task_deadline' 
                                                 // placeholder='...' 
                                                 // value={'1.1.2024'}
                                             />
@@ -600,11 +587,9 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                 <td></td>
                                 <td></td>
                             </tr>
-                            <tr style={{ border: '1px solid black', width: '100%' }}>
+                            <tr style={{ width: '100%' }}>
                                 {/* ESTIMATED HOURS */}
-                                <td>
-                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'>estimated hours</div>
-                                </td>
+                                <td>estimated hours</td>
                                 <td>
                                     <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
                                         <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
@@ -612,18 +597,13 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                                 className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
                                                 type='number' 
                                                 id='estimated_hours' 
-                                                placeholder='...' 
-                                                
-                                                // value={taskEstimatedHours}
-                                                // onChange={(e) => set_taskEstimatedHours(e.target.value)}
+                                                defaultValue={40}
                                             />
                                         </div>
                                     </div>
                                 </td>
                                 {/* BOOKED HOURS */}
-                                <td>
-                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'>booked hours</div>
-                                </td>
+                                <td>booked hours</td>
                                 <td>
                                     <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
                                         <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
@@ -631,17 +611,13 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                                 className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
                                                 type='number' 
                                                 id='booked_hours' 
-                                                placeholder='...'
-                                                // value={taskBookedHours}
-                                                // onChange={(e) => set_taskBookedHours(e.target.value)}
+                                                defaultValue={0}
                                             />
                                         </div>
                                     </div>
                                 </td>
                                 {/* STATUS [%] */}
-                                <td>
-                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'>status (%)</div>
-                                </td>
+                                <td>status (%)</td>
                                 <td>
                                     <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
                                         <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
@@ -649,28 +625,24 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
                                                 className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
                                                 type='number' 
                                                 id='status' 
-                                                placeholder='...' 
-                                                // value={taskStatus}
-                                                // onChange={(e) => set_taskStatus(e.target.value)}
+                                                defaultValue={0} 
                                             />
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                            <tr style={{ border: '1px solid black', width: '100%' }}>
+                            <tr style={{ width: '100%' }}>
                                 {/* COMMENT */}
-                                <td>
-                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'>comment</div>
-                                </td>
-                                <td colSpan={6}>
+                                <td >comment</td>
+                                <td colSpan={5}>
                                     <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
                                         <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
                                             <input 
                                                 className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
-                                                style={{ width: '40rem' }}
+                                                style={{ width: '100%' }}
                                                 type='text' 
                                                 id='comment' 
-                                                placeholder='...' 
+                                                defaultValue={'working on task'} 
                                             />
                                         </div>
                                     </div>
@@ -706,72 +678,202 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             </div>
             {/* UPDATE MODE */}
             <div className={updateMode ? 'P02_C07_MANAGE_MILESTONE_TASKS-win-footer' : 'P02_C07_MANAGE_MILESTONE_TASKS-win-footer-hidden'}>
-                <table style={{ border: '1px solid black', width: '100%' }}>
-                    <tr style={{ border: '1px solid black', width: '100%' }}>
-                        <td>
-                            <div 
-                                className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1'
-                                style={{textAlign: 'left', padding: '2px 10px', width: '100px'}}
-                            >id</div>
-                        </td>
-                        <td>
-                            <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
-                                {activeTask.task_id}
-                            </div>
-                        </td>
-                        <td>
-                            <label 
-                                htmlFor='milestone_item_type' 
-                                className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col1-w2'
-                            >certification document</label>
-                        </td>
-                        <td>
-                            <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
-                                <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
-                                    <select 
-                                        id="certification_document" 
-                                    >
-                                        <option value="-1" id='empty-documents'>--no document--</option>
-                                        {certificationDocumentsNoTask.map((item) => {
+                <div>
+                    {
+                        <table style={{ width: '100%' }}>
+                            <tr style={{ width: '100%' }}>
+                                {/* TASK TYPE */}
+                                <td style={{ width: '10%' }}>task type</td>
+                                <td style={{ width: '20%' }}>
+                                    <select id='task_type'>
+                                        <option value='-1' id='default-task'>--select--</option>
+                                        {taskTypes.map((item) => {
                                             return <option 
                                                 key={Math.random() * 100000} 
                                                 id={`${item.id}`} 
                                                 value={`${item.id}`}
-                                                // onClick={() => console.log('option clicked.. ')}
-                                            >{`${item.number}, ${item.revision}, ${item.name}`}
+                                                // onClick={() => set_activeTaskType(item)}
+                                                onChange={() => set_activeTaskType(item)}
+                                                selected={item.id === selectedItem.id}
+                                            >{`${item.name}`}
                                             </option>
                                         })}
                                     </select>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            a
-                        </td>
-                        <td>
-                            a
-                        </td>
-                    </tr>
-                    <tr style={{ border: '1px solid black', width: '100%' }}>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                    </tr>
-                    <tr style={{ border: '1px solid black', width: '100%' }}>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                        <td>a</td>
-                    </tr>
-                    <tr style={{ border: '1px solid black', width: '100%' }}>
-                        <td>a</td>
-                    </tr>
-                </table>
+                                </td>
+                                {/* MILESTONE ITEM */}
+                                <td style={{ width: '10%' }}>milestone item</td>
+                                <td style={{ width: '20%' }}>
+                                    <select id="milestone_item">
+                                        <option value='-1' id='default-milestone_item'>--select--</option>
+                                        {activeProject.milestone_items.map((item, index) => {
+                                            return <option 
+                                                key={Math.random() * 100000} 
+                                                id={`${item.id}`} 
+                                                value={`${item.id}`}
+                                                selected={item.id === activeMilestone.id}
+                                            >{`${item.name}`}
+                                            </option>
+                                        })}
+                                    </select>
+                                </td>
+                                {/* EMPLOYEE */}
+                                <td style={{ width: '10%' }}>Employee</td>
+                                <td style={{ width: '20%' }}>
+                                    {/* <input 
+                                        className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
+                                        style={{width: '150px'}}
+                                        type='text'
+                                        id='selected_task_task_type' 
+                                        value={selectedItem.task_type_name}
+                                        disabled
+                                    /> */}
+                                        <select id="employee">
+                                            <option value='-1' id='default-employee'>--select--</option>
+                                            {employees.map((item, index) => {
+                                                return <option 
+                                                    key={Math.random() * 100000} 
+                                                    id={`${item.id}`} 
+                                                    value={`${item.id}`}
+                                                    // selected={item.id === activeMilestone.id}
+                                                >{`${item.employee_initials}`}
+                                                </option>
+                                            })}
+                                        </select>
+                                </td>
+                            </tr>
+                            <tr style={{ width: '100%' }}>
+                                {/* CERTIFICATION DOCUMENT */}
+                                <td>certification document</td>
+                                <td>
+                                    { updateMode ?
+                                        <div></div> :
+                                        <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
+                                            <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
+                                                <select 
+                                                    id="certification_document" 
+                                                >
+                                                    <option value="-1" id='empty-documents'>--no document--</option>
+                                                    {certificationDocumentsNoTask.map((item) => {
+                                                        return <option 
+                                                            key={Math.random() * 100000} 
+                                                            id={`${item.id}`} 
+                                                            value={`${item.id}`}
+                                                            // onClick={() => console.log('option clicked.. ')}
+                                                        >{`${item.number}, ${item.revision}, ${item.name}`}
+                                                        </option>
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    }
+                                </td>
+                                {/* TASK DEADLINE */}
+                                <td>task deadline</td>
+                                <td>
+                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
+                                        <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
+                                            <input 
+                                                className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
+                                                type='date' 
+                                                id='task_deadline' 
+                                                // placeholder='...' 
+                                                // value={'1.1.2024'}
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                                {/*  */}
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style={{ width: '100%' }}>
+                                {/* ESTIMATED HOURS */}
+                                <td>estimated hours</td>
+                                <td>
+                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
+                                        <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
+                                            <input 
+                                                className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
+                                                type='number' 
+                                                id='estimated_hours' 
+                                                defaultValue={40}
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                                {/* BOOKED HOURS */}
+                                <td>booked hours</td>
+                                <td>
+                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
+                                        <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
+                                            <input 
+                                                className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
+                                                type='number' 
+                                                id='booked_hours' 
+                                                defaultValue={0}
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                                {/* STATUS [%] */}
+                                <td>status (%)</td>
+                                <td>
+                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
+                                        <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
+                                            <input 
+                                                className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
+                                                type='number' 
+                                                id='status' 
+                                                defaultValue={0} 
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style={{ width: '100%' }}>
+                                {/* COMMENT */}
+                                <td >comment</td>
+                                <td colSpan={5}>
+                                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row1-col2'>
+                                        <div className='P02_C07_MANAGE_MILESTONE_TASKS-textbox-container'>
+                                            <input 
+                                                className='P02_C07_MANAGE_MILESTONE_TASKS-textbox' 
+                                                style={{ width: '100%' }}
+                                                type='text' 
+                                                id='comment' 
+                                                defaultValue={'working on task'} 
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+                <div className='P02_C07_MANAGE_MILESTONE_TASKS-footer-row2'>
+                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row2-col1'>
+                        {showSpinner_CreateUpdateItem ?
+                        <div className="spinner-border P02_C07_MANAGE_MILESTONE_TASKS-spinner" role="status">
+                            <span className="sr-only"></span>
+                        </div>
+                        :
+                        <input 
+                            type='button' 
+                            className='P02_C07_MANAGE_MILESTONE_TASKS-button' 
+                            value={updateMode ? 'Update' : 'Create'} 
+                            onClick={updateMode ? () => updateItem(selectedItem) : createNewItem} 
+                        />
+                        }
+                    </div>
+                    <div className='P02_C07_MANAGE_MILESTONE_TASKS-row2-col2'>
+                        <input 
+                            type='button' 
+                            className='p02-c06-button' 
+                            value={updateMode ? 'Cancel' : 'Close'} 
+                            onClick={updateMode ? () => set_updateMode(false) : () => set_createMode(false)} 
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     </div> );
