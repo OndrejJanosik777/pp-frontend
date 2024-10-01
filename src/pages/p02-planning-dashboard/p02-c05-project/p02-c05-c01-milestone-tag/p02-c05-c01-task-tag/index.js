@@ -2,7 +2,7 @@ import React, { Component, useCallback, useRef } from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import './index.scss';
+import './index.scss'; 
 import moment from 'moment';
 import * as apiActions from '../../../../../app/features/api/apiSlice';
 import * as dashboardSliceActions from '../../../../../app/features/dashboardSlice';

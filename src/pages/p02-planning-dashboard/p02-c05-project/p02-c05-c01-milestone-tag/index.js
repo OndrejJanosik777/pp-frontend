@@ -8,7 +8,7 @@ import P02_C02_C01_TASK_TAG from './p02-c05-c01-task-tag';
 import * as dashboardActions from '../../../../app/features/dashboardSlice';
 import * as apiActions from '../../../../app/features/api/apiSlice';
 // '../../app/features/dashboardSlice';
-
+ 
 const P02_C05_C01_MILESTONE_TAG = (props) => {
     const dispatch = useDispatch();
 
@@ -416,7 +416,10 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 //         // updateTaskDeadline = {updateTaskDeadline}
                 //         userPermissions = {userPermissions}
                 //     />
-                return <div className='p02-c05-c01-test'>
+                return <div 
+                    key={Math.random() * 100000}
+                    className='p02-c05-c01-test'
+                >
                     <P02_C02_C01_TASK_TAG 
                         key={Math.random() * 100000}
                         project = {props.project}

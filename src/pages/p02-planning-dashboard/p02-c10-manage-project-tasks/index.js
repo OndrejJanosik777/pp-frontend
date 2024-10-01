@@ -14,7 +14,7 @@ import pencil_edit from './assets/pencil_edit.png';
 import magnifier from './assets/magnifier.png';
 import * as dashboardActions from '../../../app/features/dashboardSlice';
 // styles
-import './index.scss';
+import './index.scss'; 
 
 const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
     const dispatch = useDispatch();
@@ -536,6 +536,14 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
                             </div>
                         </div>
                     }
+                </div>
+                <div className='p02-c10-footer-row1'>
+                    <div className='p02-c10-row1-col1'>status (%)</div>
+                    <div className='p02-c10-row1-col2'></div>
+                </div>
+                <div className='p02-c10-footer-row1'>
+                    <div className='p02-c10-row1-col1'>status (%)</div>
+                    <div className='p02-c10-row1-col2'></div>
                 </div>
                 <div className='p02-c10-footer-row1'>
                     <div className='p02-c10-row1-col1'>status (%)</div>

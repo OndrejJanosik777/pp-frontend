@@ -24,6 +24,7 @@ export const apiSlice = createSlice({
         taskTypes: [],
         milestoneTypes: [],
         projects: [],
+        employees: [],
         // spinnerFetchingProjects: true,
     },
     reducers: {
@@ -60,7 +61,12 @@ export const apiSlice = createSlice({
             } else {
                 state.baseUrl = 'https://pp--backend.herokuapp.com';
             }
-        }
+        },
+        //
+        fetch_Employees: (state, action) => { },
+        update_Employees: (state, action) => {
+            state.employees = [...action.payload];
+        },
     },
 })
 
@@ -76,6 +82,8 @@ export const {
   update_projects,
   update_project,
   set_BaseUrl,
+  fetch_Employees,
+  update_Employees,
 } = apiSlice.actions
 
 export default apiSlice.reducer

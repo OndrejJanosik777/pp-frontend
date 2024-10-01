@@ -24,7 +24,7 @@ import P02_C08_MANAGE_MONUMENTS from './p02-c08-manage-monuments';
 import P02_C09_MANAGE_DOCUMENTS from './p02-c09-manage-documents';
 import P02_C10_MANAGE_PROJECT_TASKS from './p02-c10-manage-project-tasks';
 import { useSelector, useDispatch } from 'react-redux';
-// styles  
+// styles   
 import './index.scss';
 import * as apiActions from '../../app/features/api/apiSlice';
 import * as dashboardActions from '../../app/features/dashboardSlice';
@@ -96,12 +96,13 @@ const P02_PLANNING_DASHBOARD = () => {
 
         // fetchTaskTypes();
 
-        // fetching data from backend database to redux store
+        // fetching data from backend database to redux store (api)
             dispatch(apiActions.set_BaseUrl());
             dispatch(apiActions.fetch_userProfile());
             dispatch(apiActions.fetch_taskTypes());
             dispatch(apiActions.fetch_milestoneTypes());
             dispatch(apiActions.fetch_projects());
+            dispatch(apiActions.fetch_Employees());
             dispatch(dashboardActions.set_displayedDays(
             parseInt((window.innerWidth - 8 * 16 - 0 * 16 - 4 * 16) / 16)
         ));
@@ -224,7 +225,7 @@ const P02_PLANNING_DASHBOARD = () => {
                                 // backgroundColor: 'green',
                                 width: '100%',
                             }
-                            
+                             
                             if (project.displayed) {
                                 return <P02_C05_PROJECT 
                                     key={Math.random() * 100000}

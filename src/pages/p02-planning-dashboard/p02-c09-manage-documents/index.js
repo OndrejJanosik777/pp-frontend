@@ -896,6 +896,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
                                             return <li>
                                                 <input 
+                                                    key={Math.random() * 100000}
                                                     type='checkbox' 
                                                     id={item} 
                                                     name={item} 
@@ -1179,7 +1180,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             >
                                 <option value="" id='task_type'>--select--</option>
                                 {task_types.map((item) => {
-                                    return <option id={item.task_type_id} value={item.task_type_id}>{item.task_type_name}</option>
+                                    return <option 
+                                        key={Math.random() * 100000}
+                                        id={item.task_type_id} 
+                                        value={item.task_type_id}>{item.task_type_name}
+                                    </option>
                                 })}
                             </select>
                         </div>
@@ -1195,7 +1200,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             >
                                 <option value="" id='task_milestone_item'>--select--</option>
                                 {milestone_items.map((item) => {
-                                    return <option id={item.milestone_item_id} value={item.milestone_item_id}>{item.milestone_item_name}</option>
+                                    return <option 
+                                        key={Math.random() * 100000}
+                                        id={item.milestone_item_id} 
+                                        value={item.milestone_item_id}>{item.milestone_item_name}
+                                    </option>
                                 })}
                             </select>
                         </div>
@@ -1211,7 +1220,11 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             >
                                 <option value="" id='task_employee'>--select--</option>
                                 {employees.map((item) => {
-                                    return <option id={item.employee_id} value={item.employee_id}>{item.employee_initials}</option>
+                                    return <option 
+                                        key={Math.random() * 100000}
+                                        id={item.employee_id} 
+                                        value={item.employee_id}>{item.employee_initials}
+                                    </option>
                                 })}
                             </select>
                         </div>

@@ -9,7 +9,7 @@ import './index.scss';
 import * as dashboardActions from '../../../app/features/dashboardSlice';
 import { hover } from '@testing-library/user-event/dist/hover';
  
-const P02_C05_PROJECT = (props) => {
+const P02_C05_PROJECT = (props) => { 
     const dispatch = useDispatch();
 
     // pick the data from the redux store
@@ -398,7 +398,7 @@ const P02_C05_PROJECT = (props) => {
             { 
             props.project.milestone_items.map((milestone_item, index) => {
                 // console.log('drawing milestone items: ', index)
-
+ 
                 return < P02_C05_C01_MILESTONE_TAG
                     key={Math.random() * 100000}
                     project={props.project}

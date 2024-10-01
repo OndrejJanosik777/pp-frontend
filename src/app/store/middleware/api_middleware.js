@@ -86,7 +86,7 @@ const apiMiddleware = storeAPI => next => async action => {
   
           let projects = [];
 
-          console.log('api_middleware: fetch_project: ', response.data);
+          // console.log('api_middleware: fetch_project: ', response.data);
 
           response.data.map((item) => {
               projects.push({...item, displayed: item.displayed_on_dashboard})
@@ -102,6 +102,24 @@ const apiMiddleware = storeAPI => next => async action => {
         }
         catch(error) {
           console.log('error while fetching task types...', error);
+        }
+        break;
+      case "api/fetch_Employees":
+        try { 
+          const response = await axios.request({
+            method: 'get',
+            url: baseUrl + '/company/employees/',
+            headers: {
+              "Authorization": "Bearer " + localStorage.getItem('PP-token')
+            }
+          })
+
+          // console.log('api_middleware: fetch_employees: ', response.data);
+
+          storeAPI.dispatch(apiActions.update_Employees([...response.data]))
+        }
+        catch(error) {
+          console.log('error while fetching employees...', error);
         }
         break;
       default:
