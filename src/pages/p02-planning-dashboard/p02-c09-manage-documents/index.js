@@ -83,6 +83,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [task_types, set_task_types] = useState([{ "task_type_id": null, "task_type_name": null }])
     const [milestone_items, set_milestone_items] = useState([{ "milestone_item_id": null, "milestone_item_name": null }])
     const [employees, set_employees] = useState([{ "employee_id": null, "employee_initials": null }])
+    const [display_rejected_documents, set_display_rejected_documents] = useState(false);
 
     useEffect(() => {
         set_documents_reduxStateFormat([...activeProject.documents]);
@@ -802,6 +803,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c09-nav-bar-right'>
+                    <input type='checkbox' onChange={ () => set_display_rejected_documents(!display_rejected_documents)}></input>
+                    <label style={{padding: '0 5px'}}>display rejected documents</label>
                     <div className='p02-c09-textbox-container'>
                         <input 
                             className='p02-c09-textbox' 
@@ -959,11 +962,15 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
                             let filtered = false;
 
-                            // filters
+                            // filters - check if document is in filtered milestone 
                             if (filteredMilestones.length != 0) {
                                 filtered = filteredMilestones.includes(document.document_cmit_short_name);
                             }
-
+                            
+                            // check if rejected - yes, don't display, there is a new revision
+                            if (!display_rejected_documents) {
+                                filtered = document.document_acceptance_status === 'rejected';
+                            }
 
                             if (!filtered) {
                                 return <tr key={Math.random() * 100000}>
