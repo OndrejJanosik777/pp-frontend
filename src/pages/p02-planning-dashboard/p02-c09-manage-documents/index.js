@@ -968,7 +968,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             }
                             
                             // check if rejected - yes, don't display, there is a new revision
-                            if (!display_rejected_documents) {
+                            if (!display_rejected_documents && !filtered) {
                                 filtered = document.document_acceptance_status === 'rejected';
                             }
 
