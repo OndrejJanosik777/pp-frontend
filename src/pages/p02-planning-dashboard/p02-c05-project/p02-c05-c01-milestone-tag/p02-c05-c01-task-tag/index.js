@@ -24,6 +24,7 @@ const P02_C02_C01_TASK_TAG = (props) => {
     const [taskIsMoving, set_taskIsMoving] = useState(false);   
     const [index, set_index] = useState(props.index);
     const [task, set_task] = useState(props.task);
+    const [task_label, set_task_label] = useState('task label...');
     const [taskDisplayed, set_taskDisplayed] = useState(true)
     const [initialClickDistance, set_initialClickDistance] = useState(10);
     const [milestone_item, set_milestone_item] = useState({
@@ -53,6 +54,8 @@ const P02_C02_C01_TASK_TAG = (props) => {
         set_difference(difference);
         set_taskWidth(taskWidth);
         set_delta_days_task_start_doc_deadline(delta_days_task_start_doc_deadline);
+
+        create_task_label(props.task);
     }, []);
 
     const handleTaskTagMove = useRef((event) => {
@@ -197,6 +200,23 @@ const P02_C02_C01_TASK_TAG = (props) => {
         borderLeft: '2px solid red',
     }
 
+    const create_task_label = (task) => {
+        let lab = '';
+
+        if (task.document_number === null) {
+            lab = lab + task.task_comment;
+        }
+
+        if (task.document_number !== null) {
+            lab = lab + `${task.document_number} (${task.document_revision}) : ${task.document_name}`;
+        }
+
+        if (task.task_employee_initials !== null) {
+            lab = lab + `  /${task.task_employee_initials}/`;
+        }
+
+        set_task_label(lab);
+    } 
 
     // displaying component ...
     return ( <div 
@@ -267,10 +287,21 @@ const P02_C02_C01_TASK_TAG = (props) => {
                     className='p02-c05-c01-task-label'
                     style={TaskLabel}
                     >
-                    {task.document_number === null ?
+                        {task_label}
+                    {/* {task.document_number === null ?
                         `${task.task_comment}` :
                         `${task.document_number} (${task.document_revision}) : ${task.document_name}`
                     }
+                    {task.task_employee_initials === null ?
+                        `- ${task.task_employee_initials}` :
+                        ''
+                    } */}
+                    {/* {() => {
+                        if (task.document_number === null && task.task_employee_initials === null) return `${task.task_comment}`
+                        if (task.document_number === null && task.task_employee_initials !== null) return `${task.task_comment} - ${task.task_employee_initials}`
+                        if (task.document_number !== null && task.task_employee_initials === null) return `${task.document_number} (${task.document_revision}) : ${task.document_name}`
+                        if (task.document_number !== null && task.task_employee_initials !== null) return `${task.document_number} (${task.document_revision}) : ${task.document_name} - ${task.task_employee_initials}`
+                    }} */}
                 </div>
                 {/* DOCUMENT DEADLINE - RED LINE */}
                 {props.task.document_deadline !== null ?
