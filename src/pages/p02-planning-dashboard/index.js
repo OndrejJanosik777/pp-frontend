@@ -116,6 +116,9 @@ const P02_PLANNING_DASHBOARD = () => {
         let element = document.getElementById("p02-main");
         console.log("element: ", element);
         element.scrollTop = 125;
+        // element.scroll(0,0);    // scroll element to the top
+        // element.posi
+        console.log('element scroll: ', window.scrollY);
     }
 
     const display_modal_warning_deleteMilestoneItem = (project, milestone) => {
@@ -126,7 +129,7 @@ const P02_PLANNING_DASHBOARD = () => {
         set_deleteMilestoneWarning_toogle(!deleteMilestoneWarning_toogle);
     }
 
-    return (
+    return ( 
         <div className='p02-dashboard'>
             <C01_NAVBAR />
             <C02_SIDEBAR /> 
