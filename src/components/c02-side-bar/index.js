@@ -56,7 +56,7 @@ const C02_SIDEBAR = (props) => {
                     }
                 }
             >
-                <div className='co2-button-name'>Test Center</div>
+                <div className='co2-button-name'>Test Center - items</div>
             </button>
             <button 
                 className='co2-button-container'
