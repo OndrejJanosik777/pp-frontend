@@ -10,50 +10,50 @@ import C02_SIDEBAR from '../../components/c02-side-bar';
 import './index.scss'; 
 import axios from 'axios'; 
 
-const P06_HAND_CALCULATIONS = () => {
+const P08_MATERIAL_DATABASE = () => {
     const dispatch = useDispatch();
 
     const [activeMenu, set_activeMenu] = useState('');
 
-    return ( <div className='p06-hand-calculation'>
+    return ( <div className='p08-material-database'>
         <C01_NAVBAR />
         <C02_SIDEBAR />
-        <div className='p06-center-section'>
+        <div className='p08-center-section'>
             <img 
-                className='p06-img-home' 
+                className='p08-img-home' 
                 // onClick={() => showState()}
                 src={home} 
                 alt='' 
             />
-            <button className='p06-button-container'>
-                <div className='p06-button-name'>Quick Links</div>
-                <img className='p06-img' src={small_arrow_down} alt='' />
+            <button className='p08-button-container'>
+                <div className='p08-button-name'>Quick Links</div>
+                <img className='p08-img' src={small_arrow_down} alt='' />
             </button>
-            <div className='p06-main-section' id='main-section' name='main-section'>
-                <div className='p06-nav-bar'>
-                    <div className='p06-nav-bar-left'>
+            <div className='p08-main-section' id='main-section' name='main-section'>
+                <div className='p08-nav-bar'>
+                    <div className='p08-nav-bar-left'>
                         <div 
                             // onClick={() => dispatch(dashboardActions.set_showModal_manageProjects(true))}
-                            className={activeMenu === 'Bruhn' ? 'p06-item-active' : 'p06-item'}
+                            className={activeMenu === 'Bruhn' ? 'p08-item-active' : 'p08-item'}
                             onClick={() => set_activeMenu('Bruhn')}
-                        >Bruhn</div>
-                        <div className='p06-item'>|</div>
+                        >Aluminum</div>
+                        <div className='p08-item'>|</div>
                         <div 
-                            className={activeMenu === 'Nui' ? 'p06-item-active' : 'p06-item'}
+                            className={activeMenu === 'Nui' ? 'p08-item-active' : 'p08-item'}
                             onClick={() => set_activeMenu('Nui')}
                             // onClick={() => dispatch(dashboardActions.set_showModal_manageMilestoneTypes(true))} 
-                        >Nui</div>
-                        <div className='p06-item'>|</div>
+                        >Steel</div>
+                        <div className='p08-item'>|</div>
                         <div 
-                            className={activeMenu === 'HSB' ? 'p06-item-active' : 'p06-item'}
+                            className={activeMenu === 'HSB' ? 'p08-item-active' : 'p08-item'}
                             onClick={() => set_activeMenu('HSB')}
                             // onClick={() => dispatch(dashboardActions.set_showModal_manageTaskTypes(true))}
-                        >HSB</div>
-                        <div className='p06-item'>|</div>
+                        >Wood</div>
+                        <div className='p08-item'>|</div>
                     </div>
-                    <div className='p06-nav-bar-right'>
+                    <div className='p08-nav-bar-right'>
                         <img 
-                            className='p06-icons' 
+                            className='p08-icons' 
                             // onClick={showState}
                             src={questionmark_blue} 
                             alt='' 
@@ -66,4 +66,4 @@ const P06_HAND_CALCULATIONS = () => {
     </div> );
 }
  
-export default P06_HAND_CALCULATIONS;
+export default P08_MATERIAL_DATABASE;

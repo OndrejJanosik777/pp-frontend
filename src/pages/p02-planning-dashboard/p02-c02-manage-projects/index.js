@@ -24,7 +24,6 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
 
     // const [baseUrl, set_baseUrl] = useState(getBaseUrl());
     const [token, set_token] = useState("Bearer " + localStorage.getItem('PP-token'));
-    // const [projects, set_projects] = useState([]);
     const [showSpinner_CreateUpdateProject, set_showSpinner_CreateUpdateProject] = useState(false);
     const [updateMode, set_updateMode] = useState(false);
     const [createMode, set_createMode] = useState(false);

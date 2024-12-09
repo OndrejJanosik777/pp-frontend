@@ -56,17 +56,37 @@ const C02_SIDEBAR = (props) => {
                     }
                 }
             >
-                <div className='co2-button-name'>Test Center</div>
+                <div className='co2-button-name'>Test Center - items</div>
             </button>
             <button 
                 className='co2-button-container'
                 onClick={ () => {
                     dispatch(sideBarActions.set_extendedSideBar(false));
-                    navigate('/test-center/');
+                    navigate('/hand-calculations/');
                     }
                 }
             >
                 <div className='co2-button-name'>Hand Calculations</div>
+            </button>
+            <button 
+                className='co2-button-container'
+                onClick={ () => {
+                    dispatch(sideBarActions.set_extendedSideBar(false));
+                    navigate('/tested-parts/');
+                    }
+                }
+            >
+                <div className='co2-button-name'>Tested Parts (FSR)</div>
+            </button>
+            <button 
+                className='co2-button-container'
+                onClick={ () => {
+                    dispatch(sideBarActions.set_extendedSideBar(false));
+                    navigate('/material-database/');
+                    }
+                }
+            >
+                <div className='co2-button-name'>Material Database</div>
             </button>
         </div>
         <div  className='c02-right-section'>
