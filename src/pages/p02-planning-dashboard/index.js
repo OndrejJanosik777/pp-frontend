@@ -128,7 +128,7 @@ const P02_PLANNING_DASHBOARD = () => {
 
     return (
         <div className='p02-dashboard'>
-            <C01_NAVBAR />
+            <C01_NAVBAR /> 
             <C02_SIDEBAR /> 
             <div className='p02-center-section'>
                 <img className='p02-img-home' src={home} alt='' />

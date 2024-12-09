@@ -9,7 +9,7 @@ import './index.scss';
 // landing page - with textboxes for username, password
 // load baseUrl to store
 // load userProfile to store
-
+ 
 const LandingPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();

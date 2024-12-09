@@ -118,13 +118,37 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
         let name = document.getElementById('name').value;
         let number = document.getElementById('number').value;
         let short_name = document.getElementById('short_name').value;
-        let logo = document.getElementById('logo');
+        let logo_2 = null;
 
         if (name == "" || short_name == "" || number == "")  {
             return alert('Missing input: name, number or short name')
         }
 
+        let cve_lead = employees.find(elem => elem.employee_initials === document.getElementById('cve_lead').value);
+        let stress_lead = employees.find(elem => elem.employee_initials === document.getElementById('stress_lead').value);
+        let enviromental_lead = employees.find(elem => elem.employee_initials === document.getElementById('enviromental_lead').value);
+        let ple = employees.find(elem => elem.employee_initials === document.getElementById('ple').value);
+        let plp = employees.find(elem => elem.employee_initials === document.getElementById('plp').value);
+
+        if (document.getElementById('logo').files.length > 0) {
+            logo_2 = document.getElementById('logo').files[0];
+        }
+
+        let data = {
+            name: name,
+            number: number,
+            short_name: short_name,
+            logo_2: logo_2,
+            cve_lead: (cve_lead === undefined ? null : cve_lead.employee_id),
+            stress_lead: (stress_lead === undefined ? null : stress_lead.employee_id),
+            enviromental_lead: (enviromental_lead === undefined ? null : enviromental_lead.employee_id),
+            ple: (enviromental_lead === undefined ? null : ple.employee_id),
+            plp: (enviromental_lead === undefined ? null : plp.employee_id)
+        }
+
         set_showSpinner_CreateUpdateProject(true);
+
+        let newProject = null;
 
         // update in backend database and after success in redux state
         axios({
@@ -134,17 +158,47 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
                 "Authorization": token,
                 'Content-Type': 'multipart/form-data'
             },
-            data: {
-                name: name,
-                number: number,
-                short_name: short_name,
-                logo: logo.files[0]
-            }
+            data: data
         })
         .then((response => {
             console.log("projects created sucessfully");
 
-            let newProject = {...response.data, displayed: true, milestone_items: [], monuments: [] };
+            newProject = {...response.data, displayed: true, milestone_items: [], monuments: [] };
+
+            if (cve_lead !== undefined) {
+                newProject.cve_lead = {
+                    "id": cve_lead.employee_id,
+                    "employee_initials" : cve_lead.employee_initials
+                }
+            }
+
+            if (stress_lead !== undefined) {
+                newProject.stress_lead = {
+                    "id": stress_lead.employee_id,
+                    "employee_initials" : stress_lead.employee_initials
+                }
+            }
+
+            if (enviromental_lead !== undefined) {
+                newProject.enviromental_lead = {
+                    "id": enviromental_lead.employee_id,
+                    "employee_initials" : enviromental_lead.employee_initials
+                }
+            }
+
+            if (ple !== undefined) {
+                newProject.ple = {
+                    "id": ple.employee_id,
+                    "employee_initials" : ple.employee_initials
+                }
+            }
+
+            if (plp !== undefined) {
+                newProject.plp = {
+                    "id": plp.employee_id,
+                    "employee_initials" : plp.employee_initials
+                }
+            }
 
             let updatedProjects = [...projects, newProject];
 
@@ -159,6 +213,34 @@ const P02_C02_MANAGE_PROJECTS = (props) => {
 
             alert(message);
         })
+
+        // update project visibility
+        if (newProject != null) {
+            axios({
+                method: 'post',
+                url: baseUrl + `/company/update-project-visibility/`,
+                headers: {
+                    "Authorization": token
+                },
+                data: {
+                    project_id: newProject.id
+                }
+            })
+            .then((response => {
+                // console.log("projects updated sucessfully");
+                dispatch(dashboardActions.set_spinnerFetchingProjects(true));
+                dispatch(apiActions.fetch_projects());
+            }))
+            .catch((error) => {
+                console.log("error: ", error);
+    
+                let message = error.message + "\n" + error.response.data;
+    
+                alert(message);
+    
+                // dispatch(apiActions.update_projects(originalItems));
+            })
+        }
     }
 
     const switchToUpdateMode = (item) => {
