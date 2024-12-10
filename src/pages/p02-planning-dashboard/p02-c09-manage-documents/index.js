@@ -77,6 +77,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     const [showSpinner_FetchingDocuments, set_showSpinner_FetchingDocuments] = useState(true);
     const [icon_sortDeadlineAscending, set_icon_sortDeadlineAscending] = useState(true);
     const [icon_sortDeadlineDescending, set_icon_sortDeadlineDescending] = useState(false);
+    const [icon_sortDocNumberAscending, set_icon_sortDocNumberAscending] = useState(false);
+    const [icon_sortDocNumberDescending, set_icon_sortDocNumberDescending] = useState(false);
+    const [icon_sortDocNameAscending, set_icon_sortDocNameAscending] = useState(false);
+    const [icon_sortDocNameDescending, set_icon_sortDocNameDescending] = useState(false);
+    const [icon_sortDocStatusAscending, set_icon_sortDocStatusAscending] = useState(false);
+    const [icon_sortDocStatusDescending, set_icon_sortDocStatusDescending] = useState(false);
     const [showFilterDeadline, set_showFilterDeadline] = useState(false);
     const [filteredMilestones, set_filteredMilestones] = useState([]);
     const [cmit_short_names, set_cmit_short_names] = useState([]);
@@ -252,6 +258,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             set_documents_localStateFormat([...updatedDocuments_localStateFormat]);
 
             set_showSpinner_CreateUpdateItem(false);
+
+            fetchDocuments();
         })
         .catch((error) => {
             console.log("error: ", error);
@@ -356,6 +364,8 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             set_documents_reduxStateFormat([...newDocuments_reduxProjectFormat]);
 
             set_showSpinner_CreateUpdateItem(false);
+
+            fetchDocuments();
         }))
         .catch((error) => {
             console.log("error: ", error);
@@ -465,41 +475,13 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
 
     // TODO:
     const reviseDocument = (item, index) => {
-        console.log('revising document (item): ', item);
-        console.log('revising document (index): ', index);
+        // console.log('revising document (item): ', item);
+        // console.log('revising document (index): ', index);
 
         // 1 - update item in backend 
         // 2 - update item in local state
         // 3 - update item in redux store
         // console.log('updateItem function');
-
-        // item.document_name = document.getElementById('name').value;
-        // item.document_number = document.getElementById('number').value;
-        // item.document_revision = document.getElementById('revision').value;
-        // item.document_deadline = document.getElementById('deadline').value;
-        // item.document_deadline_second = document.getElementById('deadline_second').value;
-        // item.document_sended_on = document.getElementById('sended_on').value;
-        // item.document_acceptance_status = document.getElementById('acceptance_status').value;
-        // item.document_comment = document.getElementById('comment').value;
-        // const selectedMonuments = [];
-
-        // monuments.map((monument) => {
-        //     if (monument.isSelected) {
-        //         selectedMonuments.push(monument.id);
-        //     }
-        // })
-
-        // if (document.getElementById('name').value === "") return alert('missing input');
-        // if (document.getElementById('number').value === "") return alert('missing input');
-        // if (document.getElementById('revision').value === "") return alert('missing input');
-        // if (document.getElementById('deadline').value === "") item.document_deadline = null;
-        // if (document.getElementById('deadline_second').value === "") item.document_deadline_second = null;
-        // if (document.getElementById('sended_on').value === "") item.document_sended_on = null;
-        // if (document.getElementById('acceptance_status').value === "") return alert('missing input');
-        // if (document.getElementById('comment').value === "") return alert('missing input');
-        // if (selectedMonuments.length === 0) return alert('missing input');
-
-        // set_showSpinner_CreateUpdateItem(true);
 
         // // 1 - 
         axios({
@@ -508,56 +490,14 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
             headers: {
                 "Authorization": token
             }
-            // data: {
-            //     name: item.document_name,
-            //     number: item.document_number,
-            //     revision: item.document_revision,
-            //     deadline: item.document_deadline,
-            //     deadline_second: item.document_deadline_second,
-            //     sended_on: item.document_sended_on,
-            //     acceptance_status: item.document_acceptance_status,
-            //     comment: item.document_comment,
-            //     monuments: selectedMonuments,
-            //     project: activeProject.id,
-            // }
         })
         .then((response => {
             // 2 - 
-            // let updatedDocuments = [...documents_localStateFormat];
-            // updatedDocuments.splice(index, 1, item)
-            // set_documents_localStateFormat([...updatedDocuments]);
-
-            // // 3 - 
-            // let updateDocument_inReduxState = {
-            //     id: response.data.id,
-            //     acceptance_status: response.data.acceptance_status,
-            //     project_id: response.data.project
-            // }
-
-            // let updatedProject = {...activeProject};
-            // let updateDocuments_inReduxState = [...updatedProject.documents];
-            // let index_inReduxState = updateDocuments_inReduxState.findIndex(elem => elem.id === item.document_id);
-
-            // updateDocuments_inReduxState.splice(index_inReduxState, 1, updateDocument_inReduxState);
-
-            // updatedProject.documents = [...updateDocuments_inReduxState];
-
-            // dispatch(apiActions.update_project(updatedProject));
-
-            // // set_monuments([...monuments]);
-
-            // set_showSpinner_CreateUpdateItem(false);
 
             fetchDocuments();
         }))
         .catch((error) => {
             console.log("error while revising document: ", error);
-
-            // let message = error.message + "\n" + error.response.data;
-
-            // alert(message);
-
-            // set_showSpinner_CreateUpdateItem(false);
         })
     }
 
@@ -602,6 +542,222 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         set_selectedItemIndex(index);
     }
 
+    const sortDocStatusAscending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            if (b.document_acceptance_status > a.document_acceptance_status) {
+                return -1;
+            }
+
+            if (b.document_acceptance_status < a.document_acceptance_status) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        // 3 -
+        set_documents_localStateFormat([...documents]);
+
+        // 4 -
+        set_icon_sortDeadlineAscending(false);
+        set_icon_sortDeadlineDescending(false);
+        set_icon_sortDocNumberAscending(false);
+        set_icon_sortDocNumberDescending(false);
+        set_icon_sortDocNameAscending(false);
+        set_icon_sortDocNameDescending(false);
+        set_icon_sortDocStatusAscending(true);
+        set_icon_sortDocStatusDescending(false);
+    }
+
+    const sortDocStatusDescending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            if (b.document_acceptance_status < a.document_acceptance_status) {
+                return -1;
+            }
+
+            if (b.document_acceptance_status > a.document_acceptance_status) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        // 3 -
+        set_documents_localStateFormat([...documents]);
+
+        // 4 -
+        set_icon_sortDeadlineAscending(false);
+        set_icon_sortDeadlineDescending(false);
+        set_icon_sortDocNumberAscending(false);
+        set_icon_sortDocNumberDescending(false);
+        set_icon_sortDocNameAscending(false);
+        set_icon_sortDocNameDescending(false);
+        set_icon_sortDocStatusAscending(false);
+        set_icon_sortDocStatusDescending(true);
+    }
+
+    const sortDocNameAscending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            if (b.document_name > a.document_name) {
+                return -1;
+            }
+
+            if (b.document_name < a.document_name) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        // 3 -
+        set_documents_localStateFormat([...documents]);
+
+        // 4 -
+        set_icon_sortDeadlineAscending(false);
+        set_icon_sortDeadlineDescending(false);
+        set_icon_sortDocNumberAscending(false);
+        set_icon_sortDocNumberDescending(false);
+        set_icon_sortDocNameAscending(true);
+        set_icon_sortDocNameDescending(false);
+        set_icon_sortDocStatusAscending(false);
+        set_icon_sortDocStatusDescending(false);
+    }
+
+    const sortDocNameDescending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            if (b.document_name < a.document_name) {
+                return -1;
+            }
+
+            if (b.document_name > a.document_name) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        // 3 -
+        set_documents_localStateFormat([...documents]);
+
+        // 4 -
+        set_icon_sortDeadlineAscending(false);
+        set_icon_sortDeadlineDescending(false);
+        set_icon_sortDocNumberAscending(false);
+        set_icon_sortDocNumberDescending(false);
+        set_icon_sortDocNameAscending(false);
+        set_icon_sortDocNameDescending(true);
+        set_icon_sortDocStatusAscending(false);
+        set_icon_sortDocStatusDescending(false);
+    }
+
+    const sortDocNumberAscending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            if (b.document_number > a.document_number) {
+                return -1;
+            }
+
+            if (b.document_number < a.document_number) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        // 3 -
+        set_documents_localStateFormat([...documents]);
+
+        // 4 -
+        set_icon_sortDeadlineAscending(false);
+        set_icon_sortDeadlineDescending(false);
+        set_icon_sortDocNumberAscending(true);
+        set_icon_sortDocNumberDescending(false);
+        set_icon_sortDocNameAscending(false);
+        set_icon_sortDocNameDescending(false);
+        set_icon_sortDocStatusAscending(false);
+        set_icon_sortDocStatusDescending(false);
+    }
+
+    const sortDocNumberDescending = () => {
+        // 1 - get actual array of documents from local state
+        // 2 - sort array 
+        // 3 - update local state
+        // 4 - set colors
+
+        // 1 -
+        let documents = [...documents_localStateFormat];
+
+        // 2 -
+        documents.sort((a, b) => {
+            if (b.document_number < a.document_number) {
+                return -1;
+            }
+
+            if (b.document_number > a.document_number) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        // 3 -
+        set_documents_localStateFormat([...documents]);
+
+        // 4 -
+        set_icon_sortDeadlineAscending(false);
+        set_icon_sortDeadlineDescending(false);
+        set_icon_sortDocNumberAscending(false);
+        set_icon_sortDocNumberDescending(true);
+        set_icon_sortDocNameAscending(false);
+        set_icon_sortDocNameDescending(false);
+        set_icon_sortDocStatusAscending(false);
+        set_icon_sortDocStatusDescending(false);
+    }
+
     const sortDeadlineAscending = (originalDocuments) => {
         // 1 - get actual array of documents from local state
         // 2 - sort array 
@@ -629,6 +785,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         // 4 - 
         set_icon_sortDeadlineAscending(true);
         set_icon_sortDeadlineDescending(false);
+        set_icon_sortDocNumberAscending(false);
+        set_icon_sortDocNumberDescending(false);
+        set_icon_sortDocNameAscending(false);
+        set_icon_sortDocNameDescending(false);
+        set_icon_sortDocStatusAscending(false);
+        set_icon_sortDocStatusDescending(false);
     }
 
     const sortDeadlineDescending = () => {
@@ -658,6 +820,12 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
         // 4 - 
         set_icon_sortDeadlineAscending(false);
         set_icon_sortDeadlineDescending(true);
+        set_icon_sortDocNumberAscending(false);
+        set_icon_sortDocNumberDescending(false);
+        set_icon_sortDocNameAscending(false);
+        set_icon_sortDocNameDescending(false);
+        set_icon_sortDocStatusAscending(false);
+        set_icon_sortDocStatusDescending(false);
     }
 
     const updateItem = (item, index) => {
@@ -838,8 +1006,48 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                                     {/* <img src={arrow_down} alt='' className='p02-c09-img-inactive' ></img> */}
                                 </div>
                             </th>
-                            <th>name</th>
-                            <th>nr.</th>
+                            <th>name
+                                <div className='p02-c09-icon'>
+                                    <img 
+                                        src={arrow_up} 
+                                        alt='' 
+                                        className={icon_sortDocNameAscending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDocNameAscending()}
+                                    ></img>
+                                    <img 
+                                        src={arrow_down} 
+                                        alt='' 
+                                        className={icon_sortDocNameDescending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDocNameDescending()}
+                                    ></img>
+                                    {/* <img 
+                                        src={filter} 
+                                        alt='' 
+                                        className={icon_filterDeadline ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                    ></img> */}
+                                </div>
+                            </th>
+                            <th>nr.
+                                <div className='p02-c09-icon'>
+                                    <img 
+                                        src={arrow_up} 
+                                        alt='' 
+                                        className={icon_sortDocNumberAscending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDocNumberAscending()}
+                                    ></img>
+                                    <img 
+                                        src={arrow_down} 
+                                        alt='' 
+                                        className={icon_sortDocNumberDescending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDocNumberDescending()}
+                                    ></img>
+                                    {/* <img 
+                                        src={filter} 
+                                        alt='' 
+                                        className={icon_filterDeadline ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                    ></img> */}
+                                </div>
+                            </th>
                             <th>rev.</th>
                             <th>deadline 1
                                 <div className='p02-c09-icon'>
@@ -864,7 +1072,27 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
                             </th>
                             <th>deadline 2</th>
                             <th>sended on</th>
-                            <th>status</th>
+                            <th>status
+                                <div className='p02-c09-icon'>
+                                    <img 
+                                        src={arrow_up} 
+                                        alt='' 
+                                        className={icon_sortDocStatusAscending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDocStatusAscending()}
+                                    ></img>
+                                    <img 
+                                        src={arrow_down} 
+                                        alt='' 
+                                        className={icon_sortDocStatusDescending ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                        onClick={() => sortDocStatusDescending()}
+                                    ></img>
+                                    {/* <img 
+                                        src={filter} 
+                                        alt='' 
+                                        className={icon_filterDeadline ? 'p02-c09-img-active' : 'p02-c09-img-inactive'} 
+                                    ></img> */}
+                                </div>  
+                            </th>
                             <th>last update</th>
                             <th>comment</th>
                             <th>author</th>
