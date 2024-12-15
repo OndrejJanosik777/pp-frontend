@@ -1,0 +1,26 @@
+.p07-c01-doors-abuse {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    background: rgb(195, 231, 162);
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        padding: 0 10px;
+        font-size: large;
+        width: 150px;
+    }
+
+    input {
+        width: 150px;
+    }
+
+    button {
+        font-size: large;
+    }
+}

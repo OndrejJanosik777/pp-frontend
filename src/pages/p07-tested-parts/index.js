@@ -8,6 +8,7 @@ import questionmark_blue from './assets/questionmark_blue.png';
 // general components
 import C01_NAVBAR from '../../components/c01-nav-bar'
 import C02_SIDEBAR from '../../components/c02-side-bar';
+import P07_C01_DOORS_ABUSE from './p07-c01-doors-abuse';
 import './index.scss'; 
 // load temporary tie rod data
 import tempTieRods from './data';
@@ -63,7 +64,7 @@ const P07_TESTED_PARTS = () => {
                         <div 
                             className={activeMenu === 'Doors' ? 'p07-item-active' : 'p07-item'}
                             onClick={() => set_activeMenu('Doors')}
-                        >Doors</div>
+                        >Doors - Abuse Test</div>
                         <div className='p07-item'>|</div>
                         <div
                             className={activeMenu === 'Latches' ? 'p07-item-active' : 'p07-item'}
@@ -80,26 +81,8 @@ const P07_TESTED_PARTS = () => {
                         />
                     </div>
                 </div>
-                <div style={{backgroundColor: "lightblue"}}>
-                    <table style={{ border: "1px solid black" }}>
-                        <thead>
-                            <tr>
-                                <td>{"p/n"}</td>
-                                <td>{"tie rod end #1"}</td>
-                                <td>{"p/n"}</td>
-                                <td>{"p/n"}</td>
-                                <td>{"p/n"}</td>
-                                <td>{"p/n"}</td>
-                                <td>{"p/n"}</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
+                <P07_C01_DOORS_ABUSE />
 
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
     </div> );
