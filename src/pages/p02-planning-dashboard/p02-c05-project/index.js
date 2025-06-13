@@ -73,9 +73,17 @@ const P02_C05_PROJECT = (props) => {
         set_nrOfTasks(nrOfTasks);
     }, []);
 
-    const showState = () => {
+    const showState = (e) => {
         console.log('nrOfMilestones', nrOfMilestones);
         console.log('nrOfTasks', nrOfTasks);
+        // let projectElement = document.getElementById('p02-c05-project');
+        // console.log('top', projectElement.getBoundingClientRect().top);
+        // console.log('left', projectElement.getBoundingClientRect().left);
+        console.log('e', e);
+        console.log('e.clientX', e.clientX);
+        console.log('e.clientX', e.clientY);
+        // projectElement.getBoundingClientRect().top;
+        // projectElement.getBoundingClientRect().left;
     }
 
     const display_modal_createNewTask = (project, milestoneItem) => {
@@ -258,25 +266,17 @@ const P02_C05_PROJECT = (props) => {
         alignItems: 'center',
         backgroundColor: '#F1F1F1',
         width: '8rem',
-        maxWidth: '8rem',
+        // maxWidth: '8rem',
         overflow: 'hidden',
         zIndex: 14,
     }
 
-    return ( <div className='p02-c05-project'>
-        <div 
-            className='p02-c05-left-container' 
-            style={style_leftContainer}
-        >
-            <div 
-                style={{ borderBottom: "1px solid gray", width: "100%", textAlign: "center", fontWeight: "bold" }}
-                onClick={() => showState()} 
-            >
+    return ( <div className='p02-c05-project' id={`#${props.project.id} : ${props.project.number}`}>
+        <div className='p02-c05-left-container' style={style_leftContainer}>
+            <div style={{ borderBottom: "1px solid gray", width: "100%", textAlign: "center", fontWeight: "bold" }} onClick={(e) => showState(e)}>
                 {`#${props.project.id} : ${props.project.number}`}
             </div>
-            <div 
-                style={{ textAlign: "center", width: "100%", paddingTop: "0.2rem"}}
-            >
+            <div style={{ textAlign: "center", width: "100%", paddingTop: "0.2rem"}}>
                 {props.project.name}
             </div>
             <div style={{ textAlign: "center", width: "100%", borderBottom: "1px solid gray", borderTop: "1px solid gray", margin: "0.2rem 0"}}>
@@ -308,12 +308,7 @@ const P02_C05_PROJECT = (props) => {
             </div>
             <div style={{ width: "100%", borderBottom: "1px solid gray", margin: "0.5rem 0" }}></div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <img
-                    style={{ maxWidth: '90%', maxHeight: '2rem', margin: '0.2rem 0.2rem' }}
-                    src={`https://res.cloudinary.com/dpdthtsnm/${props.project.logo_2}`}
-                    alt=''
-                    onClick={() => showState()} 
-                />
+                <img style={{ maxWidth: '90%', maxHeight: '2rem', margin: '0.2rem 0.2rem' }} src={`https://res.cloudinary.com/dpdthtsnm/${props.project.logo_2}`} alt='' onClick={(e) => showState(e)} />
             </div>
             {/* <div>
                 <img
@@ -323,8 +318,7 @@ const P02_C05_PROJECT = (props) => {
                     onClick={() => showState()} 
                 />
             </div> */}
-            <div 
-                className='p02-c05-row-left'
+            <div className='p02-c05-row-left'
                 style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "0 0.2rem", cursor: "pointer", borderTop: "1px solid gray", marginTop: "0.2rem" }}
                 onClick={
                     () => {
@@ -402,6 +396,7 @@ const P02_C05_PROJECT = (props) => {
                 return < P02_C05_C01_MILESTONE_TAG
                     key={Math.random() * 100000}
                     project={props.project}
+                    projectId={`#${props.project.id} : ${props.project.number}`}
                     milestone_item={milestone_item}
                     milestone_offsetTop={index * 30}  // offset in px from top
                     milestone_offsetLeft={moment().diff(moment(milestone_item.date), 'days') + dateOffset - 1}

@@ -202,7 +202,7 @@ const P02_PLANNING_DASHBOARD = () => {
                     </div>
                     <main className='p02-main' id="p02-main">
                     {
-                        projects.map((project) => {
+                        projects.map((project, index) => {
                             let totalTasks = 0;
                             let completedTasks = 0;
 
@@ -232,6 +232,7 @@ const P02_PLANNING_DASHBOARD = () => {
                             if (project.displayed) {
                                 return <P02_C05_PROJECT 
                                     key={Math.random() * 100000}
+                                    index={index}
                                     project={project} 
                                     //
                                     createTask_toogle={createTask_toogle}

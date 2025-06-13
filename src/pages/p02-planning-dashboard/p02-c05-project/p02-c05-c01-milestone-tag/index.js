@@ -33,6 +33,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
     const [milestone_item, set_milestone_item] = useState({
         tasks: []
     })
+    const [contextMenuClickedEvent, set_contextMenuClickedEvent] = useState({ clientX: 0, clientY: 0});
 
     const showState = () => {
         console.log('props: ', props);
@@ -183,9 +184,15 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
     const contextMenuClicked = (event) => {
         event.preventDefault();
+        console.log('event.clientX: ', event.clientX);
+        console.log('event.clientY: ', event.clientY);
+        let projectElement = document.getElementById(props.projectId);
+        console.log('projectElement.getBoundingClientRect().left: ', projectElement.getBoundingClientRect().left);
+        console.log('projectElement.getBoundingClientRect().top: ', projectElement.getBoundingClientRect().top);
 
         // setMouseX(event.clientX);
         // setMouseY(event.clientY);
+        set_contextMenuClickedEvent(event);
         set_contextMenu_visibility(!contextMenu_visibility);
         // console.log(`context menu clicked: ${event.clientX} ${event.clientY}`);
     }
@@ -263,6 +270,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
         position: 'absolute',
         // marginLeft: `${leftOffset_milestone}px`,
         // marginTop: `${-25 - 10 * milestone_item.tasks.length}px`,
+        // marginLeft: `${contextMenuClickedEvent.clientX - document.getElementById(props.projectId).getBoundingClientRect().left}px`,
         marginLeft: '0px',
         marginTop: '0px',
         zIndex: `15`,
@@ -339,7 +347,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
             // <div style={{ height: '30px' }}></div>
             <div style={{ height: `${30 + 10 * milestone_item.tasks.length}px` }}></div>
         }
-        {/* CONTEXT MENU */}
+         {/*CONTEXT MENU */}
         {contextMenu_visibility ?
             <div 
                 style={ContextMenuStyle}
