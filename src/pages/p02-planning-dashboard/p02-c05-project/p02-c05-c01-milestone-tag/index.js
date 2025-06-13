@@ -261,8 +261,10 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
 
     const ContextMenuStyle = {
         position: 'absolute',
-        marginLeft: `${leftOffset_milestone}px`,
-        marginTop: `${-25 - 10 * milestone_item.tasks.length}px`,
+        // marginLeft: `${leftOffset_milestone}px`,
+        // marginTop: `${-25 - 10 * milestone_item.tasks.length}px`,
+        marginLeft: '0px',
+        marginTop: '0px',
         zIndex: `15`,
     }
 
@@ -298,9 +300,18 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 className='p02-c05-c01-milestone-tag' 
                 style={{height: `${tasks.length * 10 + 23}px`}} 
                 id='milestone-tag'
+                onContextMenu={(e) => contextMenuClicked(e)}
             >
         {/* LINE */}
-        <div className='p02-c05-c01-milestone-line' >{
+        <div className='p02-c05-c01-milestone-line'
+             onContextMenu={(e) => contextMenuClicked(e)}
+             onClick={(e) => {
+                 console.log('line clicked...');
+                 console.log(`client X: ${e.clientX.toString()}`);
+                 console.log(`client Y: ${e.clientY.toString()}`);
+                 console.log(`screen X: ${e.screenX.toString()}`);
+             }}
+        >{
             milestone_item.milestone_item_type !== undefined ?
             `${milestone_item.milestone_item_type.short_name} : ${moment(milestone_item.date).format('D-MMM-YY')}(KW${moment(milestone_item.date).format('WW')})` :
             ''

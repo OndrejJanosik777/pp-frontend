@@ -312,10 +312,10 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                             <th>P/N</th>
                             <th>name</th>
                             <th>substantiation</th>
-                            <th>hours D</th>
-                            <th>hours K</th>
-                            <th>hours S</th>
-                            <th>hours Z</th>
+                            <th>SW</th>
+                            <th>RW</th>
+                            <th>CW</th>
+                            <th>AW</th>
                             <th>action</th>
                         </tr>
                     </thead>
@@ -384,7 +384,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c08-footer-row1'>
-                    <div className='p02-c08-row1-col1'>hours D</div>
+                    <div className='p02-c08-row1-col1'>SW</div>
                     <div className='p02-c08-row1-col2'>
                         <div className='p02-c08-textbox-container'>
                             <input 
@@ -397,7 +397,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c08-footer-row1'>
-                    <div className='p02-c08-row1-col1'>hours K</div>
+                    <div className='p02-c08-row1-col1'>RW</div>
                     <div className='p02-c08-row1-col2'>
                         <div className='p02-c08-textbox-container'>
                             <input 
@@ -410,7 +410,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c08-footer-row1'>
-                    <div className='p02-c08-row1-col1'>hours S</div>
+                    <div className='p02-c08-row1-col1'>CW</div>
                     <div className='p02-c08-row1-col2'>
                         <div className='p02-c08-textbox-container'>
                             <input 
@@ -423,7 +423,7 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
                     </div>
                 </div>
                 <div className='p02-c08-footer-row1'>
-                    <div className='p02-c08-row1-col1'>hours Z</div>
+                    <div className='p02-c08-row1-col1'>AW</div>
                     <div className='p02-c08-row1-col2'>
                         <div className='p02-c08-textbox-container'>
                             <input 
