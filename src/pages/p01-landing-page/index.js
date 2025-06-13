@@ -56,17 +56,14 @@ const LandingPage = () => {
             // alert('account created succesfully');
             // console.log(response.data);
             localStorage.setItem('PP-token', response.data.access);
+            // new line
             setShowSpinnerLogin(false);
-
             dispatch(fetch_userProfile());
-
             navigate('/dashboard/');
         }))
         .catch((error) => {
             alert('problem getting token: /api/token/');
-
             console.log(error);
-
             setShowSpinnerLogin(false);
         })
     }
