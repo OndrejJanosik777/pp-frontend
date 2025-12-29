@@ -137,7 +137,6 @@ const P04_C01_MANAGE_EMPLOYEES = (props) => {
                 first_name: first_name,
                 last_name: last_name,
                 email: email,
-                email: email,
                 department: department,
                 pensum: pensum,
                 groups: groups,
