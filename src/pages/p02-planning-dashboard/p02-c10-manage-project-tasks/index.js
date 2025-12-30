@@ -31,7 +31,6 @@ const P02_C10_MANAGE_PROJECT_TASKS = (props) => {
         } else {
             // production code
             return 'https://pp-backend-44378a9b5178.herokuapp.com';
-            let a = 1;
         }
     }
 
