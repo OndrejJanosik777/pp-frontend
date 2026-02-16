@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import Playground from './pages/p00-playground';
 import PLAYGOUND_02 from './pages/p00-playground_02';
+import PLAYGROUND_03 from './pages/p00-playground_03';
 import P01_LANDING_PAGE from './pages/p01-landing-page';
 import P02_PLANNING_DASHBOARD from './pages/p02-planning-dashboard';
 import P03_DOCUMENTS from './pages/p03-documents';
@@ -33,6 +34,7 @@ root.render(
         <Route path="/material-database/" element={<P08_MATERIAL_DATABASE />} ></Route>
         <Route path="/playground/" element={<Playground />} ></Route>
         <Route path="/playground_02/" element={<PLAYGOUND_02 />} ></Route>
+        <Route path="/playground_03/" element={<PLAYGROUND_03 />} ></Route>
       </Routes>
     </BrowserRouter>
   </Provider>
