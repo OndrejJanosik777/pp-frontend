@@ -69,7 +69,7 @@ const P02_C09_MANAGE_DOCUMENTS = (props) => {
     }]);
     // 
     const [updateMode, set_updateMode] = useState(false);
-    const [updateTask, set_updateTask] = useState(true);
+    const [updateTask, set_updateTask] = useState(false);
     const [createMode, set_createMode] = useState(false);
     const [selectedItem, set_selectedItem] = useState(undefined);
     const [selectedItemIndex, set_selectedItemIndex] = useState(undefined);
