@@ -155,6 +155,8 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
             let message = error.message + "\n" + error.response.data;
 
             alert(message);
+
+            set_showSpinner_CreateUpdateItem(false);
         })
     }
 

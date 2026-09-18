@@ -109,12 +109,30 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
 
         set_showSpinner_CreateUpdateItem(true);
 
-        if (name === "") return alert('missing input');
-        if (milestoneTypes[milestoneTypeIndex].id === "") return alert('missing input');
-        if (date === "") return alert('missing input');
-        if (comment === "") return alert('missing input');
-        if (tasks === "") return alert('missing input');
-        if (activeProject.id === "") return alert('missing input');
+        if (name === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (milestoneTypes[milestoneTypeIndex].id === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (date === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (comment === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (tasks === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (activeProject.id === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
 
         let newMilestone_reduxFormat = {
             id: null,
@@ -337,6 +355,8 @@ const P02_C06_MANAGE_MILESTONES = (props) => {
             let message = error.message + "\n" + error.response.data;
 
             alert(message);
+
+            set_showSpinner_CreateUpdateItem(false);
         })
     }
 
