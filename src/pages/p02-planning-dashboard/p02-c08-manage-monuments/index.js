@@ -61,12 +61,30 @@ const P02_C08_MANAGE_MONUMENTS = (props) => {
 
         set_showSpinner_CreateUpdateItem(true);
 
-        if (part_number === "") return alert('missing input');
-        if (name === "") return alert('missing input');
-        if (hours_D === "") return alert('missing input');
-        if (hours_K === "") return alert('missing input');
-        if (hours_S === "") return alert('missing input');
-        if (hours_Z === "") return alert('missing input');
+        if (part_number === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (name === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (hours_D === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (hours_K === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (hours_S === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
+        if (hours_Z === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing input');
+        }
 
         // 1
         axios({

@@ -260,22 +260,20 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
     const switchToUpdateMode = (item, index) => {
         // function that should fil the forms according selected item.
         dispatch(dashboardActions.set_activeTask(item));
-
-        console.log('switchToUpdateMode: ', item)
-
+        // display in console log
+        console.log('const switchToUpdateMode = (item, index) =>: ', item)
+        //
         document.getElementById('update_mode_task_id').value = item.task_id;
         document.getElementById('update_mode_task_type_name').value = item.task_type_name;
         document.getElementById('update_mode_certification_document_number').value = item.document_number;
         document.getElementById('update_mode_task_deadline').value = item.task_deadline;
-
-
-        // document.getElementById('selected_task_id').value = item.task_id;
-        // document.getElementById('selected_task_task_type').value = item.task_type_name;
-        // document.getElementById('status').value = item.task_status_percentage;
-        // document.getElementById('estimated_hours').value = item.task_estimated_hours;
-        // document.getElementById('booked_hours').value = item.task_booked_hours;
-        // document.getElementById('comment').value = item.task_comment;
-        // document.getElementById('task_deadline').value = selectedItem.task_deadline;
+        document.getElementById('update_mode_task_id').value = item.task_id;
+//        document.getElementById('update_mode_selected_task_task_type').value = item.task_type_name;
+        document.getElementById('update_mode_status').value = item.task_status_percentage;
+        document.getElementById('update_mode_estimated_hours').value = item.task_estimated_hours;
+        document.getElementById('update_mode_booked_hours').value = item.task_booked_hours;
+        document.getElementById('update_mode_comment').value = item.task_comment;
+        document.getElementById('update_mode_task_deadline').value = selectedItem.task_deadline;
 
         set_updateMode(true);
         set_selectedItem(item);
@@ -283,33 +281,53 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
 
     const updateItem = (item) => {
         // get the data from input form and send API request...
-        console.log('item: ', item);
+        console.log('HELLO UPDATING item: ', item);
 
         const task_id = document.getElementById('update_mode_task_id').value;
-
         const estimated_hours = document.getElementById('update_mode_estimated_hours').value;
         const booked_hours = document.getElementById('update_mode_booked_hours').value;
         const comment = document.getElementById('update_mode_comment').value;
-
         const milestone_item = document.getElementById('update_mode_milestone_item').value;
         const status = document.getElementById('update_mode_status').value;
         const employee = document.getElementById('update_mode_employee').value;
-
         const task_deadline = document.getElementById('update_mode_task_deadline').value;
 
         set_showSpinner_CreateUpdateItem(true);
 
-        if (task_id === "") return alert('missing task_id');
+        if (task_id === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing task_id');
+        }
 
-        if (estimated_hours === "") return alert('missing estimated_hours');
-        if (booked_hours === "") return alert('missing booked_hours');
-        if (comment === "") return alert('missing comment');
+        if (estimated_hours === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing estimated_hours');
+        }
+        if (booked_hours === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing booked_hours');
+        }
+        if (comment === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing comment');
+        }
+        if (milestone_item === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing milestone_item');
+        }
+        if (status === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing status');
+        }
+        if (employee === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing employee');
+        }
 
-        if (milestone_item === "") return alert('missing milestone_item');
-        if (status === "") return alert('missing status');
-        if (employee === "") return alert('missing employee');
-
-        if (task_deadline === "") return alert('missing task_deadline');
+        if (task_deadline === "") {
+            set_showSpinner_CreateUpdateItem(false);
+            return alert('missing task_deadline');
+        }
 
         // patch method to update task
         axios({
