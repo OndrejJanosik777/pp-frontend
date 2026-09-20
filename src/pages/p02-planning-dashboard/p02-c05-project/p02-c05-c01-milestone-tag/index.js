@@ -308,7 +308,7 @@ const P02_C05_C01_MILESTONE_TAG = (props) => {
                 className='p02-c05-c01-milestone-tag' 
                 style={{height: `${tasks.length * 10 + 23}px`}} 
                 id='milestone-tag'
-                onContextMenu={(e) => contextMenuClicked(e)}
+                // onContextMenu={(e) => contextMenuClicked(e)}
             >
         {/* LINE */}
         <div className='p02-c05-c01-milestone-line'

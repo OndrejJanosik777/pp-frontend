@@ -289,8 +289,10 @@ const P02_C07_MANAGE_MILESTONE_TASKS = (props) => {
         const comment = document.getElementById('update_mode_comment').value;
         const milestone_item = document.getElementById('update_mode_milestone_item').value;
         const status = document.getElementById('update_mode_status').value;
-        const employee = document.getElementById('update_mode_employee').value;
+        const employee = document.getElementById('update_mode_employee').value === "-1" ? null : document.getElementById('update_mode_employee').value;
         const task_deadline = document.getElementById('update_mode_task_deadline').value;
+
+        console.log("employee: ", employee);
 
         set_showSpinner_CreateUpdateItem(true);
 
